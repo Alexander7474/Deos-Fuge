@@ -42,7 +42,7 @@ public:
   Map(const Map& other);
 
   /**
-  * @debrief Destructeur de Map
+  * @brief Destructeur de Map
   * 
   * @see Map::~Map();
   */
