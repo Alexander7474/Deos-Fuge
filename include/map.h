@@ -27,7 +27,7 @@ public:
   * @brief Constructeur de Map.
   * @overload
   * @param tiles_folder Chemin d'accès vers le dossier contenant les tuiles de la map
-  * @note Le dossier doit contenir 80x45 tuiles en 16x16px dans des fichier .png nommé: 0.png 1.png ....png 80x45-1.png
+  * @note Le dossier doit contenir un fichier background.png, definition.bmc et un set de tuiles en fonctions de defintion.bmc
   *
   * @see Map::Map(const char* tiles_folder);
   */

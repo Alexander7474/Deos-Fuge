@@ -4,14 +4,7 @@ def print_map(mapToDraw):
     for y in range(len(mapToDraw)):
         line = ''
         for x in range(len(mapToDraw[y])):
-            if x != len(mapToDraw[y])-1:
-                line += str(mapToDraw[y][x][1])+''
-            else:
-                line += str(mapToDraw[y][x][1])
-        if y != len(mapToDraw)-1:
-            line += ''
-        else:
-            line += ''
+            line += str(mapToDraw[y][x][1])
         print(line)
 
 SIZE_X = int(input('taille window x: '))

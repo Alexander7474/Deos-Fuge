@@ -5,7 +5,7 @@
 int main()
 {
   GLFWwindow * window;
-  bbopInit(1280, 720, "water", window);
+  bbopInit(1280, 720, "Bro Melee", window);
 
   Scene defaultScene;
 
