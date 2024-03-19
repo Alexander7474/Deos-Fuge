@@ -1,0 +1,57 @@
+#pragma once
+
+#include <BBOP/Graphics.h>
+#include <BBOP/Graphics/bbopGlobal.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
+/**
+* @class Map "map.h" "map.cpp"
+* @brief La class Map initialise une map avec un tableau de case en 16x16 depuis un fichier map contenant toute les cellules  
+* @author Alexandre
+* @version 0.1
+*/
+class Map : public BbopDrawable
+{
+private:
+  Sprite* tiles; //!< Liste de Sprite alloué dynamiquement pour stocké les tuiles 16x16 de la map
+public:
+  /**
+  * @brief Constructeur par défault de Map.
+  *
+  * @see Map::Map();
+  */
+  Map();
+
+  /**
+  * @brief Constructeur de Map.
+  * @overload
+  * @param tiles_folder Chemin d'accès vers le dossier contenant les tuiles de la map
+  * @note Le dossier doit contenir 80x45 tuiles en 16x16px dans des fichier .png nommé: 0.png 1.png ....png 80x45-1.png
+  *
+  * @see Map::Map(const char* tiles_folder);
+  */
+  Map(const char* tiles_folder);
+
+  /**
+  * @brief Conctructeur par copie de Map
+  * @param other Autre Map
+  *
+  * @see Map::Map(const Map& other);
+  */
+  Map(const Map& other);
+
+  /**
+  * @debrief Destructeur de Map
+  * 
+  * @see Map::~Map();
+  */
+  ~Map();
+
+  /**
+  * @brief Dessine la map sur l'écran, à utiliser avec une scene ou une autre méthode draw
+  *
+  * @see Map::Draw(GLint renderModLoc) const;
+  */
+  virtual void Draw(GLint renderModLoc) const override;
+};
