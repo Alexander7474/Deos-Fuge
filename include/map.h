@@ -14,7 +14,8 @@
 class Map : public BbopDrawable
 {
 private:
-  Sprite* tiles; //!< Liste de Sprite alloué dynamiquement pour stocké les tuiles 16x16 de la map
+  Sprite** tiles; //!< Liste de Sprite alloué dynamiquement pour stocké les tuiles 16x16 de la map
+  Sprite background;
 public:
   /**
   * @brief Constructeur par défault de Map.
@@ -54,4 +55,6 @@ public:
   * @see Map::Draw(GLint renderModLoc) const;
   */
   virtual void Draw(GLint renderModLoc) const override;
+
+  void Remplissage();
 };
