@@ -14,8 +14,9 @@
 class Map : public BbopDrawable
 {
 private:
-  Sprite** tiles; //!< Liste de Sprite alloué dynamiquement pour stocké les tuiles 16x16 de la map
-  Sprite background;
+  std::vector<Sprite>* tiles; //!< Liste de Sprite alloué dynamiquement pour stocké les tuiles 16x16 de la map
+  Sprite background; 
+  
 public:
   /**
   * @brief Constructeur par défault de Map.
@@ -32,7 +33,7 @@ public:
   *
   * @see Map::Map(const char* tiles_folder);
   */
-  Map(const char* tiles_folder);
+  Map(const char* tiles_folder, const char* background_folder);
 
   /**
   * @brief Conctructeur par copie de Map
@@ -42,11 +43,6 @@ public:
   */
   Map(const Map& other);
 
-  /**
-  * @brief Destructeur de Map
-  * 
-  * @see Map::~Map();
-  */
   ~Map();
 
   /**
@@ -56,5 +52,5 @@ public:
   */
   virtual void Draw(GLint renderModLoc) const override;
 
-  void Remplissage();
+  void Remplissage(const char* tiles_folder);
 };
