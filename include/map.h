@@ -70,7 +70,7 @@ public:
   *
   * @see Map::Remplissage(const char* tiles_folder);
   */
-  void Remplissage(const char* tiles_folder);
+  void remplissage(const char* tiles_folder);
 
   /**
   * @brief Remplie un tableau d'entier correspondant aux index des sprites/blocks de la map qui se trouvent dans la zone d'explosion
@@ -80,7 +80,7 @@ public:
   * 
   * @see Map::IndexZone(Vector2f, float);
   */
-  void IndexZone(Vector2f position, float zone, int *tab, int &cpt);
+  void indexZone(Vector2f position, float zone, int *tab, int &cpt);
 
   /**
   * @brief supprime les bloques qui sont dans la zone d'explosion
@@ -90,5 +90,7 @@ public:
   * 
   * @see Map::DestroyBlock(Vector2f position, float zone);
   */
-  void DestroyBlock(Vector2f position, float zone);
+  void destroyBlock(Vector2f position, float zone);
+
+  std::vector <Sprite> &getTiles();
 };

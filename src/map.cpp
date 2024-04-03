@@ -8,13 +8,13 @@ Map::Map() :
     background(Texture("img/map/glace/background.png"))
 {
     // remplissage du tableau
-    Remplissage("img/map/glace/");
+    remplissage("img/map/glace/");
 }
 
 Map::Map(const char* tiles_folder) :
     background(Texture((string(tiles_folder) + "background.png").c_str()))
 {
-    Remplissage(tiles_folder);
+    remplissage(tiles_folder);
 }
 
 Map::~Map()
@@ -23,7 +23,7 @@ Map::~Map()
     cout << "tableau de vecteur vidé" << endl;
 }
 
-void Map::Remplissage(const char* tiles_folder)
+void Map::remplissage(const char* tiles_folder)
 {
     ifstream fichier(string(tiles_folder) + "definition.bmm");
 
@@ -83,7 +83,7 @@ void Map::Draw(GLint renderModLoc) const
     }
 }
 
-void Map::IndexZone(Vector2f position, float zone, int * tab, int &cpt)
+void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)
 {
     for (unsigned i=0; i<tiles.size(); i++)
     {
@@ -98,11 +98,11 @@ void Map::IndexZone(Vector2f position, float zone, int * tab, int &cpt)
 }
 
 
-void Map::DestroyBlock(Vector2f position, float zone)
+void Map::destroyBlock(Vector2f position, float zone)
 {
     int * tab = new int;
     int N=0;
-    IndexZone(position, zone, tab, N);
+    indexZone(position, zone, tab, N);
 
     for(int i=0; i<N; i++)
     {
@@ -111,4 +111,9 @@ void Map::DestroyBlock(Vector2f position, float zone)
     }
 
     cout << "bloque(s) supprimé(s)" << endl;
+}
+
+vector<Sprite> & Map::getTiles()
+{
+    return tiles;
 }
