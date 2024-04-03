@@ -14,8 +14,8 @@
 class Map : public BbopDrawable
 {
 private:
-  std::vector<Sprite>* tiles; //!< Liste de Sprite alloué dynamiquement pour stocké les tuiles 16x16 de la map
-  Sprite background; 
+  std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
+  Sprite background; //!< Background du jeu
   
 public:
   /**
@@ -28,12 +28,12 @@ public:
   /**
   * @brief Constructeur de Map.
   * @overload
-  * @param tiles_folder Chemin d'accès vers le dossier contenant les tuiles de la map
+  * @param tiles_folder Chemin d'accès vers le dossier contenant les tuiles de la map de la forme img/map/glace/
   * @note Le dossier doit contenir un fichier background.png, definition.bmc et un set de tuiles en fonctions de defintion.bmc
   *
   * @see Map::Map(const char* tiles_folder);
   */
-  Map(const char* tiles_folder, const char* background_folder);
+  Map(const char* tiles_folder);
 
   /**
   * @brief Conctructeur par copie de Map
@@ -43,6 +43,11 @@ public:
   */
   Map(const Map& other);
 
+  /**
+  * @brief Destructeur de Map
+  * 
+  * @see Map::~Map();
+  */
   ~Map();
 
   /**
@@ -52,5 +57,38 @@ public:
   */
   virtual void Draw(GLint renderModLoc) const override;
 
+  /**
+  * @brief Ouvre le fichier defnition.bmm , puis définis les Sprites selon les valeurs du fichier et les ajoute au vecteur tiles
+  * @param tiles_folder chemin d'accès des tuiles
+  * @note colonne du fichier definition.bmm : 
+  * @note colonne 1 : correspond à l'index du sprite 
+  * @note colonne 2 : position x du premier sprite
+  * @note colonne 3 : position x du dernier sprite
+  * @note colonne 4 : position y du premier sprite
+  * @note colonne 5 : position y du dernier sprite
+  * @note les positions sont des multiples de 16 (tailles des blocks de sprite)
+  *
+  * @see Map::Remplissage(const char* tiles_folder);
+  */
   void Remplissage(const char* tiles_folder);
+
+  /**
+  * @brief Remplie un tableau d'entier correspondant aux index des sprites/blocks de la map qui se trouvent dans la zone d'explosion
+  * @param position coordonnées x et y de l'explosion
+  * @param zone périmètre de l'explosion
+  * @note A faire pour plus tard : augmenter ou réduire la zone avec un nombre aléatoire
+  * 
+  * @see Map::IndexZone(Vector2f, float);
+  */
+  void IndexZone(Vector2f position, float zone, int *tab, int &cpt);
+
+  /**
+  * @brief supprime les bloques qui sont dans la zone d'explosion
+  * @param position coordonnées x et y de l'explosion
+  * @param zone périmètre de l'explosion
+  * @note les arguments sont récupérés par la fonction IndexZone(Vector2f position, float zone, int *tab, int &cpt)
+  * 
+  * @see Map::DestroyBlock(Vector2f position, float zone);
+  */
+  void DestroyBlock(Vector2f position, float zone);
 };

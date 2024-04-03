@@ -1,58 +1,114 @@
 #include "../include/map.h"
+#include <iostream>
+#include <fstream>
+#include <typeinfo>
+using namespace std;
 
 Map::Map() : 
-    background(Texture("img/background/ciel.png")), 
-    tiles(new std::vector <Sprite>[45])
+    background(Texture("img/map/glace/background.png"))
 {
     // remplissage du tableau
-    Remplissage("img/map/");
+    Remplissage("img/map/glace/");
 }
 
-Map::Map(const char* tiles_folder, const char* background_folder) :
-    background(Texture(background_folder)), 
-    tiles(new std::vector <Sprite>[45])
+Map::Map(const char* tiles_folder) :
+    background(Texture((string(tiles_folder) + "background.png").c_str()))
 {
     Remplissage(tiles_folder);
 }
 
 Map::~Map()
 {
-    delete[] this->tiles;
-    std::cout << "vecteur de sprite dynamique désaloué avec succès" << std::endl;
+    tiles.clear();
+    cout << "tableau de vecteur vidé" << endl;
 }
 
 void Map::Remplissage(const char* tiles_folder)
 {
-    for(int i=0; i<45; i++)
-    {
-        for(int j=0; j<80; j++)
-        {
-            std::string path = tiles_folder + std::to_string(16*i) + "-" + std::to_string(16*j) + ".png" ;
-            std::cout << path << std::endl;
+    ifstream fichier(string(tiles_folder) + "definition.bmm");
 
-            Sprite sprite(Texture(path.c_str()));
-            sprite.setSize(Vector2f(16, 16));
-            sprite.setOrigin(Vector2f(0, 0));
-            sprite.setPosition(Vector2f(j*16, i*16));
-            tiles[i].push_back(sprite);
+    string path;
+    int x, x_final, y, y_final;
+
+    if (fichier)
+    {
+        string mot;
+
+        for(int b=0; b<9; b++)
+        {
+            fichier >> mot;
+            path = string(tiles_folder) + "tiles/" + mot + ".png";
+
+            fichier >> mot;
+            x = stoi(mot);
+
+            fichier >> mot;
+            x_final = stoi(mot);
+
+            fichier >> mot;
+            y = stoi(mot);
+
+            fichier >> mot;
+            y_final = stoi(mot);
+
+            cout << path << " " << x << " " << x_final << " " << y << " " << y_final << endl;
+
+            for(int j=y; j<=y_final; j+=16)
+            {
+                for(int i=x; i<=x_final; i+=16)
+                {
+                    Sprite sprite(Texture(path.c_str()));
+                    sprite.setPosition(Vector2f(i, j));
+                    tiles.push_back(sprite);
+                }
+            }
         }
+
+        cout << "Vecteur de Sprite remplie avec succès" << endl;
     }
-    std::cout << "tableau de tiles remplies avec succès" << std::endl;
+
+    else
+    {
+        cout << "Erreur Impossible d'ouvrir le fichier" << endl;
+    }
 }
 
 void Map::Draw(GLint renderModLoc) const
 {
     background.Draw(renderModLoc);
 
-    for(int i=0; i<45; i++)
+    for (unsigned i=0; i<tiles.size(); i++)
     {
-        for(int j=0; j<80; j++)
-        {
-            tiles[i][j].Draw(renderModLoc);
-        }
-    } 
+        tiles[i].Draw(renderModLoc);
+    }
+}
 
-    std::cout << "map dessiné avec succès" << std::endl;
+void Map::IndexZone(Vector2f position, float zone, int * tab, int &cpt)
+{
+    for (unsigned i=0; i<tiles.size(); i++)
+    {
+        if(tiles[i].getPosition().x >= position.x-zone && tiles[i].getPosition().x <= position.x+zone 
+        && tiles[i].getPosition().y >= position.y-zone && tiles[i].getPosition().y <= position.y+zone) 
+        {
+            cout << i << endl;
+            tab[cpt] = i;
+            cpt++;
+        }
+    }
 }
 
 
+void Map::DestroyBlock(Vector2f position, float zone)
+{
+    int * tab = new int;
+    int N=0;
+    IndexZone(position, zone, tab, N);
+
+    for(int i=0; i<N; i++)
+    {
+        tab[i] = tab[i] - i;
+        tiles.erase(tiles.begin()+tab[i]);
+    }
+
+    cout << "bloque(s) supprimé(s)" << endl;
+}
