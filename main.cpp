@@ -10,7 +10,7 @@ int main()
   bbopInit(1280, 720, "Bro Melee", window);
 
   std::vector<Personnage> test; 
-  Personnage perso("img/person/", 0, 0, 0);
+  Personnage perso("img/personnages/default/", 0, 0, 0);
   test.push_back(perso);
   std::vector<Personnage> test2; 
   Map map;
@@ -20,6 +20,7 @@ int main()
   while(!glfwWindowShouldClose(window)){
     bbopCleanWindow(window, Vector3i(0,0,0), 1.0);
 
+    game.update();
     game.Draw();
 
     bbopErrorCheck();
