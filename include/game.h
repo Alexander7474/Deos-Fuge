@@ -14,7 +14,11 @@
 #include "map.h"
 #include "personnage.h"
 
-enum game_state_enum { Start=0, Middle=1, End=2};
+enum game_state_enum{ 
+  start=0, 
+  middle=1, 
+  end=2
+};
 
 /**
  * @class Game
@@ -34,7 +38,7 @@ public:
   *
   * @see Map Personnage
   */
-  Game(Map map_, std::vector<Personnage> personnages_, std::vector<Personnage> bots_);
+  Game(Map &map_, std::vector<Personnage> &personnages_, std::vector<Personnage> &bots_);
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -46,15 +50,13 @@ public:
   /**
   * @brief Dessine tous les attribut de la game 
   *
-  * @param[in] window fenêtre glfw initialisé avec bbopInit
-  *
   * @note À utiliser à chaque frame avec 
   */
-  void Draw(GLFWwindow *&window) const;
+  void Draw();
 private:
+  Scene scene;
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
-  int n_bot; //<! nombre de Bot 
-  std::vector<Personnage> personnages;
-  std::vector<Personnage> bots;
+  std::vector<Personnage> personnages; //<! liste des personnages
+  std::vector<Personnage> bots; //<! liste des bots 
 };
