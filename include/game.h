@@ -13,7 +13,6 @@
 /////////////////
 #include "map.h"
 #include "personnage.h"
-#include "projectiles.h"
 
 enum game_state_enum { Start=0, Middle=1, End=2};
 
@@ -35,7 +34,7 @@ public:
   *
   * @see Map Personnage
   */
-  Game(Map map_, int n_personnage_, int n_bot_);
+  Game(Map map_, std::vector<Personnage> personnages_, std::vector<Personnage> bots_);
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -55,8 +54,7 @@ public:
 private:
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
-  int n_personnage; //<! nombre de personnage
   int n_bot; //<! nombre de Bot 
-  std::vector<Personnage> personnages; //<! liste des personnages
-  std::vector<Projectile> projectiles; //<! liste des projectiles
+  std::vector<Personnage> personnages;
+  std::vector<Personnage> bots;
 };
