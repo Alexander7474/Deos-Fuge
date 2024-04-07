@@ -8,9 +8,9 @@ Personnage::Personnage(std::string sprite_folder,float percentage_ , float vites
     weight(weight_),
     state(stationary)
 {
-   std::string anim_folder[3] = {"walk","static","run"};
-   int anim_frame_n[3] = {1,1,1};
-   for (int i = 0; i < 3; i++)
+   std::string anim_folder[6] = {"walk","static","run","jump","fall","dash"};
+   int anim_frame_n[6] = {2,2,2,2,2,2};
+   for (int i = 0; i < 6; i++)
    {
         
         std::string anim_folder_i=sprite_folder+anim_folder[i];
@@ -22,14 +22,18 @@ Personnage::Personnage(std::string sprite_folder,float percentage_ , float vites
         }
         
    }
-    
+    pr_time=glfwGetTime();
+    weight=5;
+    vitesse=7;
     setPosition(Vector2f(100,100));
     setSize(Vector2f(50,50));
     
 }
 void Personnage::update()
 {
-    
+    bool invincible=false;
+    int cpt=0;
+    int framecount=0;
     mouvement=Vector2f(0,0);
     int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
     if (1 == present)
@@ -37,13 +41,77 @@ void Personnage::update()
         
         int axes;
         const float *axesc = glfwGetJoystickAxes(GLFW_JOYSTICK_1,&axes);
-        float deplacement=vitesse*axesc[0];
-        mouvement.x=deplacement;
+        if (axesc[0]>0.1 || axesc[0]<-0.1)
+        {
+            std::cout<<"c"<<std::endl;
+            mouvement.x=vitesse*axesc[0];
+        }
+        if (getPosition().x<50 )
+        {
+            setPosition(Vector2f(50,getPosition().y));
+        }
+        if (getPosition().x>950 )
+        {
+            setPosition(Vector2f(950,getPosition().y));
+        }
         
-
+        
+        if(axesc[5]>0.1)
+        {
+            float acjump_time=glfwGetTime();
+            if (acjump_time-pr_time>3)
+            {
+                mouvement.y=mouvement.y-(vitesse/weight);
+                pr_time=glfwGetTime();
+                std::cout<<"kys"<<std::endl;
+                cpt=0;
+                state=jump;
+            }
+            
+        }
+        if(axesc[3]>0.1 && axesc[0]>0.1)
+        {
+            
+            mouvement.y=mouvement.x+50;
+            pr_time=glfwGetTime();
+            std::cout<<"kys"<<std::endl;
+            cpt=0;
+            state=dash;        
+            
+        }
+        if(axesc[3]>0.1 && axesc[0]<-0.1)
+        {
+            
+            mouvement.y=mouvement.x-50;
+            pr_time=glfwGetTime();
+            std::cout<<"kys"<<std::endl;
+            cpt=0;
+            state=dash;        
+            
+        }
+        
+        if (getPosition().y<950 )
+        {
+            mouvement.y=mouvement.y+(weight/2);
+            std::cout<<"ckk"<<std::endl;
+            state=fall;
+        }
+        
+        framecount++;
         
     }
-    
-    setTexture(animation[state][0]);
+    if (framecount==5)
+    {
+        framecount=0;
+        cpt++;
+    }
+
+    std::cerr<<"beforz"<<std::endl;    
+    setTexture(animation[state][1]);
+    std::cerr<<"after"<<std::endl;
     move(mouvement);
+    if (cpt==1)
+    {
+        cpt=0;
+    }
 }
