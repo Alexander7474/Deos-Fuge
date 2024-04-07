@@ -12,6 +12,7 @@
 /// Local headers
 /////////////////
 #include "map.h"
+#include "player.h"
 #include "personnage.h"
 
 enum game_state_enum{ 
@@ -38,7 +39,7 @@ public:
   *
   * @see Map Personnage
   */
-  Game(Map &map_, std::vector<Personnage> &personnages_, std::vector<Personnage> &bots_);
+  Game(Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_);
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -57,6 +58,6 @@ private:
   Scene scene;
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
-  std::vector<Personnage> personnages; //<! liste des personnages
+  std::vector<Player> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
 };

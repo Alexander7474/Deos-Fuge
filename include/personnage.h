@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "map.h"
+#include "perso_info.h"
 
 static const int frame_divisor = 5;
 
@@ -22,6 +23,11 @@ enum perso_direction:int{
   right=1
 };
 
+/**
+ * @class Personnage
+ *
+ * @brief gère un personnage, a ne pas utiliser directement mais avec un Bot ou un Personnage
+ */
 class Personnage : public Sprite
 {
 private:
@@ -43,13 +49,48 @@ private:
   int dash_frame_cpt; //<! compteur de frame du dash
   int jump_frame_cpt; //<! compteur de frame du saut
   int jump_cpt; //<! compteur de jump
+  bool jump_call; //<! stock si le jump est appelé lors de la frame
+  bool dash_call; //<! stock si le dash est appelé lors de la frame
   
-  // gestion de la manette
-  int joystick; //<! stockage de la manette 
-
 public:
-  Personnage(int joystick_, std::string sprite_folder,float percentage_, float vitesse_ , float weight_);
+ 
+  /**
+  * @brief Constructeur de personnage
+  *
+  * @param[in] personnage_info_ information sur le personnage 
+  *
+  * @note le personnage se créer a partir d'une struct perso_info qui est déclarer dans perso_info.h
+  */ 
+  Personnage(perso_info personnage_info_);
+
+  /**
+  * @brief met à jour le personnage à partir de ces attribut et de ce de la map
+  */
   void update(Map &map_);
+
+  /**
+  * @brief Va a gauche
+  *
+  * @param[in] value -1.0 vitesse max - 0.0 immobile
+  */
+  void goLeft(float value);
+
+  /**
+  * @brief Va a droite
+  *
+  * @param[in] value 1.0 vitesse max - 0.0 immobile
+  */
+  void goRight(float value);
+
+  /**
+  * @brief Saute si Cela est possible
+  */
+  void doJump();
+
+  /**
+  * @brief Dash si cela est possible
+  */
+  void doDash();
   //virtual void attack(Personnage Ennemy[], GLFWwindow *);
   //virtual bool gettinghit();
   //virtual void Dash();
