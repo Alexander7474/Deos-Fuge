@@ -1,4 +1,5 @@
 #include "../include/game.h"
+#include <BBOP/Graphics/bbopFunc.h>
 
 
 Game::Game(Map &map_, std::vector<Personnage> &personnages_, std::vector<Personnage> &bots_):
@@ -12,11 +13,11 @@ Game::Game(Map &map_, std::vector<Personnage> &personnages_, std::vector<Personn
 void Game::update()
 {
   for(long unsigned int i = 0; i < personnages.size(); i++){
-    personnages[i].update();
+    personnages[i].update(map);
   }
-  for(long unsigned int i = 0; i < bots.size(); i++){
-    bots[i].update();
-  }
+  //for(long unsigned int i = 0; i < bots.size(); i++){
+    //bots[i].update();
+  //}
 }
 
 void Game::Draw()
@@ -25,8 +26,9 @@ void Game::Draw()
   scene.Draw(map);
   for(long unsigned int i = 0; i < personnages.size(); i++){
     scene.Draw(personnages[i]);
+    bbopDebugCollisionBox(personnages[i].getCollisionBox(), scene);
   }
-  for(long unsigned int i = 0; i < bots.size(); i++){
-    scene.Draw(bots[i]);
-  }
+  //for(long unsigned int i = 0; i < bots.size(); i++){
+    //scene.Draw(bots[i]);
+  //}
 }

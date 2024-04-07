@@ -10,7 +10,7 @@ int main()
   bbopInit(1280, 720, "Bro Melee", window);
 
   std::vector<Personnage> test; 
-  Personnage perso("img/personnages/default/", 0, 0, 0);
+  Personnage perso("img/personnages/default/", 100, 5, 75);
   test.push_back(perso);
   std::vector<Personnage> test2; 
   Map map;

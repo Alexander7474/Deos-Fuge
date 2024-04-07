@@ -1,117 +1,148 @@
 #include "../include/personnage.h"
+#include <GLFW/glfw3.h>
+#include <iostream>
+#include <string>
 
 
-Personnage::Personnage(std::string sprite_folder,float percentage_ , float vitesse_ , float weight_):
+Personnage::Personnage(std::string sprite_folder,float percentage_ , float speed_ , float weight_):
     Sprite("img/default.png"),
     percentage(percentage_),
-    vitesse(vitesse_),
+    speed(speed_),
     weight(weight_),
-    state(stationary)
+    state(fall)
 {
-   std::string anim_folder[6] = {"walk","static","run","jump","fall","dash"};
-   int anim_frame_n[6] = {2,2,2,2,2,2};
-   for (int i = 0; i < 6; i++)
-   {
-        
-        std::string anim_folder_i=sprite_folder+anim_folder[i];
-        for (int k = 0; k < anim_frame_n[i]; k++)
-        {
-            std::string anim_frame=anim_folder_i+"/"+ std::to_string(k)+".png";
-            Texture new_frame(anim_frame.c_str());
-            animation[i].push_back(new_frame);
-        }
-        
-   }
-    pr_time=glfwGetTime();
-    weight=5;
-    vitesse=7;
-    setPosition(Vector2f(100,100));
-    setSize(Vector2f(50,50));
-    
-}
-void Personnage::update()
-{
-    bool invincible=false;
-    int cpt=0;
-    int framecount=0;
-    mouvement=Vector2f(0,0);
-    int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
-    if (1 == present)
+  int anim_frame_n[5] = {1,1,1,1,1};
+  for (int i = stationary; i <= fall; i++)
+  {        
+    std::string anim_folder_i=sprite_folder+std::to_string(i);
+    for (int k = 0; k < anim_frame_n[i]; k++)
     {
-        
-        int axes;
-        const float *axesc = glfwGetJoystickAxes(GLFW_JOYSTICK_1,&axes);
-        if (axesc[0]>0.1 || axesc[0]<-0.1)
-        {
-            std::cout<<"c"<<std::endl;
-            mouvement.x=vitesse*axesc[0];
-        }
-        if (getPosition().x<50 )
-        {
-            setPosition(Vector2f(50,getPosition().y));
-        }
-        if (getPosition().x>950 )
-        {
-            setPosition(Vector2f(950,getPosition().y));
-        }
-        
-        
-        if(axesc[5]>0.1)
-        {
-            float acjump_time=glfwGetTime();
-            if (acjump_time-pr_time>3)
-            {
-                mouvement.y=mouvement.y-(vitesse/weight);
-                pr_time=glfwGetTime();
-                std::cout<<"kys"<<std::endl;
-                cpt=0;
-                state=jump;
-            }
-            
-        }
-        if(axesc[3]>0.1 && axesc[0]>0.1)
-        {
-            
-            mouvement.y=mouvement.x+50;
-            pr_time=glfwGetTime();
-            std::cout<<"kys"<<std::endl;
-            cpt=0;
-            state=dash;        
-            
-        }
-        if(axesc[3]>0.1 && axesc[0]<-0.1)
-        {
-            
-            mouvement.y=mouvement.x-50;
-            pr_time=glfwGetTime();
-            std::cout<<"kys"<<std::endl;
-            cpt=0;
-            state=dash;        
-            
-        }
-        
-        if (getPosition().y<950 )
-        {
-            mouvement.y=mouvement.y+(weight/2);
-            std::cout<<"ckk"<<std::endl;
-            state=fall;
-        }
-        
-        framecount++;
-        
+      std::string anim_frame=anim_folder_i+"/"+ std::to_string(k)+".png";
+      Texture new_frame(anim_frame.c_str());
+      animation[i].push_back(new_frame);
     }
-    if (framecount==5)
-    {
-        framecount=0;
-        cpt++;
+  }
+  setPosition(100.f,100.f);
+  setSize(50.f,50.f); 
+  setOrigin(25.f,50.0f);
+}
+
+void Personnage::update(Map &map_)
+{
+  //gestion de la manette
+  int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+  mouvement.x=0.f;
+  if (1 == present)
+  {
+    int n_axes;
+    int n_buttons;
+    const float *axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1,&n_axes);
+    const unsigned char *buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &n_buttons);
+
+    //perso axe y
+      
+    //application de la gravité
+    if(state == fall){
+      mouvement.y=mouvement.y+weight*0.00981;
+      if(mouvement.y>10.0f)
+        mouvement.y=10.0f;
+    }
+    //collision avec les plateforms
+    for(long unsigned int i = 0; i < map_.getTiles().size() ; i++){
+      if(map_.getTiles()[i].getCollisionBox().check(shapeCollisionBox)){
+        mouvement.y=0;
+        jump_cpt=0;
+        if(state != dash)
+          state=stationary;
+        setPosition(getPosition().x,map_.getTiles()[i].getPosition().y);
+      }
+    }
+    
+    //perso axe x
+    //
+    //touche x de la manette
+    if(buttons[2] == GLFW_PRESS){
+      //std::cerr << "dash" << std::endl;
+      if(dash_frame_cpt == 0)
+        state = dash;
+    }else{
+      // si la touche de dash est relaché et que l'état est stationnaire(donc dash fini) on reset le compteur de frame de dash
+      //std::cerr << "dash released" << std::endl;
+      if(state == stationary){
+        dash_frame_cpt = 0;
+      }
     }
 
-    std::cerr<<"beforz"<<std::endl;    
-    setTexture(animation[state][1]);
-    std::cerr<<"after"<<std::endl;
-    move(mouvement);
-    if (cpt==1)
-    {
-        cpt=0;
+    //touche a de la manette
+    if(buttons[0] == GLFW_PRESS){
+      if(state!=jump && jump_frame_cpt == 0){
+        jump_cpt++;
+      }
+      state = jump;
+    }else{
+      if(state != jump)
+        jump_frame_cpt = 0;
+      else
+       state = fall;
     }
+
+    // axes de la manette
+    if(state != dash){
+      if(axes[0] > 0.15){
+        mouvement.x=speed*axes[0];
+        direction=right;
+        if(state==stationary)
+          state=run;
+      }
+      if(axes[0] < -0.15){
+        mouvement.x=speed*axes[0];
+        direction=left;
+        if(state==stationary)
+          state=run;
+      }
+    }
+    switch(state){
+      case dash:
+        // si le perso dash
+        if(dash_frame_cpt <= 10){
+          mouvement.x=direction*speed*4;
+          dash_frame_cpt++;
+        }else{
+          state = fall;
+        }
+        break;
+      case jump:
+        //si le perso jump 
+        if(jump_frame_cpt <= 10 && jump_cpt <= 2){
+          mouvement.y=-5;
+          jump_frame_cpt++;
+        }else{
+          state = fall;
+        }
+        break;
+      default:
+        break;
+    }
+  
+    if(false){
+      std::cerr << "0:  " << axes[0] << std::endl;
+      std::cerr << "1:  " << axes[1] << std::endl;
+      std::cerr << "2:  " << axes[2] << std::endl;
+      std::cerr << "3:  " << axes[3] << std::endl;
+      std::cerr << "4:  " << axes[4] << std::endl;
+      std::cerr << "5:  " << axes[5] << std::endl;
+    }
+    if(false){
+      for(int i = 0; i < n_buttons; i++){
+        if (buttons[i] == GLFW_PRESS){
+          std::cerr << i << std::endl;
+        }
+      }
+    }
+  }
+ 
+  
+  std::cerr << "state: " << state << std::endl;
+  move(mouvement);
+  setTexture(animation[0][0]);
 }
