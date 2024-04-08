@@ -1,7 +1,9 @@
 CC = g++
-CFLAGS = -std=c++11 -Wall -I/usr/include/freetype2
+CFLAGS = -std=c++11 -Wall
 LIBS = -lbbop -lglfw -lGLEW -lGL -lfreetype 
-SRCS = main.cpp src/personnage.cpp src/map.cpp src/game.cpp
+
+SRCS = main.cpp src/personnage.cpp src/map.cpp src/game.cpp src/player.cpp src/perso_info.cpp
+
 OBJS = $(SRCSM:.cpp=.o) $(SRCS:.cpp=.o)
 
 all: final
