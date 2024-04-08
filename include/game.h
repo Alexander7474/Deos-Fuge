@@ -13,7 +13,6 @@
 /////////////////
 #include "map.h"
 #include "player.h"
-#include "personnage.h"
 
 enum game_state_enum{ 
   start=0, 

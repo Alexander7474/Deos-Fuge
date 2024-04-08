@@ -1,7 +1,6 @@
 #include "../include/game.h"
 #include <BBOP/Graphics/bbopFunc.h>
 
-
 Game::Game(Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
    game_state(start),
    players(players_),

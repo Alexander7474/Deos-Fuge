@@ -1,6 +1,5 @@
 #pragma once
 #include <BBOP/Graphics.h>
-#include <BBOP/Graphics/bbopMathClass.h>
 #include <vector>
 #include <iostream>
 #include "map.h"

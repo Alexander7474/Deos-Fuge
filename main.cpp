@@ -12,6 +12,7 @@ int main()
 
   std::vector<Player> test; 
   Player perso(GLFW_JOYSTICK_1, "roger", DEFAULT_PERSO);
+
   test.push_back(perso);
   std::vector<Personnage> test2; 
   Map map;
