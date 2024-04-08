@@ -3,6 +3,7 @@
 ////////////////////
 /// External headers
 ////////////////////
+#include <BBOP/Graphics/fontsClass.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <BBOP/Graphics.h>
@@ -54,9 +55,18 @@ public:
   */
   void Draw();
 private:
-  Scene scene;
+  Scene scene; //<! Scene avec paramètre de rendue de la game
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
+  Font font;
   std::vector<Player> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
+  
+  //Texte box pour le hud 
+  TexteBox fps_hud; //<! affichage des fps
+  
+  /**
+  * @brief Met à jour le hud
+  */
+  void updateHUD();
 };

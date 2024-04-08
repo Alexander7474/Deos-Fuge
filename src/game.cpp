@@ -1,12 +1,18 @@
 #include "../include/game.h"
 #include <BBOP/Graphics/bbopFunc.h>
+#include <BBOP/Graphics/fontsClass.h>
+#include <string>
 
 Game::Game(Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
    game_state(start),
+   font(48, "font/GohuFont11NerdFont-Regular.ttf"),
    players(players_),
-   bots(bots_)
+   bots(bots_),
+   fps_hud("120", nullptr)
 {
   map = map_;
+  fps_hud.setFont(&font);
+  fps_hud.setPosition(Vector2f(0.0f,250.f));
 }
 
 void Game::update()
@@ -29,4 +35,9 @@ void Game::Draw()
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);
   //}
+  scene.Draw(fps_hud);
+}
+
+void Game::updateHUD()
+{
 }
