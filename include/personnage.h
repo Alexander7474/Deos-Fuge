@@ -42,14 +42,13 @@ private:
 
   // gestion des états du personnage
   perso_state state; //<! etat général
+  perso_state calling_state; //<! état demandé par les inputs donné à personnage
   perso_direction direction; //<! direction 
   Vector2f mouvement; //<! mouvement du personnage
   int frame_cpt; //<! compteur de frame par default
   int dash_frame_cpt; //<! compteur de frame du dash
   int jump_frame_cpt; //<! compteur de frame du saut
   int jump_cpt; //<! compteur de jump
-  bool jump_call; //<! stock si le jump est appelé lors de la frame
-  bool dash_call; //<! stock si le dash est appelé lors de la frame
   
 public:
  

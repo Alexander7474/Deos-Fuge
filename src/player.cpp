@@ -24,6 +24,12 @@ void Player::update(Map &map_)
       const float *axes = glfwGetJoystickAxes(joystick,&n_axes);
       const unsigned char *buttons = glfwGetJoystickButtons(joystick, &n_buttons);
     
+      if(axes[0] > 0.15){
+        personnage.goRight(axes[0]);
+      }
+      if(axes[0] < -0.15){
+        personnage.goLeft(axes[0]);
+      }  
       //touche de la manette////////////////////////////////////////////////////////////////////////////////////////////
       //touche x de la manette
       if(buttons[2] == GLFW_PRESS){
@@ -33,14 +39,6 @@ void Player::update(Map &map_)
       if(buttons[0] == GLFW_PRESS){
         personnage.doJump();
       }
-
-      if(axes[0] > 0.15){
-        personnage.goRight(axes[0]);
-      }
-      if(axes[0] < -0.15){
-        personnage.goLeft(axes[0]);
-      }
-
       //debuging/////////////////////////////////////////////
       if(false){
         std::cerr << "0:  " << axes[0] << std::endl;

@@ -15,7 +15,6 @@ Personnage::Personnage(perso_info personnage_info_):
     jump_frame_cpt(0),
     jump_cpt(0)
 {
-  jump_call = false;
   std::string sprite_folder = personnage_info_.folder_path;
   anim_frame_n[stationary] = personnage_info_.anim_frame_n[stationary];
   anim_frame_n[run] = personnage_info_.anim_frame_n[run];
@@ -39,22 +38,34 @@ Personnage::Personnage(perso_info personnage_info_):
 
 void Personnage::update(Map &map_)
 {
-  if(jump_call){
-    jump_call = false;
-  }else{
-    // si il n'y a pas de jump call le jump frame est reset
-    if(state != jump)
-      jump_frame_cpt = 0;
-    else // pas de jump call ni de jump state en cours le perso tombe
-      state = fall;
-  }
-
-  if(dash_call){
-    dash_call = false;
-  }else{
-    // reset du dash uniquement quand le pero est au sol et sans dash call
-    if(state==stationary || state == run)
-      dash_frame_cpt = 0;
+  switch (calling_state) {
+    case dash:
+      // dash seulement si le dash est reset
+      if(dash_frame_cpt == 0)
+        state = dash;
+      break;
+    case jump:
+      //si le personnage ne saute pas deja on considère qu'un saut est rajouté au compteur
+      if(state!=jump && jump_frame_cpt == 0)
+        jump_cpt++;
+      // limite de deux jump 
+      if(jump_cpt <= 2)
+        state = jump;
+      break;
+    case run:
+      // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
+      if(state==stationary)
+        state=run;
+    default:
+      // si il n'y a pas de jump call le jump frame est reset
+      if(state != jump)
+        jump_frame_cpt = 0;
+      else // pas de jump call ni de jump state en cours le perso tombe
+        state = fall;
+      // reset du dash uniquement quand le pero est au sol et sans dash call
+      if(state==stationary || state == run)
+        dash_frame_cpt = 0;
+      break;
   }
 
   //gestion des jump et des dash///////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +133,7 @@ void Personnage::update(Map &map_)
   frame_cpt++;
   mouvement.x=0.f;
 
-  std::cerr << state << std::endl;
+  calling_state = stationary;
 }
 
 void Personnage::goRight(float value)
@@ -134,10 +145,8 @@ void Personnage::goRight(float value)
       flipVertically();
       direction=right;
     }
-    // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
-    if(state==stationary)
-      state=run;
   }
+  calling_state=run;
 }
 
 void Personnage::goLeft(float value)
@@ -149,31 +158,20 @@ void Personnage::goLeft(float value)
       flipVertically();
       direction=left;
     }
-    // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
-    if(state==stationary)
-      state=run;
   }
+  calling_state = run;
 }
 
 // appelle pour faire sauter le personnage
 void Personnage::doJump()
 {
-  //si le personnage ne saute pas deja on considère qu'un saut est rajouté au compteur
-  if(state!=jump && jump_frame_cpt == 0)
-    jump_cpt++;
-  // limite de deux jump 
-  if(jump_cpt <= 2)
-    state = jump;
   // utilisé dans update pour savoir si il y a un appelle de saut dans la frame
-  jump_call = true;
+  calling_state = jump;
 }
 
 // appelle pour faire dash le personnage
 void Personnage::doDash()
 {
-  // dash seulement si le dash est reset
-  if(dash_frame_cpt == 0)
-    state = dash;
-  // utilisé dasn update pour savoir si il y a un appelle de dash dans la frame
-  dash_call = true;
+    // utilisé dasn update pour savoir si il y a un appelle de dash dans la frame
+  calling_state = dash;
 }
