@@ -62,8 +62,10 @@ private:
   std::vector<Player> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
   
-  //Texte box pour le hud 
-  TexteBox fps_hud; //<! affichage des fps
+  //Attribut pour le hud 
+  TexteBox fps_hud; //<! texte box affichage des fps
+  double last_time; //<! last time pour les fps
+  int fps_counter; //<! conpteur de frame
   
   /**
   * @brief Met à jour le hud
