@@ -92,6 +92,7 @@ void Personnage::update(Map &map_)
       mouvement.y=10.0f;
   }
   //collision avec les plateformes
+  bool isInCollision = false;
   for(long unsigned int i = 0; i < map_.getTiles().size() ; i++){
     if(map_.getTiles()[i].getCollisionBox().check(shapeCollisionBox) && state != jump){
       //reset du mouvement 
@@ -103,7 +104,11 @@ void Personnage::update(Map &map_)
         state=stationary;
       //on replace le personnage pour eviter les decalage avec la plateforme
       setPosition(getPosition().x,map_.getTiles()[i].getPosition().y);
+      isInCollision = true;
     }
+  }
+  if(!isInCollision && state == run){
+    state = fall;
   }
 
   if(state == run && mouvement.x == 0.f)
