@@ -118,7 +118,7 @@ void Personnage::update(Map &map_)
   // sécurité pour ne pas que frame_cpt dépasse le nombre de frame de l'anim qui va être joué
   if(frame_cpt/frame_divisor >= anim_frame_n[state])
     frame_cpt = 0;
-  setTexture(animation[state][frame_cpt/5]);
+  setTexture(animation[state][frame_cpt/frame_divisor]);
   frame_cpt++;
   mouvement.x=0.f;
 

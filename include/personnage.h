@@ -5,7 +5,7 @@
 #include "map.h"
 #include "perso_info.h"
 
-static const int frame_divisor = 5;
+static const int frame_divisor = 7;
 
 //enumeration des états possible du personnage
 enum perso_state:int{
