@@ -4,11 +4,12 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-Game::Game(Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
+Game::Game(GLFWwindow*& window_, Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
    game_state(start),
    font(48, "font/GohuFont11NerdFont-Regular.ttf"),
    players(players_),
    bots(bots_),
+   window(window_),
    fps_hud("0", nullptr),
    last_time(glfwGetTime()),
    fps_counter(0)

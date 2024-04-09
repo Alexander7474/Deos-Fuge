@@ -4,6 +4,7 @@
 #include "perso_info.h"
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
+#include <GLFW/glfw3.h>
 #include <iostream>
 
 /**
@@ -20,7 +21,7 @@ public:
   * @param[in] name_ nom du player 
   * @param[in] personnage_info_ struct d'information du personnage du player 
   */ 
-  Player(int joystick_, std::string name_, perso_info personnage_info_);
+  Player(GLFWwindow*& window_, int joystick_, std::string name_, perso_info personnage_info_);
 
   /**
   * @brief Met a jour le personnage du player en fonction des touches de la manettes
@@ -35,4 +36,7 @@ private:
   Personnage personnage; //<! personnage du Player
   std::string name; //<! nom du Player
   int joystick; //<! manette du Player
+
+  //attribut system
+  GLFWwindow *window;//<! pour récupérer les touches du clavier
 };

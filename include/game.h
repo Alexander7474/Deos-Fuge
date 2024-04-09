@@ -39,7 +39,7 @@ public:
   *
   * @see Map Personnage
   */
-  Game(Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_);
+  Game(GLFWwindow*& window_, Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_);
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -61,6 +61,9 @@ private:
   Font font;
   std::vector<Player> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
+  
+  //Stockage de la fenêtre 
+  GLFWwindow *window; //<! pointeur vers la fenêtre glfw
   
   //Attribut pour le hud 
   TexteBox fps_hud; //<! texte box affichage des fps
