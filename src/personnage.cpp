@@ -21,7 +21,8 @@ Personnage::Personnage(perso_info personnage_info_):
   anim_frame_n[dash] = personnage_info_.anim_frame_n[dash];
   anim_frame_n[jump] = personnage_info_.anim_frame_n[jump];
   anim_frame_n[fall] = personnage_info_.anim_frame_n[fall];
-  for (int i = stationary; i <= fall; i++)
+  anim_frame_n[light_attack] = personnage_info_.anim_frame_n[light_attack];
+  for (int i = stationary; i <= light_attack; i++)
   {        
     std::string anim_folder_i=sprite_folder+std::to_string(i);
     for (int k = 0; k < anim_frame_n[i]; k++)
@@ -29,6 +30,7 @@ Personnage::Personnage(perso_info personnage_info_):
       std::string anim_frame=anim_folder_i+"/"+ std::to_string(k)+".png";
       Texture new_frame(anim_frame.c_str());
       animation[i].push_back(new_frame);
+         std::cerr << anim_frame << std::endl;
     }
   }
   setPosition(300.f,100.f);
@@ -36,7 +38,7 @@ Personnage::Personnage(perso_info personnage_info_):
   setOrigin(50.f,100.0f);
 }
 
-void Personnage::update(Map &map_)
+void Personnage::updatePersonnage(Map &map_)
 {
   switch (calling_state) {
     case dash:
@@ -52,6 +54,10 @@ void Personnage::update(Map &map_)
       if(jump_cpt <= 2)
         state = jump;
       break;
+    case light_attack:
+      if(light_attack_frame_cpt == 0)
+        state=light_attack;
+      break;
     case run:
       // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
       if(state==stationary)
@@ -63,8 +69,10 @@ void Personnage::update(Map &map_)
       else // pas de jump call ni de jump state en cours le perso tombe
         state = fall;
       // reset du dash uniquement quand le pero est au sol et sans dash call
-      if(state==stationary || state == run)
+      if(state==stationary || state == run){
         dash_frame_cpt = 0;
+        light_attack_frame_cpt = 0;
+      }
       break;
   }
 
@@ -89,6 +97,15 @@ void Personnage::update(Map &map_)
         state = fall;
       }
       frame_cpt = jump_frame_cpt;
+      break;
+    case light_attack:
+      if(light_attack_frame_cpt < anim_frame_n[light_attack]*frame_divisor){
+        mouvement.x=direction*(speed/2.f);
+        light_attack_frame_cpt++;
+      }else{
+        state = fall;
+      }
+      frame_cpt = light_attack_frame_cpt;
       break;
     default:
       break;
@@ -126,6 +143,7 @@ void Personnage::update(Map &map_)
     state = stationary;
  
   move(mouvement);
+
   // sécurité pour ne pas que frame_cpt dépasse le nombre de frame de l'anim qui va être joué
   if(frame_cpt/frame_divisor >= anim_frame_n[state])
     frame_cpt = 0;
@@ -165,13 +183,16 @@ void Personnage::goLeft(float value)
 // appelle pour faire sauter le personnage
 void Personnage::doJump()
 {
-  // utilisé dans update pour savoir si il y a un appelle de saut dans la frame
   calling_state = jump;
 }
 
 // appelle pour faire dash le personnage
 void Personnage::doDash()
 {
-    // utilisé dasn update pour savoir si il y a un appelle de dash dans la frame
   calling_state = dash;
+}
+
+void Personnage::doLightAttack()
+{
+  calling_state = light_attack;
 }

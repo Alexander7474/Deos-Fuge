@@ -13,7 +13,8 @@ enum perso_state:int{
   run=1,
   dash=2,
   jump=3,
-  fall=4
+  fall=4,
+  light_attack=5
 };
 
 //enumeration des direction possible du personnage
@@ -37,8 +38,8 @@ private:
   float weight; //<! poid
 
   //stockage des animations
-  std::vector<Texture> animation[6]; //<! stockage des anims
-  int anim_frame_n[6]; //<! nombre de frame en fonction de chaque anim
+  std::vector<Texture> animation[7]; //<! stockage des anims
+  int anim_frame_n[7]; //<! nombre de frame en fonction de chaque anim
 
   // gestion des états du personnage
   perso_state state; //<! etat général
@@ -49,6 +50,7 @@ private:
   int dash_frame_cpt; //<! compteur de frame du dash
   int jump_frame_cpt; //<! compteur de frame du saut
   int jump_cpt; //<! compteur de jump
+  int light_attack_frame_cpt;
   
 public:
  
@@ -64,7 +66,7 @@ public:
   /**
   * @brief met à jour le personnage à partir de ces attribut et de ce de la map
   */
-  void update(Map &map_);
+  void updatePersonnage(Map &map_);
 
   /**
   * @brief Va a gauche
@@ -89,6 +91,11 @@ public:
   * @brief Dash si cela est possible
   */
   void doDash();
+
+  /**
+  * @brief attack légère
+  */
+  void doLightAttack();
   //virtual void attack(Personnage Ennemy[], GLFWwindow *);
   //virtual bool gettinghit();
   //virtual void Dash();

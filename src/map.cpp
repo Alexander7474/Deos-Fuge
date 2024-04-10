@@ -1,4 +1,5 @@
 #include "../include/map.h"
+#include <BBOP/Graphics/cameraClass.h>
 #include <iostream>
 #include <fstream>
 #include <typeinfo>
@@ -19,8 +20,8 @@ Map::Map(const char* tiles_folder) :
 
 Map::~Map()
 {
-    tiles.clear();
-    cout << "tableau de vecteur vidé" << endl;
+  tiles.clear();
+  cout << "tableau de vecteur vidé" << endl;
 }
 
 void Map::remplissage(const char* tiles_folder)
@@ -73,14 +74,16 @@ void Map::remplissage(const char* tiles_folder)
     }
 }
 
-void Map::Draw(GLint renderModLoc) const
+void Map::Draw(Scene &scene, Camera &ground_camera)
 {
-    background.Draw(renderModLoc);
+  scene.useCamera(nullptr);
+  scene.Draw(background);
 
-    for (unsigned i=0; i<tiles.size(); i++)
-    {
-        tiles[i].Draw(renderModLoc);
-    }
+  scene.useCamera(&ground_camera);
+  for (unsigned i=0; i<tiles.size(); i++)
+  {
+    scene.Draw(tiles[i]);
+  }
 }
 
 void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)

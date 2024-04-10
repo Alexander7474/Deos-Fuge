@@ -10,7 +10,7 @@
 /**
 * @brief class qui gère les caractèristique du joueur et sa manette pour manipuler un Personnage
 */
-class Player : public BbopDrawable
+class Player : public Personnage
 {
 public:
 
@@ -28,12 +28,7 @@ public:
   */ 
   void update(Map &map_);
 
-  /**
-  * @brief Dessine le Personnage du player
-  */
-  void Draw(GLint renderModeLoc) const override; 
 private:
-  Personnage personnage; //<! personnage du Player
   std::string name; //<! nom du Player
   int joystick; //<! manette du Player
 
