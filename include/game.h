@@ -59,7 +59,8 @@ private:
   //attribut fonctionelle
   Scene scene; //<! Scene avec paramètre de rendue de la game
   Camera players_camera; //<! camera pour afficher les joueur
-  float cam_scale_goal; //<! dernière scale de la cam
+  float cam_scale_goal; //<! scale objectif de la cam
+  float cam_scale_last; //<! dernière scale de la camera
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
   std::vector<Player> players; //<! liste des personnages

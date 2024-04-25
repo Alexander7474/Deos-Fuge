@@ -8,6 +8,7 @@
 
 Game::Game(GLFWwindow*& window_, Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
    cam_scale_goal(0.33f),
+   cam_scale_last(0.33f),
    game_state(start),
    players(players_),
    bots(bots_),
@@ -46,7 +47,12 @@ void Game::update()
   Vector2f cam_pos((max_x.y-max_x.x)/2.f+max_x.x,(max_y.y-max_y.x)/2.f+max_y.x);
   cam_scale+=0.33f;
   if (cam_scale>1.f) cam_scale = 1.f;
+  if(cam_scale > cam_scale_goal+0.33f || cam_scale < cam_scale_goal-0.33f){
+     cam_scale_goal = cam_scale;
+  }
+  cam_scale = cam_scale_last+((cam_scale_goal-cam_scale_last)/10.f);
   players_camera.setScale(cam_scale);
+  cam_scale_last = cam_scale;
   players_camera.setPosition(cam_pos);
   updateHUD();
 }

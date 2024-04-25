@@ -75,6 +75,9 @@ void Player::update(Map &map_)
     if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
       doDash();
     }
+    if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
+      doLightAttack();
+    }
   }
   //mettre a jour le personnage avec la map
   updatePersonnage(map_);
