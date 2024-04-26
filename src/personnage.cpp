@@ -16,14 +16,9 @@ Personnage::Personnage(perso_info personnage_info_):
     jump_cpt(0)
 {
   std::string sprite_folder = personnage_info_.folder_path;
-  anim_frame_n[stationary] = personnage_info_.anim_frame_n[stationary];
-  anim_frame_n[run] = personnage_info_.anim_frame_n[run];
-  anim_frame_n[dash] = personnage_info_.anim_frame_n[dash];
-  anim_frame_n[jump] = personnage_info_.anim_frame_n[jump];
-  anim_frame_n[fall] = personnage_info_.anim_frame_n[fall];
-  anim_frame_n[light_attack] = personnage_info_.anim_frame_n[light_attack];
   for (int i = stationary; i <= light_attack; i++)
   {        
+    anim_frame_n[i] = personnage_info_.anim_frame_n[i];
     std::string anim_folder_i=sprite_folder+std::to_string(i);
     for (int k = 0; k < anim_frame_n[i]; k++)
     {
@@ -40,6 +35,7 @@ Personnage::Personnage(perso_info personnage_info_):
 
 void Personnage::updatePersonnage(Map &map_)
 {
+  // gestion des états entrants
   switch (calling_state) {
     case dash:
       // dash seulement si le dash est reset
@@ -99,8 +95,11 @@ void Personnage::updatePersonnage(Map &map_)
       frame_cpt = jump_frame_cpt;
       break;
     case light_attack:
+      // si le perso fais une attaque légère
       if(light_attack_frame_cpt < anim_frame_n[light_attack]*frame_divisor){
-        mouvement.x=direction*(speed/2.f);
+        if(light_attack_frame_cpt < 1*frame_divisor){
+          mouvement.x=direction*(speed*3.f);
+        }
         light_attack_frame_cpt++;
       }else{
         state = fall;
@@ -111,7 +110,6 @@ void Personnage::updatePersonnage(Map &map_)
       break;
   }
 
-  //y gravité et collision////////////////////////////////////////////////////////////////////////////////////////
   //application de la gravité si le personnage tombe
   if(state == fall){
     mouvement.y=mouvement.y+weight*0.00981; // utilser les attribut de la map
@@ -119,6 +117,7 @@ void Personnage::updatePersonnage(Map &map_)
     if(mouvement.y>10.0f)
       mouvement.y=10.0f;
   }
+
   //collision avec les plateformes
   bool isInCollision = false;
   for(long unsigned int i = 0; i < map_.getTiles().size() ; i++){
@@ -135,21 +134,24 @@ void Personnage::updatePersonnage(Map &map_)
       isInCollision = true;
     }
   }
-  if(!isInCollision && state == run){
-    state = fall;
-  }
 
-  if(state == run && mouvement.x == 0.f)
-    state = stationary;
+  // check pour éviter des situations anormale
+  if(!isInCollision && state == run) state = fall;
+  if(state == run && mouvement.x == 0.f) state = stationary;
  
+  // application du vecteur de mouvmeent final
   move(mouvement);
 
+  // gestion des frames et de l'animation
   // sécurité pour ne pas que frame_cpt dépasse le nombre de frame de l'anim qui va être joué
   if(frame_cpt/frame_divisor >= anim_frame_n[state])
     frame_cpt = 0;
   setTexture(animation[state][frame_cpt/frame_divisor]);
   frame_cpt++;
+  
+  // reset du mouvement 
   mouvement.x=0.f;
+  if(state != fall && state != jump) mouvement.y = 0.f;
 
   calling_state = stationary;
 }
@@ -157,7 +159,7 @@ void Personnage::updatePersonnage(Map &map_)
 void Personnage::goRight(float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash){
+  if(state == stationary || state == run || state == fall || state == jump){
     mouvement.x=speed*value;
     if(direction==left){
       flipVertically();
@@ -170,7 +172,7 @@ void Personnage::goRight(float value)
 void Personnage::goLeft(float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash){
+  if(state == stationary || state == run || state == fall || state == jump){
     mouvement.x=speed*value;
     if(direction==right){
       flipVertically();
