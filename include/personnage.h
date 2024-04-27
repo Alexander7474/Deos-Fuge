@@ -1,11 +1,12 @@
 #pragma once
 #include <BBOP/Graphics.h>
+#include <BBOP/Graphics/collisionBoxClass.h>
 #include <vector>
 #include <iostream>
 #include "map.h"
 #include "perso_info.h"
 
-static const int frame_divisor = 7;
+static const int frame_divisor = 5;
 
 //enumeration des états possible du personnage
 enum perso_state:int{
@@ -14,7 +15,8 @@ enum perso_state:int{
   dash=2,
   jump=3,
   fall=4,
-  light_attack=5
+  light_attack=5,
+  hit=6
 };
 
 //enumeration des direction possible du personnage
@@ -27,6 +29,7 @@ enum perso_direction:int{
  * @class Personnage
  *
  * @brief gère un personnage, a ne pas utiliser directement mais avec un Bot ou un Personnage
+ * @todo utiliser une list de int pour stocker le compteur de frame des états
  */
 class Personnage : public Sprite
 {
@@ -50,8 +53,10 @@ private:
   int dash_frame_cpt; //<! compteur de frame du dash
   int jump_frame_cpt; //<! compteur de frame du saut
   int jump_cpt; //<! compteur de jump
-  int light_attack_frame_cpt;
-  
+  int light_attack_frame_cpt; //<! compteur de frame de l'attaque légère  
+  int hit_frame_cpt; //<! compteur de frame de hit
+
+  CollisionBox attack_box; //<! box de collision pour les attaques du personnage
 public:
  
   /**
@@ -96,6 +101,33 @@ public:
   * @brief attack légère
   */
   void doLightAttack();
+
+  /**
+   * @brief le personnage est touché
+   */ 
+  void doHit(int dir);
+
+  /**
+   * @brief renvoie l'état du personnage
+   *
+   * @return state état du personnage
+   */
+  int getState();
+
+  /**
+   * @brief renvoie la direction 
+   *
+   * @return direction 
+   */
+  int getDirection();
+
+  /**
+   * @brief renvoie la box d'attaque du personnage 
+   *
+   * @return attackBox box d'attaque
+   */
+  const CollisionBox &getAttackBox() const;
+
   //virtual void attack(Personnage Ennemy[], GLFWwindow *);
   //virtual bool gettinghit();
   //virtual void Dash();

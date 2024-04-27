@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -std=c++11 -Wall
-LIBS = -lbbop -lglfw -lGLEW -lGL -lfreetype 
+LIBS = -L/usr/local/lib/ -lbbop -lglfw -lGLEW -lGL -lfreetype 
 
 SRCS = main.cpp src/personnage.cpp src/map.cpp src/game.cpp src/player.cpp src/perso_info.cpp
 

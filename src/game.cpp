@@ -28,8 +28,20 @@ void Game::update()
   Vector2f max_x(9999.f,0.f);
   Vector2f max_y(9999.f,0.f);
   for(long unsigned int i = 0; i < players.size(); i++){
+    //update player
     players[i].update(map);
     Vector2f player_pos = players[i].getPosition();
+
+    //gestion des collisions entre les joueur
+    if(players[i].getState() == light_attack){
+      for(long unsigned int c = 0; c < players.size(); c++){
+        if(players[i].getAttackBox().check(players[c].getCollisionBox()) && i != c){
+          players[c].doHit(players[i].getDirection());
+        }
+      }
+    }
+
+    //gestion de la camera
     if(player_pos.x > max_x.y)
        max_x.y = player_pos.x;
     if(player_pos.x < max_x.x)
@@ -38,16 +50,22 @@ void Game::update()
        max_y.y = player_pos.y;
     if(player_pos.y < max_y.x)
        max_y.x = player_pos.y;
+
+    if(players[i].getPosition().y > 1800.f){
+      players[i].setPosition(300.f,100.f);
+    }
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //bots[i].update();
   //}
+
+  // gestion de la camera
   Vector2f scale((max_x.y-max_x.x)/BBOP_WINDOW_RESOLUTION.x, (max_y.y-max_y.x)/BBOP_WINDOW_RESOLUTION.y);
   float cam_scale = (scale.x > scale.y) ? scale.x : scale.y;
   Vector2f cam_pos((max_x.y-max_x.x)/2.f+max_x.x,(max_y.y-max_y.x)/2.f+max_y.x);
   cam_scale+=0.33f;
-  if (cam_scale>1.f) cam_scale = 1.f;
-  if(cam_scale > cam_scale_goal+0.33f || cam_scale < cam_scale_goal-0.33f){
+  if (cam_scale>3.f) cam_scale = 3.f;
+  if(cam_scale-0.2f > cam_scale_goal || cam_scale < cam_scale_goal-0.4f){
      cam_scale_goal = cam_scale;
   }
   cam_scale = cam_scale_last+((cam_scale_goal-cam_scale_last)/10.f);
@@ -64,6 +82,8 @@ void Game::Draw()
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
     scene.Draw(players[i]);
+    bbopDebugCollisionBox(players[i].getCollisionBox(), scene);
+    bbopDebugCollisionBox(players[i].getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);

@@ -1,4 +1,5 @@
 #include "../include/personnage.h"
+#include <BBOP/Graphics/collisionBoxClass.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
@@ -13,10 +14,12 @@ Personnage::Personnage(perso_info personnage_info_):
     frame_cpt(0),
     dash_frame_cpt(0),
     jump_frame_cpt(0),
-    jump_cpt(0)
+    jump_cpt(0),
+    hit_frame_cpt(0),
+    attack_box(getCollisionBox())
 {
   std::string sprite_folder = personnage_info_.folder_path;
-  for (int i = stationary; i <= light_attack; i++)
+  for (int i = stationary; i <= hit; i++)
   {        
     anim_frame_n[i] = personnage_info_.anim_frame_n[i];
     std::string anim_folder_i=sprite_folder+std::to_string(i);
@@ -31,6 +34,10 @@ Personnage::Personnage(perso_info personnage_info_):
   setPosition(300.f,100.f);
   setSize(100.f,100.f); 
   setOrigin(50.f,100.0f);
+  getCollisionBox().setOffsetX(Vector2f(25.f,25.f));
+  attack_box.follow(getCollisionBox());
+  attack_box.setOffsetX(Vector2f(25.f,25.f));
+  attack_box.setOffsetY(Vector2f(0.f,20.f));
 }
 
 void Personnage::updatePersonnage(Map &map_)
@@ -51,8 +58,14 @@ void Personnage::updatePersonnage(Map &map_)
         state = jump;
       break;
     case light_attack:
-      if(light_attack_frame_cpt == 0)
+      if(light_attack_frame_cpt == 0){
         state=light_attack;
+      }
+      break;
+    case hit:
+      if(hit_frame_cpt == 0){
+        state = hit;
+      }
       break;
     case run:
       // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
@@ -69,6 +82,8 @@ void Personnage::updatePersonnage(Map &map_)
         dash_frame_cpt = 0;
         light_attack_frame_cpt = 0;
       }
+      if(state != hit)
+        hit_frame_cpt = 0;
       break;
   }
 
@@ -101,10 +116,21 @@ void Personnage::updatePersonnage(Map &map_)
           mouvement.x=direction*(speed*3.f);
         }
         light_attack_frame_cpt++;
+        attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
       }else{
         state = fall;
       }
       frame_cpt = light_attack_frame_cpt;
+      break;
+    case hit:
+      //si le perso est touché
+      if(hit_frame_cpt < anim_frame_n[hit]*frame_divisor){
+        mouvement.x=direction*(hit_frame_cpt);
+        hit_frame_cpt++;
+      }else{
+        state = fall;
+      }
+      frame_cpt = hit_frame_cpt;
       break;
     default:
       break;
@@ -197,4 +223,27 @@ void Personnage::doDash()
 void Personnage::doLightAttack()
 {
   calling_state = light_attack;
+}
+
+void Personnage::doHit(int dir)
+{
+  calling_state = hit;
+  if(direction != static_cast<perso_direction>(dir))
+    flipVertically();
+  direction = static_cast<perso_direction>(dir);
+}
+
+int Personnage::getState()
+{
+  return state;
+}
+
+int Personnage::getDirection()
+{
+  return direction;
+}
+
+const CollisionBox &Personnage::getAttackBox() const
+{
+  return attack_box;
 }
