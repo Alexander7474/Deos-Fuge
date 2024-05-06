@@ -26,7 +26,7 @@ public:
   /**
   * @brief Met a jour le personnage du player en fonction des touches de la manettes
   */ 
-  void update(Map &map_);
+  void update(Map *map_);
 
 private:
   std::string name; //<! nom du Player

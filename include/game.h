@@ -40,7 +40,7 @@ public:
   *
   * @see Map Personnage
   */
-  Game(GLFWwindow*& window_, Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_);
+  Game(GLFWwindow*& window_, std::vector<Player*> &players_, std::vector<Personnage> &bots_);
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -63,7 +63,7 @@ private:
   float cam_scale_last; //<! dernière scale de la camera
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
-  std::vector<Player> players; //<! liste des personnages
+  std::vector<Player*> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
   
   //Stockage de la fenêtre 

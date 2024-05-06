@@ -11,7 +11,7 @@ Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, perso_inf
     window(window_)
 {}
 
-void Player::update(Map &map_)
+void Player::update(Map *map_)
 {
   // si joystick < 0 alors il faut utiliser un clavier
   if(joystick >= 0){

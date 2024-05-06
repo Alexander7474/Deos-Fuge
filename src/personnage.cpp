@@ -1,5 +1,6 @@
 #include "../include/personnage.h"
 #include <BBOP/Graphics/collisionBoxClass.h>
+#include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
@@ -26,9 +27,9 @@ Personnage::Personnage(perso_info personnage_info_):
     for (int k = 0; k < anim_frame_n[i]; k++)
     {
       std::string anim_frame=anim_folder_i+"/"+ std::to_string(k)+".png";
-      Texture new_frame(anim_frame.c_str());
+      Texture *new_frame = new Texture(anim_frame.c_str());
       animation[i].push_back(new_frame);
-         std::cerr << anim_frame << std::endl;
+      std::cerr << anim_frame << std::endl;
     }
   }
   setPosition(300.f,100.f);
@@ -40,7 +41,16 @@ Personnage::Personnage(perso_info personnage_info_):
   attack_box.setOffsetY(Vector2f(0.f,20.f));
 }
 
-void Personnage::updatePersonnage(Map &map_)
+Personnage::~Personnage()
+{
+  for (int i = stationary; i < hit; i++){
+    for (long unsigned int y = 0; y < anim_frame_n[i]; y++){
+      delete animation[i][y];
+    }
+  }
+}
+
+void Personnage::updatePersonnage(Map *map_)
 {
   // gestion des états entrants
   switch (calling_state) {
@@ -146,8 +156,8 @@ void Personnage::updatePersonnage(Map &map_)
 
   //collision avec les plateformes
   bool isInCollision = false;
-  for(long unsigned int i = 0; i < map_.getTiles().size() ; i++){
-    if(map_.getTiles()[i].getCollisionBox().check(shapeCollisionBox) && state != jump){
+  for(long unsigned int i = 0; i < map_->getTiles().size() ; i++){
+    if(map_->getTiles()[i]->getCollisionBox().check(shapeCollisionBox) && state != jump){
       //reset du mouvement 
       mouvement.y=0;
       //reset compteur de jump
@@ -156,7 +166,7 @@ void Personnage::updatePersonnage(Map &map_)
       if(state == fall)
         state=stationary;
       //on replace le personnage pour eviter les decalage avec la plateforme
-      setPosition(getPosition().x,map_.getTiles()[i].getPosition().y);
+      setPosition(getPosition().x,map_->getTiles()[i]->getPosition().y);
       isInCollision = true;
     }
   }
@@ -172,7 +182,7 @@ void Personnage::updatePersonnage(Map &map_)
   // sécurité pour ne pas que frame_cpt dépasse le nombre de frame de l'anim qui va être joué
   if(frame_cpt/frame_divisor >= anim_frame_n[state])
     frame_cpt = 0;
-  setTexture(animation[state][frame_cpt/frame_divisor]);
+  setTexture(*animation[state][frame_cpt/frame_divisor]);
   frame_cpt++;
   
   // reset du mouvement 
