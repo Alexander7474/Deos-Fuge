@@ -3,6 +3,7 @@
 ////////////////////
 /// External headers
 ////////////////////
+#include <BBOP/Graphics/cameraClass.h>
 #include <BBOP/Graphics/fontsClass.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -39,7 +40,7 @@ public:
   *
   * @see Map Personnage
   */
-  Game(GLFWwindow*& window_, Map &map_, std::vector<Player> &players_, std::vector<Personnage> &bots_);
+  Game(GLFWwindow*& window_, std::vector<Player> &players_, std::vector<Personnage> &bots_);
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -55,10 +56,13 @@ public:
   */
   void Draw();
 private:
+  //attribut fonctionelle
   Scene scene; //<! Scene avec paramètre de rendue de la game
+  Camera players_camera; //<! camera pour afficher les joueur
+  float cam_scale_goal; //<! scale objectif de la cam
+  float cam_scale_last; //<! dernière scale de la camera
   game_state_enum game_state; //<! statut de la game
   Map map; //<! Map où se déroule la game
-  Font font;
   std::vector<Player> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
   
@@ -66,6 +70,7 @@ private:
   GLFWwindow *window; //<! pointeur vers la fenêtre glfw
   
   //Attribut pour le hud 
+  Font font; //<! font pour le texte
   TexteBox fps_hud; //<! texte box affichage des fps
   double last_time; //<! last time pour les fps
   int fps_counter; //<! conpteur de frame

@@ -5,13 +5,13 @@
 #include <string>
 
 Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, perso_info personnage_info_)
-  : personnage(personnage_info_),
+  : Personnage(personnage_info_),
     name(name_),
     joystick(joystick_),
     window(window_)
 {}
 
-void Player::update(Map &map_)
+void Player::update(Map *map_)
 {
   // si joystick < 0 alors il faut utiliser un clavier
   if(joystick >= 0){
@@ -24,23 +24,26 @@ void Player::update(Map &map_)
       const float *axes = glfwGetJoystickAxes(joystick,&n_axes);
       const unsigned char *buttons = glfwGetJoystickButtons(joystick, &n_buttons);
     
+      if(axes[0] > 0.15){
+        goRight(axes[0]);
+      }
+      if(axes[0] < -0.15){
+        goLeft(axes[0]);
+      }  
       //touche de la manette////////////////////////////////////////////////////////////////////////////////////////////
       //touche x de la manette
       if(buttons[2] == GLFW_PRESS){
-        personnage.doDash();
+        doDash();
       }
       //touche a de la manette
       if(buttons[0] == GLFW_PRESS){
-        personnage.doJump();
+        doJump();
       }
 
-      if(axes[0] > 0.15){
-        personnage.goRight(axes[0]);
+      //touche y de la manette
+      if(buttons[1] == GLFW_PRESS){
+        doLightAttack();
       }
-      if(axes[0] < -0.15){
-        personnage.goLeft(axes[0]);
-      }
-
       //debuging/////////////////////////////////////////////
       if(false){
         std::cerr << "0:  " << axes[0] << std::endl;
@@ -61,23 +64,22 @@ void Player::update(Map &map_)
     }
   }else {
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-      personnage.goRight(1.f);
+      goRight(1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-      personnage.goLeft(-1.f);
+      goLeft(-1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-      personnage.doJump();
+      doJump();
     }
     if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
-      personnage.doDash();
+      doDash();
+    }
+    if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
+      doLightAttack();
     }
   }
   //mettre a jour le personnage avec la map
-  personnage.update(map_);
+  updatePersonnage(map_);
  }
 
-void Player::Draw(GLint renderModeLoc) const
-{
-  personnage.Draw(renderModeLoc);  
-}

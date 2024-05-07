@@ -2,6 +2,7 @@
 
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
+#include <BBOP/Graphics/cameraClass.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -11,7 +12,7 @@
 * @author Alexandre
 * @version 0.1
 */
-class Map : public BbopDrawable
+class Map
 {
 private:
   std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
@@ -44,18 +45,11 @@ public:
   Map(const Map& other);
 
   /**
-  * @brief Destructeur de Map
-  * 
-  * @see Map::~Map();
-  */
-  ~Map();
-
-  /**
   * @brief Dessine la map sur l'écran, à utiliser avec une scene ou une autre méthode draw
   *
   * @see Map::Draw(GLint renderModLoc) const;
   */
-  virtual void Draw(GLint renderModLoc) const override;
+  void Draw(Scene &scene, Camera &ground_camera);
 
   /**
   * @brief Ouvre le fichier defnition.bmm , puis définis les Sprites selon les valeurs du fichier et les ajoute au vecteur tiles
@@ -92,5 +86,5 @@ public:
   */
   void destroyBlock(Vector2f position, float zone);
 
-  std::vector <Sprite> &getTiles();
+  std::vector<Sprite>& getTiles();
 };

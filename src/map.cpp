@@ -1,7 +1,7 @@
 #include "../include/map.h"
+#include <BBOP/Graphics/cameraClass.h>
 #include <iostream>
 #include <fstream>
-#include <typeinfo>
 using namespace std;
 
 Map::Map() : 
@@ -15,12 +15,6 @@ Map::Map(const char* tiles_folder) :
     background(Texture((string(tiles_folder) + "background.png").c_str()))
 {
     remplissage(tiles_folder);
-}
-
-Map::~Map()
-{
-    tiles.clear();
-    cout << "tableau de vecteur vidé" << endl;
 }
 
 void Map::remplissage(const char* tiles_folder)
@@ -60,6 +54,7 @@ void Map::remplissage(const char* tiles_folder)
                     Sprite sprite(Texture(path.c_str()));
                     sprite.setPosition(Vector2f(i, j));
                     tiles.push_back(sprite);
+                    std::cerr << "tuile added" << std::endl;
                 }
             }
         }
@@ -73,14 +68,16 @@ void Map::remplissage(const char* tiles_folder)
     }
 }
 
-void Map::Draw(GLint renderModLoc) const
+void Map::Draw(Scene &scene, Camera &ground_camera)
 {
-    background.Draw(renderModLoc);
+  scene.useCamera(nullptr);
+  scene.Draw(background);
 
-    for (unsigned i=0; i<tiles.size(); i++)
-    {
-        tiles[i].Draw(renderModLoc);
-    }
+  scene.useCamera(&ground_camera);
+  for (unsigned i=0; i<tiles.size(); i++)
+  {
+    scene.Draw(tiles[i]);
+  }
 }
 
 void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)
@@ -113,7 +110,7 @@ void Map::destroyBlock(Vector2f position, float zone)
     cout << "bloque(s) supprimé(s)" << endl;
 }
 
-vector<Sprite> & Map::getTiles()
+vector<Sprite>& Map::getTiles()
 {
     return tiles;
 }
