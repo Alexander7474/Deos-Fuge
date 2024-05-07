@@ -41,7 +41,7 @@ private:
   float weight; //<! poid
 
   //stockage des animations
-  std::vector<Texture*> animation[7]; //<! stockage des anims
+  std::vector<Texture> animation[7]; //<! stockage des anims
   int anim_frame_n[7]; //<! nombre de frame en fonction de chaque anim
 
   // gestion des états du personnage
@@ -71,7 +71,6 @@ public:
   /**
    * @brief Destructeur de personnages
    */
-  ~Personnage();
 
   /**
   * @brief met à jour le personnage à partir de ces attribut et de ce de la map

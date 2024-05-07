@@ -6,7 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-Game::Game(GLFWwindow*& window_, std::vector<Player*> &players_, std::vector<Personnage> &bots_):
+Game::Game(GLFWwindow*& window_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
    cam_scale_goal(0.33f),
    cam_scale_last(0.33f),
    game_state(start),
@@ -28,14 +28,14 @@ void Game::update()
   Vector2f max_y(9999.f,0.f);
   for(long unsigned int i = 0; i < players.size(); i++){
     //update player
-    players[i]->update(&map);
-    Vector2f player_pos = players[i]->getPosition();
+    players[i].update(&map);
+    Vector2f player_pos = players[i].getPosition();
 
     //gestion des collisions entre les joueur
-    if(players[i]->getState() == light_attack){
+    if(players[i].getState() == light_attack){
       for(long unsigned int c = 0; c < players.size(); c++){
-        if(players[i]->getAttackBox().check(players[c]->getCollisionBox()) && i != c){
-          players[c]->doHit(players[i]->getDirection());
+        if(players[i].getAttackBox().check(players[c].getCollisionBox()) && i != c){
+          players[c].doHit(players[i].getDirection());
         }
       }
     }
@@ -50,8 +50,8 @@ void Game::update()
     if(player_pos.y < max_y.x)
        max_y.x = player_pos.y;
 
-    if(players[i]->getPosition().y > 1800.f){
-      players[i]->setPosition(300.f,100.f);
+    if(players[i].getPosition().y > 1800.f){
+      players[i].setPosition(300.f,100.f);
     }
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
@@ -80,9 +80,9 @@ void Game::Draw()
 
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
-    scene.Draw(*players[i]);
-    bbopDebugCollisionBox(players[i]->getCollisionBox(), scene);
-    bbopDebugCollisionBox(players[i]->getAttackBox(), scene);
+    scene.Draw(players[i]);
+    bbopDebugCollisionBox(players[i].getCollisionBox(), scene);
+    bbopDebugCollisionBox(players[i].getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);

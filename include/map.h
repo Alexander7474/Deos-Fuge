@@ -15,7 +15,7 @@
 class Map
 {
 private:
-  std::vector<Sprite*> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
+  std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
   Sprite background; //!< Background du jeu
   
 public:
@@ -43,13 +43,6 @@ public:
   * @see Map::Map(const Map& other);
   */
   Map(const Map& other);
-
-  /**
-  * @brief Destructeur de Map
-  * 
-  * @see Map::~Map();
-  */
-  ~Map();
 
   /**
   * @brief Dessine la map sur l'écran, à utiliser avec une scene ou une autre méthode draw
@@ -93,5 +86,5 @@ public:
   */
   void destroyBlock(Vector2f position, float zone);
 
-  std::vector<Sprite*> &getTiles();
+  std::vector<Sprite>& getTiles();
 };

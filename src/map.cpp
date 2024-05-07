@@ -2,7 +2,6 @@
 #include <BBOP/Graphics/cameraClass.h>
 #include <iostream>
 #include <fstream>
-#include <typeinfo>
 using namespace std;
 
 Map::Map() : 
@@ -16,15 +15,6 @@ Map::Map(const char* tiles_folder) :
     background(Texture((string(tiles_folder) + "background.png").c_str()))
 {
     remplissage(tiles_folder);
-}
-
-Map::~Map()
-{
-  for(long unsigned int i = 0; i < tiles.size(); i++){
-    delete tiles[i];
-  }
-  tiles.clear();
-  cout << "tableau de vecteur vidé" << endl;
 }
 
 void Map::remplissage(const char* tiles_folder)
@@ -61,8 +51,8 @@ void Map::remplissage(const char* tiles_folder)
             {
                 for(int i=x; i<=x_final; i+=16)
                 {
-                    Sprite *sprite = new Sprite(Texture(path.c_str()));
-                    sprite->setPosition(Vector2f(i, j));
+                    Sprite sprite(Texture(path.c_str()));
+                    sprite.setPosition(Vector2f(i, j));
                     tiles.push_back(sprite);
                     std::cerr << "tuile added" << std::endl;
                 }
@@ -86,7 +76,7 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
   scene.useCamera(&ground_camera);
   for (unsigned i=0; i<tiles.size(); i++)
   {
-    scene.Draw(*tiles[i]);
+    scene.Draw(tiles[i]);
   }
 }
 
@@ -94,8 +84,8 @@ void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)
 {
     for (unsigned i=0; i<tiles.size(); i++)
     {
-        if(tiles[i]->getPosition().x >= position.x-zone && tiles[i]->getPosition().x <= position.x+zone 
-        && tiles[i]->getPosition().y >= position.y-zone && tiles[i]->getPosition().y <= position.y+zone) 
+        if(tiles[i].getPosition().x >= position.x-zone && tiles[i].getPosition().x <= position.x+zone 
+        && tiles[i].getPosition().y >= position.y-zone && tiles[i].getPosition().y <= position.y+zone) 
         {
             cout << i << endl;
             tab[cpt] = i;
@@ -120,7 +110,7 @@ void Map::destroyBlock(Vector2f position, float zone)
     cout << "bloque(s) supprimé(s)" << endl;
 }
 
-vector<Sprite*> & Map::getTiles()
+vector<Sprite>& Map::getTiles()
 {
     return tiles;
 }
