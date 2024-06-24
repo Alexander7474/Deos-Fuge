@@ -63,6 +63,11 @@ void Personnage::updatePersonnage(Map *map_)
         state=light_attack;
       }
       break;
+    case attack:
+      if(attack_frame_cpt == 0){
+        state=attack;
+      }
+      break;
     case hit:
       if(hit_frame_cpt == 0){
         state = hit;
@@ -82,6 +87,7 @@ void Personnage::updatePersonnage(Map *map_)
       if(state==stationary || state == run){
         dash_frame_cpt = 0;
         light_attack_frame_cpt = 0;
+        attack_frame_cpt = 0;
       }
       if(state != hit)
         hit_frame_cpt = 0;
@@ -94,6 +100,7 @@ void Personnage::updatePersonnage(Map *map_)
       // si le perso dash
       if(dash_frame_cpt < anim_frame_n[dash]*frame_divisor){
         mouvement.x=direction*speed*4;
+        mouvement.y=0.01*weight;
         dash_frame_cpt++;
       }else{
         state = fall;
@@ -123,6 +130,19 @@ void Personnage::updatePersonnage(Map *map_)
       }
       frame_cpt = light_attack_frame_cpt;
       break;
+    case attack:
+      // si le perso fais une attaque
+      if(attack_frame_cpt < anim_frame_n[attack]*frame_divisor){
+        if(attack_frame_cpt < 1*frame_divisor){
+          mouvement.x=direction*(speed*3.f);
+        }
+        attack_frame_cpt++;
+        attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
+      }else{
+        state = fall;
+      }
+      frame_cpt = attack_frame_cpt;
+      break;
     case hit:
       //si le perso est touché
       if(hit_frame_cpt < anim_frame_n[hit]*frame_divisor){
@@ -138,11 +158,11 @@ void Personnage::updatePersonnage(Map *map_)
   }
 
   //application de la gravité si le personnage tombe
-  if(state == fall){
+  if(state != dash || state != jump){
     mouvement.y=mouvement.y+weight*0.00981; // utilser les attribut de la map
     //limite de vitesse y
-    if(mouvement.y>10.0f)
-      mouvement.y=10.0f;
+    if(mouvement.y>0.1*weight)
+      mouvement.y=0.1*weight;
   }
 
   //collision avec les plateformes
@@ -163,6 +183,7 @@ void Personnage::updatePersonnage(Map *map_)
   }
 
   // check pour éviter des situations anormale
+  if(mouvement.x >= -0.1f && mouvement.x <= 0.1f) mouvement.x = 0.f;  
   if(!isInCollision && state == run) state = fall;
   if(state == run && mouvement.x == 0.f) state = stationary;
  
@@ -176,9 +197,8 @@ void Personnage::updatePersonnage(Map *map_)
   setTexture(animation[state][frame_cpt/frame_divisor]);
   frame_cpt++;
   
-  // reset du mouvement 
-  mouvement.x=0.f;
-  if(state != fall && state != jump) mouvement.y = 0.f;
+  // reset du mouvement
+  mouvement.x = mouvement.x/20.0;
 
   calling_state = stationary;
 }
@@ -224,6 +244,11 @@ void Personnage::doDash()
 void Personnage::doLightAttack()
 {
   calling_state = light_attack;
+}
+
+void Personnage::doAttack()
+{
+  calling_state = attack;
 }
 
 void Personnage::doHit(int dir)

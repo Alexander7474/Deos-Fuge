@@ -54,7 +54,6 @@ void Map::remplissage(const char* tiles_folder)
                     Sprite sprite(Texture(path.c_str()));
                     sprite.setPosition(Vector2f(i, j));
                     tiles.push_back(sprite);
-                    std::cerr << "tuile added" << std::endl;
                 }
             }
         }

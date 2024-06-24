@@ -31,19 +31,27 @@ void Player::update(Map *map_)
         goLeft(axes[0]);
       }  
       //touche de la manette////////////////////////////////////////////////////////////////////////////////////////////
+
       //touche x de la manette
       if(buttons[2] == GLFW_PRESS){
         doDash();
       }
+
       //touche a de la manette
       if(buttons[0] == GLFW_PRESS){
         doJump();
       }
 
-      //touche y de la manette
+      //touche b de la manette
       if(buttons[1] == GLFW_PRESS){
         doLightAttack();
       }
+
+      //touche y de la manette
+      if(buttons[3] == GLFW_PRESS){
+        doAttack();
+      }
+
       //debuging/////////////////////////////////////////////
       if(false){
         std::cerr << "0:  " << axes[0] << std::endl;
@@ -77,6 +85,9 @@ void Player::update(Map *map_)
     }
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
       doLightAttack();
+    }
+    if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
+      doAttack();
     }
   }
   //mettre a jour le personnage avec la map

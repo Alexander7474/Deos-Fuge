@@ -16,7 +16,8 @@ enum perso_state:int{
   jump=3,
   fall=4,
   light_attack=5,
-  hit=6
+  attack=6,
+  hit=7
 };
 
 //enumeration des direction possible du personnage
@@ -41,8 +42,8 @@ private:
   float weight; //<! poid
 
   //stockage des animations
-  std::vector<Texture> animation[7]; //<! stockage des anims
-  int anim_frame_n[7]; //<! nombre de frame en fonction de chaque anim
+  std::vector<Texture> animation[8]; //<! stockage des anims
+  int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
 
   // gestion des états du personnage
   perso_state state; //<! etat général
@@ -54,6 +55,7 @@ private:
   int jump_frame_cpt; //<! compteur de frame du saut
   int jump_cpt; //<! compteur de jump
   int light_attack_frame_cpt; //<! compteur de frame de l'attaque légère  
+  int attack_frame_cpt; //<! compteur de frame de l'attaque légère  
   int hit_frame_cpt; //<! compteur de frame de hit
 
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage
@@ -105,6 +107,11 @@ public:
   * @brief attack légère
   */
   void doLightAttack();
+
+  /**
+  * @brief attack
+  */
+  void doAttack();
 
   /**
    * @brief le personnage est touché
