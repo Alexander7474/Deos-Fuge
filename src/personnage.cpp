@@ -2,6 +2,7 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
+#include <cmath>
 #include <iostream>
 #include <string>
 
@@ -22,20 +23,16 @@ Personnage::Personnage(perso_info personnage_info_):
   std::string sprite_folder = personnage_info_.folder_path;
   for (int i = stationary; i <= hit; i++)
   {        
+    std::string anim_file=sprite_folder+std::to_string(i)+".png";
     anim_frame_n[i] = personnage_info_.anim_frame_n[i];
-    std::string anim_folder_i=sprite_folder+std::to_string(i);
-    for (int k = 0; k < anim_frame_n[i]; k++)
-    {
-      std::string anim_frame=anim_folder_i+"/"+ std::to_string(k)+".png";
-      Texture new_frame(anim_frame.c_str());
-      animation[i].push_back(new_frame);
-      std::cerr << anim_frame << std::endl;
-    }
+    animation[i] = bbopLoadSpriteSheet(anim_file.c_str(), 1, anim_frame_n[i]);
   }
+  setAutoUpdateCollision(true);
   setPosition(300.f,100.f);
-  setSize(100.f,100.f); 
-  setOrigin(50.f,100.0f);
-  getCollisionBox().setOffsetX(Vector2f(25.f,25.f));
+  setSize(200.f,200.f); 
+  setOrigin(100.f,200.0f);
+  getCollisionBox().setOffsetY(Vector2f(100.f,0.f));
+  rebuildCollisionBox();
   attack_box.follow(getCollisionBox());
   attack_box.setOffsetX(Vector2f(25.f,25.f));
   attack_box.setOffsetY(Vector2f(0.f,20.f));
@@ -99,7 +96,7 @@ void Personnage::updatePersonnage(Map *map_)
     case dash:
       // si le perso dash
       if(dash_frame_cpt < anim_frame_n[dash]*frame_divisor){
-        mouvement.x=direction*speed*4;
+        mouvement.x=direction*speed;
         mouvement.y=0.01*weight;
         dash_frame_cpt++;
       }else{
@@ -211,6 +208,7 @@ void Personnage::goRight(float value)
     if(direction==left){
       flipVertically();
       direction=right;
+      rebuildCollisionBox();
     }
   }
   calling_state=run;
@@ -224,6 +222,7 @@ void Personnage::goLeft(float value)
     if(direction==right){
       flipVertically();
       direction=left;
+      rebuildCollisionBox();
     }
   }
   calling_state = run;
@@ -257,6 +256,7 @@ void Personnage::doHit(int dir)
   if(direction != static_cast<perso_direction>(dir))
     flipVertically();
   direction = static_cast<perso_direction>(dir);
+  rebuildCollisionBox();
 }
 
 int Personnage::getState()
@@ -272,4 +272,13 @@ int Personnage::getDirection()
 const CollisionBox &Personnage::getAttackBox() const
 {
   return attack_box;
+}
+
+void Personnage::rebuildCollisionBox()
+{
+  if(direction == right){
+    getCollisionBox().setOffsetX(Vector2f(75.f,90.f));
+  }else{
+    getCollisionBox().setOffsetX(Vector2f(90.f,75.f));
+  }
 }

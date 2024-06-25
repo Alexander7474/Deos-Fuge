@@ -133,6 +133,11 @@ public:
   int getDirection();
 
   /**
+   * @brief permet de recalculer la boite de collision
+   */
+  void rebuildCollisionBox();
+
+  /**
    * @brief renvoie la box d'attaque du personnage 
    *
    * @return attackBox box d'attaque
