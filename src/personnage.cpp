@@ -1,4 +1,4 @@
-#include "../include/personnage.h"
+#include "personnage.h"
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
