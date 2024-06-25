@@ -1,4 +1,4 @@
-#include "../include/perso_info.h"
+#include "perso_info.h"
 
 // perso par default
 const perso_info DEFAULT_PERSO = {

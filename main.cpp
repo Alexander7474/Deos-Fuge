@@ -1,7 +1,7 @@
-#include "include/perso_info.h"
-#include "include/personnage.h"
-#include "include/game.h"
-#include "include/player.h"
+#include "src/perso_info.h"
+#include "src/personnage.h"
+#include "src/game.h"
+#include "src/player.h"
 #include <BBOP/Graphics.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>

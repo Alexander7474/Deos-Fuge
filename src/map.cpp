@@ -1,4 +1,4 @@
-#include "../include/map.h"
+#include "map.h"
 #include <BBOP/Graphics/cameraClass.h>
 #include <iostream>
 #include <fstream>

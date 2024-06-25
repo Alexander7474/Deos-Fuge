@@ -1,4 +1,4 @@
-#include "../include/game.h"
+#include "game.h"
 #include <BBOP/Graphics/bbopFunc.h>
 #include <BBOP/Graphics/bbopGlobal.h>
 #include <BBOP/Graphics/cameraClass.h>
