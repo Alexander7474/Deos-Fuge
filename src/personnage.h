@@ -77,21 +77,21 @@ public:
   /**
   * @brief met à jour le personnage à partir de ces attribut et de ce de la map
   */
-  void updatePersonnage(Map *map_);
+  void updatePersonnage(double delta_time_, Map *map_);
 
   /**
   * @brief Va a gauche
   *
   * @param[in] value -1.0 vitesse max - 0.0 immobile
   */
-  void goLeft(float value);
+  void goLeft(double delta_time_, float value);
 
   /**
   * @brief Va a droite
   *
   * @param[in] value 1.0 vitesse max - 0.0 immobile
   */
-  void goRight(float value);
+  void goRight(double delta_time_, float value);
 
   /**
   * @brief Saute si Cela est possible

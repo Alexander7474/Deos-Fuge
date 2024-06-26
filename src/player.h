@@ -25,8 +25,11 @@ public:
 
   /**
   * @brief Met a jour le personnage du player en fonction des touches de la manettes
+  *
+  * @param[in] delta_time temps ecoulé depuis la dernière frame 
+  * @param[in] map_ map de jeu
   */ 
-  void update(Map *map_);
+  void update(double delta_time_, Map *map_);
 
 private:
   std::string name; //<! nom du Player

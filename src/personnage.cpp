@@ -38,7 +38,7 @@ Personnage::Personnage(perso_info personnage_info_):
   attack_box.setOffsetY(Vector2f(0.f,20.f));
 }
 
-void Personnage::updatePersonnage(Map *map_)
+void Personnage::updatePersonnage(double delta_time_, Map *map_)
 {
   // gestion des états entrants
   switch (calling_state) {
@@ -96,8 +96,8 @@ void Personnage::updatePersonnage(Map *map_)
     case dash:
       // si le perso dash
       if(dash_frame_cpt < anim_frame_n[dash]*frame_divisor){
-        mouvement.x=direction*speed;
-        mouvement.y=0.01*weight;
+        mouvement.x=direction*speed*delta_time_;
+        mouvement.y=0.01*weight*delta_time_;
         dash_frame_cpt++;
       }else{
         state = fall;
@@ -107,7 +107,7 @@ void Personnage::updatePersonnage(Map *map_)
     case jump:
       //si le perso jump 
       if(jump_frame_cpt < anim_frame_n[jump]*frame_divisor && jump_cpt <= 2){
-        mouvement.y=-5;
+        mouvement.y=-500*delta_time_;
         jump_frame_cpt++;
       }else{
         state = fall;
@@ -118,7 +118,7 @@ void Personnage::updatePersonnage(Map *map_)
       // si le perso fais une attaque légère
       if(light_attack_frame_cpt < anim_frame_n[light_attack]*frame_divisor){
         if(light_attack_frame_cpt < 1*frame_divisor){
-          mouvement.x=direction*(speed*3.f);
+          mouvement.x=direction*(speed*3.f)*delta_time_;
         }
         light_attack_frame_cpt++;
         attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
@@ -131,7 +131,7 @@ void Personnage::updatePersonnage(Map *map_)
       // si le perso fais une attaque
       if(attack_frame_cpt < anim_frame_n[attack]*frame_divisor){
         if(attack_frame_cpt < 1*frame_divisor){
-          mouvement.x=direction*(speed*3.f);
+          mouvement.x=direction*(speed*3.f)*delta_time_;
         }
         attack_frame_cpt++;
         attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
@@ -143,7 +143,7 @@ void Personnage::updatePersonnage(Map *map_)
     case hit:
       //si le perso est touché
       if(hit_frame_cpt < anim_frame_n[hit]*frame_divisor){
-        mouvement.x=direction*(hit_frame_cpt);
+        mouvement.x=direction*(hit_frame_cpt)*delta_time_;
         hit_frame_cpt++;
       }else{
         state = fall;
@@ -156,7 +156,7 @@ void Personnage::updatePersonnage(Map *map_)
 
   //application de la gravité si le personnage tombe
   if(state != dash || state != jump){
-    mouvement.y=mouvement.y+weight*0.00981; // utilser les attribut de la map
+    mouvement.y=mouvement.y+weight*0.981*delta_time_; // utilser les attribut de la map
     //limite de vitesse y
     if(mouvement.y>0.1*weight)
       mouvement.y=0.1*weight;
@@ -200,11 +200,12 @@ void Personnage::updatePersonnage(Map *map_)
   calling_state = stationary;
 }
 
-void Personnage::goRight(float value)
+void Personnage::goRight(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
   if(state == stationary || state == run || state == fall || state == jump){
-    mouvement.x=speed*value;
+    mouvement.x=speed*value*delta_time_;
+    std::cout << mouvement.x << std::endl;
     if(direction==left){
       flipVertically();
       direction=right;
@@ -214,11 +215,12 @@ void Personnage::goRight(float value)
   calling_state=run;
 }
 
-void Personnage::goLeft(float value)
+void Personnage::goLeft(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
   if(state == stationary || state == run || state == fall || state == jump){
-    mouvement.x=speed*value;
+    mouvement.x=speed*value*delta_time_;
+    std::cout << mouvement.x << std::endl;
     if(direction==right){
       flipVertically();
       direction=left;

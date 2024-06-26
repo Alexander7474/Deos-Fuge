@@ -11,7 +11,7 @@ Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, perso_inf
     window(window_)
 {}
 
-void Player::update(Map *map_)
+void Player::update(double delta_time_, Map *map_)
 {
   // si joystick < 0 alors il faut utiliser un clavier
   if(joystick >= 0){
@@ -25,10 +25,10 @@ void Player::update(Map *map_)
       const unsigned char *buttons = glfwGetJoystickButtons(joystick, &n_buttons);
     
       if(axes[0] > 0.15){
-        goRight(axes[0]);
+        goRight(delta_time_, axes[0]);
       }
       if(axes[0] < -0.15){
-        goLeft(axes[0]);
+        goLeft(delta_time_, axes[0]);
       }  
       //touche de la manette////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -72,10 +72,10 @@ void Player::update(Map *map_)
     }
   }else {
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-      goRight(1.f);
+      goRight(delta_time_, 1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-      goLeft(-1.f);
+      goLeft(delta_time_, -1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
       doJump();
@@ -91,6 +91,6 @@ void Player::update(Map *map_)
     }
   }
   //mettre a jour le personnage avec la map
-  updatePersonnage(map_);
+  updatePersonnage(delta_time_, map_);
  }
 
