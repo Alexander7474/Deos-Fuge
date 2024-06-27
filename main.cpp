@@ -24,7 +24,7 @@ int main()
 
   Game game(window, test, test2);
 
-  glfwSwapInterval(1);
+  glfwSwapInterval(0);
 
   while(!glfwWindowShouldClose(window)){
     bbopCleanWindow(window, Vector3i(0,0,0), 1.0);

@@ -65,6 +65,7 @@ private:
   Map map; //<! Map où se déroule la game
   std::vector<Player> players; //<! liste des personnages
   std::vector<Personnage> bots; //<! liste des bots 
+  double last_time; //<! timing de la dernière frame
   
   //Stockage de la fenêtre 
   GLFWwindow *window; //<! pointeur vers la fenêtre glfw
@@ -72,7 +73,7 @@ private:
   //Attribut pour le hud 
   Font font; //<! font pour le texte
   TexteBox fps_hud; //<! texte box affichage des fps
-  double last_time; //<! last time pour les fps
+  double last_time_fps; //<! last time pour les fps
   int fps_counter; //<! conpteur de frame
   
   /**

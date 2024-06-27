@@ -6,7 +6,7 @@
 #include "map.h"
 #include "perso_info.h"
 
-static const int frame_divisor = 5;
+static const int frame_divisor = 1;
 
 //enumeration des états possible du personnage
 enum perso_state:int{
@@ -44,6 +44,8 @@ private:
   //stockage des animations
   std::vector<Texture> animation[8]; //<! stockage des anims
   int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
+  double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
+  double last_frame_t[8]; //<! timing de la dernière frame de l'anim
 
   // gestion des états du personnage
   perso_state state; //<! etat général
@@ -77,21 +79,21 @@ public:
   /**
   * @brief met à jour le personnage à partir de ces attribut et de ce de la map
   */
-  void updatePersonnage(Map *map_);
+  void updatePersonnage(double delta_time_, Map *map_);
 
   /**
   * @brief Va a gauche
   *
   * @param[in] value -1.0 vitesse max - 0.0 immobile
   */
-  void goLeft(float value);
+  void goLeft(double delta_time_, float value);
 
   /**
   * @brief Va a droite
   *
   * @param[in] value 1.0 vitesse max - 0.0 immobile
   */
-  void goRight(float value);
+  void goRight(double delta_time_, float value);
 
   /**
   * @brief Saute si Cela est possible

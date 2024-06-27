@@ -12,10 +12,11 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_, std::vector<Pers
    game_state(start),
    players(players_),
    bots(bots_),
+   last_time(glfwGetTime()),
    window(window_),
    font(48, "font/GohuFont11NerdFont-Regular.ttf"),
    fps_hud("0", nullptr),
-   last_time(glfwGetTime()),
+   last_time_fps(glfwGetTime()),
    fps_counter(0)
 {
   fps_hud.setFont(&font);
@@ -24,11 +25,16 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_, std::vector<Pers
 
 void Game::update()
 {
+  //recupertation du temps depuis la dernière frame
+  double current_time = glfwGetTime();
+  double delta_time = current_time - last_time;
+  last_time = current_time;
+
   Vector2f max_x(9999.f,0.f);
   Vector2f max_y(9999.f,0.f);
   for(long unsigned int i = 0; i < players.size(); i++){
     //update player
-    players[i].update(&map);
+    players[i].update(delta_time, &map);
     Vector2f player_pos = players[i].getPosition();
 
     //gestion des collisions entre les joueur
@@ -94,12 +100,12 @@ void Game::Draw()
 void Game::updateHUD()
 {
   double actual_time = glfwGetTime();
-  double delta_time = actual_time-last_time;
+  double delta_time = actual_time-last_time_fps;
   fps_counter++;
   std::string final_fps = std::to_string(fps_counter/delta_time);
   if (delta_time >= 1.0){
     fps_counter = 0;
-    last_time = actual_time;
+    last_time_fps = actual_time;
   }
   fps_hud.setTexte(final_fps.c_str());
 }
