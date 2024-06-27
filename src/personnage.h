@@ -6,7 +6,7 @@
 #include "map.h"
 #include "perso_info.h"
 
-static const int frame_divisor = 5;
+static const int frame_divisor = 1;
 
 //enumeration des états possible du personnage
 enum perso_state:int{
@@ -44,6 +44,8 @@ private:
   //stockage des animations
   std::vector<Texture> animation[8]; //<! stockage des anims
   int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
+  double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
+  double last_frame_t[8]; //<! timing de la dernière frame de l'anim
 
   // gestion des états du personnage
   perso_state state; //<! etat général

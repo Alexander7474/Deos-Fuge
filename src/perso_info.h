@@ -12,6 +12,7 @@
 struct perso_info{
   std::string folder_path; //<! chemin d'accès vers le dossier de frame du personnage
   int anim_frame_n[8]; //<! nombre de frame par anim du personnage
+  double anim_frame_t[8]; //<! temps entre chaque frame par anim du personnage
   float speed; //<! vitesse du personnage
   float weight; //<! poid du personnage
 };
