@@ -32,7 +32,7 @@ int main()
     game.update();
     game.Draw();
 
-    //bbopErrorCheck();
+    bbopErrorCheck();
 
     glfwSwapBuffers(window);
     glfwPollEvents();

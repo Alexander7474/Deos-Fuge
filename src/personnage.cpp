@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <iostream>
+#include <ostream>
 #include <string>
 
 Personnage::Personnage(perso_info personnage_info_):
@@ -11,8 +12,10 @@ Personnage::Personnage(perso_info personnage_info_):
     percentage(0),
     speed(personnage_info_.speed),
     weight(personnage_info_.weight),
+    jump_force(personnage_info_.jump_force),
     state(fall),
     direction(right),
+    fall_start_t(glfwGetTime()),
     frame_cpt(0),
     dash_frame_cpt(0),
     jump_frame_cpt(0),
@@ -99,7 +102,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       // si le perso dash
       if(dash_frame_cpt < anim_frame_n[dash]*frame_divisor){
         mouvement.x=direction*speed*delta_time_;
-        mouvement.y=0.01*weight*delta_time_;
         if(glfwGetTime()-last_frame_t[dash] > anim_frame_t[dash]){
           dash_frame_cpt++;
           last_frame_t[dash] = glfwGetTime();
@@ -112,7 +114,7 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
     case jump:
       //si le perso jump 
       if(jump_frame_cpt < anim_frame_n[jump]*frame_divisor && jump_cpt <= 2){
-        mouvement.y=-500*delta_time_;
+        mouvement.y= -jump_force*delta_time_;
         if(glfwGetTime()-last_frame_t[jump] > anim_frame_t[jump]){
           jump_frame_cpt++;
           last_frame_t[jump] = glfwGetTime();
@@ -165,25 +167,33 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       break;
   }
 
+
+
   //application de la gravité si le personnage tombe
-  if(state != dash || state != jump){
-    mouvement.y=mouvement.y+weight*0.00981*delta_time_; // utilser les attribut de la map
-    //limite de vitesse y
-    if(mouvement.y>0.1*weight)
-      mouvement.y=0.1*weight;
-  }
+  double fall_time = glfwGetTime() - fall_start_t;
+  std::cout << "before " <<  mouvement.y << " __ " << fall_time << std::endl;
+  mouvement.y += fall_time * weight * delta_time_; // utilser les attribut de la map
+  
+  if(mouvement.y > weight * 10 * delta_time_)
+    mouvement.y= weight * 10 * delta_time_;
+  
+  std::cout << "after " <<  mouvement.y << std::endl;
+  
+  move(mouvement);
 
   //collision avec les plateformes
   bool isInCollision = false;
   for(long unsigned int i = 0; i < map_->getTiles().size() ; i++){
-    if(map_->getTiles()[i].getCollisionBox().check(shapeCollisionBox) && state != jump){
+    if(map_->getTiles()[i].getCollisionBox().check(shapeCollisionBox)){
       //reset du mouvement 
       mouvement.y=0;
       //reset compteur de jump
       jump_cpt=0;
       // si le personngae ne dash pas il est considéré comme stationnaire
-      if(state == fall)
+      if(state == fall){
         state=stationary;
+      }
+      fall_start_t = glfwGetTime();
       //on replace le personnage pour eviter les decalage avec la plateforme
       setPosition(getPosition().x,map_->getTiles()[i].getPosition().y);
       isInCollision = true;
@@ -194,8 +204,10 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   if(mouvement.x >= -0.1f && mouvement.x <= 0.1f) mouvement.x = 0.f;  
   if(!isInCollision && state == run) state = fall;
   if(state == run && mouvement.x == 0.f) state = stationary;
+  
+  std::cout << "after after " <<  mouvement.y << std::endl;
  
-  // application du vecteur de mouvmeent final
+  // application du vecteur de mouvement final
   move(mouvement);
 
   // gestion des frames et de l'animation

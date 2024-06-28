@@ -40,6 +40,7 @@ private:
   float percentage; //<! pourcentage de dégats 
   float speed; //<! vitesse
   float weight; //<! poid
+  float jump_force; //<! force de saut
 
   //stockage des animations
   std::vector<Texture> animation[8]; //<! stockage des anims
@@ -51,7 +52,8 @@ private:
   perso_state state; //<! etat général
   perso_state calling_state; //<! état demandé par les inputs donné à personnage
   perso_direction direction; //<! direction 
-  Vector2f mouvement; //<! mouvement du personnage
+  Vector2f mouvement; //<! mouvement du personnages
+  double fall_start_t; //<! timing du debut de la chute 
   int frame_cpt; //<! compteur de frame par default
   int dash_frame_cpt; //<! compteur de frame du dash
   int jump_frame_cpt; //<! compteur de frame du saut

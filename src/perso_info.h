@@ -14,7 +14,8 @@ struct perso_info{
   int anim_frame_n[8]; //<! nombre de frame par anim du personnage
   double anim_frame_t[8]; //<! temps entre chaque frame par anim du personnage
   float speed; //<! vitesse du personnage
-  float weight; //<! poid du personnage
+  float weight; //<! force de gravité subit par le perso (détermine si le personnage va tomber plus ou moin vite)
+  float jump_force; //<! force de saut du personnage
 };
 
 extern const perso_info DEFAULT_PERSO; //<! Personnage de par default
