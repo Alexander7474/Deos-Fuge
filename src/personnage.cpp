@@ -34,13 +34,13 @@ Personnage::Personnage(perso_info personnage_info_):
   }
   setAutoUpdateCollision(true);
   setPosition(300.f,100.f);
-  setSize(200.f,200.f); 
+  setSize(personnage_info_.size); 
   setOrigin(100.f,200.0f);
   getCollisionBox().setOffsetY(Vector2f(100.f,0.f));
   rebuildCollisionBox();
   attack_box.follow(getCollisionBox());
-  attack_box.setOffsetX(Vector2f(25.f,25.f));
-  attack_box.setOffsetY(Vector2f(0.f,20.f));
+  attack_box.setOffsetX(personnage_info_.attack_box_offset[0]);
+  attack_box.setOffsetY(personnage_info_.attack_box_offset[1]);
 }
 
 void Personnage::updatePersonnage(double delta_time_, Map *map_)
@@ -167,17 +167,12 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       break;
   }
 
-
-
   //application de la gravité si le personnage tombe
   double fall_time = glfwGetTime() - fall_start_t;
-  std::cout << "before " <<  mouvement.y << " __ " << fall_time << std::endl;
-  mouvement.y += fall_time * weight * delta_time_; // utilser les attribut de la map
+  mouvement.y += fall_time * delta_time_ * weight * delta_time_; // utilser les attribut de la map
   
-  if(mouvement.y > weight * 10 * delta_time_)
-    mouvement.y= weight * 10 * delta_time_;
-  
-  std::cout << "after " <<  mouvement.y << std::endl;
+  if(mouvement.y > weight * delta_time_)
+    mouvement.y= weight * delta_time_;
   
   move(mouvement);
 
@@ -205,8 +200,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   if(!isInCollision && state == run) state = fall;
   if(state == run && mouvement.x == 0.f) state = stationary;
   
-  std::cout << "after after " <<  mouvement.y << std::endl;
- 
   // application du vecteur de mouvement final
   move(mouvement);
 
@@ -229,7 +222,7 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
 void Personnage::goRight(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state == stationary || state == run || state == fall || state == jump){
+  if(state != dash){
     mouvement.x=speed*value*delta_time_;
     if(direction==left){
       flipVertically();

@@ -62,6 +62,7 @@ private:
   int attack_frame_cpt; //<! compteur de frame de l'attaque légère  
   int hit_frame_cpt; //<! compteur de frame de hit
 
+  //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage
 public:
  
