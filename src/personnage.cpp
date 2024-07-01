@@ -7,12 +7,9 @@
 #include <ostream>
 #include <string>
 
-Personnage::Personnage(perso_info personnage_info_):
+Personnage::Personnage():
     Sprite("img/default.png"),
     percentage(0),
-    speed(personnage_info_.speed),
-    weight(personnage_info_.weight),
-    jump_force(personnage_info_.jump_force),
     state(fall),
     direction(right),
     fall_start_t(glfwGetTime()),
@@ -22,26 +19,7 @@ Personnage::Personnage(perso_info personnage_info_):
     jump_cpt(0),
     hit_frame_cpt(0),
     attack_box(getCollisionBox())
-{
-  std::string sprite_folder = personnage_info_.folder_path;
-  for (int i = stationary; i <= hit; i++)
-  {        
-    std::string anim_file=sprite_folder+std::to_string(i)+".png";
-    anim_frame_n[i] = personnage_info_.anim_frame_n[i];
-    anim_frame_t[i] = personnage_info_.anim_frame_t[i];
-    last_frame_t[i] = glfwGetTime();
-    animation[i] = bbopLoadSpriteSheet(anim_file.c_str(), 1, anim_frame_n[i]);
-  }
-  setAutoUpdateCollision(true);
-  setPosition(300.f,100.f);
-  setSize(personnage_info_.size); 
-  setOrigin(100.f,200.0f);
-  getCollisionBox().setOffsetY(Vector2f(100.f,0.f));
-  rebuildCollisionBox();
-  attack_box.follow(getCollisionBox());
-  attack_box.setOffsetX(personnage_info_.attack_box_offset[0]);
-  attack_box.setOffsetY(personnage_info_.attack_box_offset[1]);
-}
+{}
 
 void Personnage::updatePersonnage(double delta_time_, Map *map_)
 {
@@ -174,6 +152,7 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   if(mouvement.y > weight * delta_time_)
     mouvement.y= weight * delta_time_;
   
+  std::cerr << weight << std::endl;
   move(mouvement);
 
   //collision avec les plateformes
@@ -300,4 +279,18 @@ void Personnage::rebuildCollisionBox()
   }else{
     getCollisionBox().setOffsetX(Vector2f(90.f,75.f));
   }
+}
+
+void Personnage::buildAnimCache(perso_info info_)
+{
+  std::string sprite_folder = info_.folder_path;
+  for (int i = stationary; i <= hit; i++)
+  {        
+    std::string anim_file=sprite_folder+std::to_string(i)+".png";
+    anim_frame_n[i] = info_.anim_frame_n[i];
+    anim_frame_t[i] = info_.anim_frame_t[i];
+    last_frame_t[i] = glfwGetTime();
+    animation[i] = bbopLoadSpriteSheet(anim_file.c_str(), 1, anim_frame_n[i]);
+  }
+
 }

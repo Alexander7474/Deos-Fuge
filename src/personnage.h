@@ -34,7 +34,7 @@ enum perso_direction:int{
  */
 class Personnage : public Sprite
 {
-private:
+protected:
   
   // caractèristique du personnage
   float percentage; //<! pourcentage de dégats 
@@ -68,12 +68,8 @@ public:
  
   /**
   * @brief Constructeur de personnage
-  *
-  * @param[in] personnage_info_ information sur le personnage 
-  *
-  * @note le personnage se créer a partir d'une struct perso_info qui est déclarer dans perso_info.h
-  */ 
-  Personnage(perso_info personnage_info_);
+  */  
+  Personnage();
 
   /**
    * @brief Destructeur de personnages
@@ -89,39 +85,39 @@ public:
   *
   * @param[in] value -1.0 vitesse max - 0.0 immobile
   */
-  void goLeft(double delta_time_, float value);
+  virtual void goLeft(double delta_time_, float value);
 
   /**
   * @brief Va a droite
   *
   * @param[in] value 1.0 vitesse max - 0.0 immobile
   */
-  void goRight(double delta_time_, float value);
+  virtual void goRight(double delta_time_, float value);
 
   /**
   * @brief Saute si Cela est possible
   */
-  void doJump();
+  virtual void doJump();
 
   /**
   * @brief Dash si cela est possible
   */
-  void doDash();
+  virtual void doDash();
 
   /**
   * @brief attack légère
   */
-  void doLightAttack();
+  virtual void doLightAttack();
 
   /**
   * @brief attack
   */
-  void doAttack();
+  virtual void doAttack();
 
   /**
    * @brief le personnage est touché
    */ 
-  void doHit(int dir);
+  virtual void doHit(int dir);
 
   /**
    * @brief renvoie l'état du personnage
@@ -148,6 +144,8 @@ public:
    * @return attackBox box d'attaque
    */
   const CollisionBox &getAttackBox() const;
+
+  void buildAnimCache(perso_info info_);
 
   //virtual void attack(Personnage Ennemy[], GLFWwindow *);
   //virtual bool gettinghit();

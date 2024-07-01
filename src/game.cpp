@@ -35,13 +35,13 @@ void Game::update()
   for(long unsigned int i = 0; i < players.size(); i++){
     //update player
     players[i].update(delta_time, &map);
-    Vector2f player_pos = players[i].getPosition();
+    Vector2f player_pos = players[i].perso->getPosition();
 
     //gestion des collisions entre les joueur
-    if(players[i].getState() == light_attack){
+    if(players[i].perso->getState() == light_attack){
       for(long unsigned int c = 0; c < players.size(); c++){
-        if(players[i].getAttackBox().check(players[c].getCollisionBox()) && i != c){
-          players[c].doHit(players[i].getDirection());
+        if(players[i].perso->getAttackBox().check(players[c].perso->getCollisionBox()) && i != c){
+          players[c].perso->doHit(players[i].perso->getDirection());
         }
       }
     }
@@ -56,8 +56,8 @@ void Game::update()
     if(player_pos.y < max_y.x)
        max_y.x = player_pos.y;
 
-    if(players[i].getPosition().y > 1800.f){
-      players[i].setPosition(300.f,100.f);
+    if(players[i].perso->getPosition().y > 1800.f){
+      players[i].perso->setPosition(300.f,100.f);
     }
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
@@ -86,9 +86,9 @@ void Game::Draw()
 
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
-    scene.Draw(players[i]);
-    bbopDebugCollisionBox(players[i].getCollisionBox(), scene);
-    bbopDebugCollisionBox(players[i].getAttackBox(), scene);
+    scene.Draw(*players[i].perso);
+    bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
+    bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);

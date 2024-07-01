@@ -10,5 +10,5 @@ const perso_info DEFAULT_PERSO = {
   100.f,
   Vector2f(200.f,200.f),
   {Vector2f(25.f,0.f),Vector2f(0.f,0.f)},
-  {Vector2f(50.f,50.f),Vector2f(50.f,50.f)}
+  {Vector2f(90.f,60.f),Vector2f(100.f,0.f)}
 };
