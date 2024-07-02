@@ -9,8 +9,7 @@ Player::Player(GLFWwindow*& window_, int joystick_, std::string name_)
     joystick(joystick_),
     window(window_)
 {
-  Knight k;
-  perso = &k;
+  perso = new Knight();
 }
 
 void Player::update(double delta_time_, Map *map_)

@@ -3,8 +3,6 @@
 #include "personnages/knight.h"
 #include "map.h"
 #include "personnage.h"
-#include "perso_info.h"
-
 
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>

@@ -1,4 +1,3 @@
-#include "src/perso_info.h"
 #include "src/personnage.h"
 #include "src/game.h"
 #include "src/player.h"

@@ -9,8 +9,9 @@ Knight::Knight()
   weight = 650.f;
   jump_force = 100.f;
 
-  //attribue du sprite
-  //
+  //attribut du sprite
+  // 
+  buildAnimCache(DEFAULT_PERSO);
   setAutoUpdateCollision(true);
   setPosition(300.f,100.f);
   setSize(200.f,200.f); 

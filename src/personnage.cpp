@@ -152,7 +152,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   if(mouvement.y > weight * delta_time_)
     mouvement.y= weight * delta_time_;
   
-  std::cerr << weight << std::endl;
   move(mouvement);
 
   //collision avec les plateformes

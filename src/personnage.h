@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "map.h"
-#include "perso_info.h"
+#include "personnages/perso_info.h"
 
 static const int frame_divisor = 1;
 
@@ -65,6 +65,8 @@ protected:
   //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage
 public:
+
+  friend class Player;
  
   /**
   * @brief Constructeur de personnage
@@ -85,39 +87,39 @@ public:
   *
   * @param[in] value -1.0 vitesse max - 0.0 immobile
   */
-  virtual void goLeft(double delta_time_, float value);
+  void goLeft(double delta_time_, float value);
 
   /**
   * @brief Va a droite
   *
   * @param[in] value 1.0 vitesse max - 0.0 immobile
   */
-  virtual void goRight(double delta_time_, float value);
+  void goRight(double delta_time_, float value);
 
   /**
   * @brief Saute si Cela est possible
   */
-  virtual void doJump();
+  void doJump();
 
   /**
   * @brief Dash si cela est possible
   */
-  virtual void doDash();
+  void doDash();
 
   /**
   * @brief attack légère
   */
-  virtual void doLightAttack();
+  void doLightAttack();
 
   /**
   * @brief attack
   */
-  virtual void doAttack();
+  void doAttack();
 
   /**
    * @brief le personnage est touché
    */ 
-  virtual void doHit(int dir);
+  void doHit(int dir);
 
   /**
    * @brief renvoie l'état du personnage
@@ -147,7 +149,7 @@ public:
 
   void buildAnimCache(perso_info info_);
 
-  //virtual void attack(Personnage Ennemy[], GLFWwindow *);
-  //virtual bool gettinghit();
-  //virtual void Dash();
+  //void attack(Personnage Ennemy[], GLFWwindow *);
+  //bool gettinghit();
+  //void Dash();
 };
