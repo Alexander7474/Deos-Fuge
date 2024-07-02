@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "map.h"
-#include "perso_info.h"
+#include "personnages/perso_info.h"
 
 static const int frame_divisor = 1;
 
@@ -34,7 +34,7 @@ enum perso_direction:int{
  */
 class Personnage : public Sprite
 {
-private:
+protected:
   
   // caractèristique du personnage
   float percentage; //<! pourcentage de dégats 
@@ -65,15 +65,13 @@ private:
   //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage
 public:
+
+  friend class Player;
  
   /**
   * @brief Constructeur de personnage
-  *
-  * @param[in] personnage_info_ information sur le personnage 
-  *
-  * @note le personnage se créer a partir d'une struct perso_info qui est déclarer dans perso_info.h
-  */ 
-  Personnage(perso_info personnage_info_);
+  */  
+  Personnage();
 
   /**
    * @brief Destructeur de personnages
@@ -149,7 +147,9 @@ public:
    */
   const CollisionBox &getAttackBox() const;
 
-  //virtual void attack(Personnage Ennemy[], GLFWwindow *);
-  //virtual bool gettinghit();
-  //virtual void Dash();
+  void buildAnimCache(perso_info info_);
+
+  //void attack(Personnage Ennemy[], GLFWwindow *);
+  //bool gettinghit();
+  //void Dash();
 };

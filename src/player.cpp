@@ -4,12 +4,13 @@
 #include <iostream>
 #include <string>
 
-Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, perso_info personnage_info_)
-  : Personnage(personnage_info_),
-    name(name_),
+Player::Player(GLFWwindow*& window_, int joystick_, std::string name_)
+  : name(name_),
     joystick(joystick_),
     window(window_)
-{}
+{
+  perso = new Knight();
+}
 
 void Player::update(double delta_time_, Map *map_)
 {
@@ -25,31 +26,31 @@ void Player::update(double delta_time_, Map *map_)
       const unsigned char *buttons = glfwGetJoystickButtons(joystick, &n_buttons);
     
       if(axes[0] > 0.15){
-        goRight(delta_time_, axes[0]);
+        perso->goRight(delta_time_, axes[0]);
       }
       if(axes[0] < -0.15){
-        goLeft(delta_time_, axes[0]);
+        perso->goLeft(delta_time_, axes[0]);
       }  
       //touche de la manette////////////////////////////////////////////////////////////////////////////////////////////
 
       //touche x de la manette
       if(buttons[2] == GLFW_PRESS){
-        doDash();
+        perso->doDash();
       }
 
       //touche a de la manette
       if(buttons[0] == GLFW_PRESS){
-        doJump();
+        perso->doJump();
       }
 
       //touche b de la manette
       if(buttons[1] == GLFW_PRESS){
-        doLightAttack();
+        perso->doLightAttack();
       }
 
       //touche y de la manette
       if(buttons[3] == GLFW_PRESS){
-        doAttack();
+        perso->doAttack();
       }
 
       //debuging/////////////////////////////////////////////
@@ -72,25 +73,25 @@ void Player::update(double delta_time_, Map *map_)
     }
   }else {
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-      goRight(delta_time_, 1.f);
+      perso->goRight(delta_time_, 1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-      goLeft(delta_time_, -1.f);
+      perso->goLeft(delta_time_, -1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-      doJump();
+      perso->doJump();
     }
     if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
-      doDash();
+      perso->doDash();
     }
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
-      doLightAttack();
+      perso->doLightAttack();
     }
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
-      doAttack();
+      perso->doAttack();
     }
   }
   //mettre a jour le personnage avec la map
-  updatePersonnage(delta_time_, map_);
+  perso->updatePersonnage(delta_time_, map_);
  }
 

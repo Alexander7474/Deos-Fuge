@@ -1,7 +1,9 @@
 #pragma once 
+
+#include "personnages/knight.h"
 #include "map.h"
 #include "personnage.h"
-#include "perso_info.h"
+
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
 #include <GLFW/glfw3.h>
@@ -10,9 +12,11 @@
 /**
 * @brief class qui gère les caractèristique du joueur et sa manette pour manipuler un Personnage
 */
-class Player : public Personnage
+class Player
 {
 public:
+
+  friend class Game;
 
   /**
   * @brief Contructeur de Player
@@ -21,7 +25,7 @@ public:
   * @param[in] name_ nom du player 
   * @param[in] personnage_info_ struct d'information du personnage du player 
   */ 
-  Player(GLFWwindow*& window_, int joystick_, std::string name_, perso_info personnage_info_);
+  Player(GLFWwindow*& window_, int joystick_, std::string name_);
 
   /**
   * @brief Met a jour le personnage du player en fonction des touches de la manettes
@@ -34,6 +38,7 @@ public:
 private:
   std::string name; //<! nom du Player
   int joystick; //<! manette du Player
+  Personnage *perso; //<! personnage du joueur
 
   //attribut system
   GLFWwindow *window;//<! pour récupérer les touches du clavier

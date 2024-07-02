@@ -1,4 +1,3 @@
-#include "src/perso_info.h"
 #include "src/personnage.h"
 #include "src/game.h"
 #include "src/player.h"
@@ -12,11 +11,8 @@ int main()
   bbopInit(1280, 720, "Bro Melee", window);
 
   std::vector<Player> test; 
-  Player perso1(window, GLFW_JOYSTICK_1, "roger", DEFAULT_PERSO);
-  Player perso2(window, -1, "roger", DEFAULT_PERSO);
-  perso1.setRGBFilterState(true);
-  perso2.setColor(255,255,0);
-  perso1.setColor(255,0,255);
+  Player perso1(window, GLFW_JOYSTICK_1, "roger");
+  Player perso2(window, -1, "roger");
 
   test.push_back(perso1);
   test.push_back(perso2);
