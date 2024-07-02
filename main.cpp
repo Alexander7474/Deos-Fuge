@@ -16,9 +16,8 @@ int main()
 
   test.push_back(perso1);
   test.push_back(perso2);
-  std::vector<Personnage> test2; 
 
-  Game game(window, test, test2);
+  Game game(window, test);
 
   glfwSwapInterval(0);
 

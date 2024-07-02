@@ -6,12 +6,11 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-Game::Game(GLFWwindow*& window_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
+Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
    cam_scale_goal(0.33f),
    cam_scale_last(0.33f),
    game_state(start),
    players(players_),
-   bots(bots_),
    last_time(glfwGetTime()),
    window(window_),
    font(48, "font/GohuFont11NerdFont-Regular.ttf"),

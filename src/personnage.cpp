@@ -78,68 +78,23 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   switch(state){
     case dash:
       // si le perso dash
-      if(dash_frame_cpt < anim_frame_n[dash]*frame_divisor){
-        mouvement.x=direction*speed*delta_time_;
-        if(glfwGetTime()-last_frame_t[dash] > anim_frame_t[dash]){
-          dash_frame_cpt++;
-          last_frame_t[dash] = glfwGetTime();
-        }
-      }else{
-        state = fall;
-      }
-      frame_cpt = dash_frame_cpt;
+      Dash(delta_time_);
       break;
     case jump:
       //si le perso jump 
-      if(jump_frame_cpt < anim_frame_n[jump]*frame_divisor && jump_cpt <= 2){
-        mouvement.y= -jump_force*delta_time_;
-        if(glfwGetTime()-last_frame_t[jump] > anim_frame_t[jump]){
-          jump_frame_cpt++;
-          last_frame_t[jump] = glfwGetTime();
-        }
-      }else{
-        state = fall;
-      }
-      frame_cpt = jump_frame_cpt;
+      Jump(delta_time_);
       break;
     case light_attack:
       // si le perso fais une attaque légère
-      if(light_attack_frame_cpt < anim_frame_n[light_attack]*frame_divisor){
-        if(glfwGetTime()-last_frame_t[light_attack] > anim_frame_t[light_attack]){
-          light_attack_frame_cpt++;
-          last_frame_t[light_attack] = glfwGetTime();
-        }
-        attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
-      }else{
-        state = fall;
-      }
-      frame_cpt = light_attack_frame_cpt;
+      Light_attack(delta_time_);
       break;
     case attack:
       // si le perso fais une attaque
-      if(attack_frame_cpt < anim_frame_n[attack]*frame_divisor){
-        if(glfwGetTime()-last_frame_t[attack] > anim_frame_t[attack]){
-          attack_frame_cpt++;
-          last_frame_t[attack] = glfwGetTime();
-        }
-        attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
-      }else{
-        state = fall;
-      }
-      frame_cpt = attack_frame_cpt;
+      Attack(delta_time_);
       break;
     case hit:
       //si le perso est touché
-      if(hit_frame_cpt < anim_frame_n[hit]*frame_divisor){
-        mouvement.x=direction*(hit_frame_cpt)*delta_time_;
-        if(glfwGetTime()-last_frame_t[hit] > anim_frame_t[hit]){
-          hit_frame_cpt++;
-          last_frame_t[hit] = glfwGetTime();
-        }
-      }else{
-        state = fall;
-      }
-      frame_cpt = hit_frame_cpt;
+      Hit(delta_time_);
       break;
     default:
       break;
@@ -223,28 +178,6 @@ void Personnage::goLeft(double delta_time_, float value)
     }
   }
   calling_state = run;
-}
-
-// appelle pour faire sauter le personnage
-void Personnage::doJump()
-{
-  calling_state = jump;
-}
-
-// appelle pour faire dash le personnage
-void Personnage::doDash()
-{
-  calling_state = dash;
-}
-
-void Personnage::doLightAttack()
-{
-  calling_state = light_attack;
-}
-
-void Personnage::doAttack()
-{
-  calling_state = attack;
 }
 
 void Personnage::doHit(int dir)

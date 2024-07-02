@@ -96,27 +96,7 @@ public:
   */
   void goRight(double delta_time_, float value);
 
-  /**
-  * @brief Saute si Cela est possible
-  */
-  void doJump();
-
-  /**
-  * @brief Dash si cela est possible
-  */
-  void doDash();
-
-  /**
-  * @brief attack légère
-  */
-  void doLightAttack();
-
-  /**
-  * @brief attack
-  */
-  void doAttack();
-
-  /**
+   /**
    * @brief le personnage est touché
    */ 
   void doHit(int dir);
@@ -138,7 +118,7 @@ public:
   /**
    * @brief permet de recalculer la boite de collision
    */
-  void rebuildCollisionBox();
+  virtual void rebuildCollisionBox();
 
   /**
    * @brief renvoie la box d'attaque du personnage 
@@ -147,9 +127,20 @@ public:
    */
   const CollisionBox &getAttackBox() const;
 
+  /**
+   * @brief construit les tableau contenant toutes les informations sur les animations 
+   */
   void buildAnimCache(perso_info info_);
 
-  //void attack(Personnage Ennemy[], GLFWwindow *);
-  //bool gettinghit();
-  //void Dash();
+  /**
+   * @brief Methode purement virtuelle qui définissent comment le personnage agit selon son etat
+   */
+  //////////////////////////////////////
+  virtual void Dash(double delta_time_) = 0;
+  virtual void Jump(double delta_time_) = 0;
+  virtual void Attack(double delta_time_) = 0;
+  virtual void Light_attack(double delta_time_) = 0;
+  virtual void Hit(double delta_time_) = 0;
+  //////////////////////////////////////
+
 };

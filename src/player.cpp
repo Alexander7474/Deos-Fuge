@@ -1,4 +1,5 @@
 #include "player.h"
+#include "personnage.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -35,22 +36,22 @@ void Player::update(double delta_time_, Map *map_)
 
       //touche x de la manette
       if(buttons[2] == GLFW_PRESS){
-        perso->doDash();
+        perso->calling_state = dash;
       }
 
       //touche a de la manette
       if(buttons[0] == GLFW_PRESS){
-        perso->doJump();
+        perso->calling_state = jump;
       }
 
       //touche b de la manette
       if(buttons[1] == GLFW_PRESS){
-        perso->doLightAttack();
+        perso->calling_state = light_attack;
       }
 
       //touche y de la manette
       if(buttons[3] == GLFW_PRESS){
-        perso->doAttack();
+        perso->calling_state = attack;
       }
 
       //debuging/////////////////////////////////////////////
@@ -79,16 +80,16 @@ void Player::update(double delta_time_, Map *map_)
       perso->goLeft(delta_time_, -1.f);
     }
     if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
-      perso->doJump();
+        perso->calling_state = jump;
     }
     if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS){
-      perso->doDash();
+        perso->calling_state = dash;
     }
     if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS){
-      perso->doLightAttack();
+        perso->calling_state = light_attack;
     }
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
-      perso->doAttack();
+        perso->calling_state = attack;
     }
   }
   //mettre a jour le personnage avec la map
