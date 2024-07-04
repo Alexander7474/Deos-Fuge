@@ -98,7 +98,7 @@ public:
    /**
    * @brief le personnage est touché
    */ 
-  void doHit(int dir);
+  void doHit(int dir, float percentage_);
 
   /**
    * @brief renvoie l'état du personnage

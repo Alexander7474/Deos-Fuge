@@ -190,9 +190,10 @@ void Personnage::goLeft(double delta_time_, float value)
   calling_state = run;
 }
 
-void Personnage::doHit(int dir)
+void Personnage::doHit(int dir, float percentage_)
 {
   calling_state = hit;
+  percentage += percentage_;
   if(direction == static_cast<perso_direction>(dir))
     flipVertically();
   direction = static_cast<perso_direction>(-1*dir);

@@ -90,20 +90,27 @@ void Knight::Light_attack(double delta_time_)
 void Knight::Hit(double delta_time_)
 { 
         if(hit_frame_cpt < anim_frame_n[hit]){
-                if(int((last_frame_t[hit]-glfwGetTime())*100) % 2 == 0){
-                        setColor(255,255,255);
-                }else{
-                        setColor(255*3,255*3,255*3);
-                }
                 mouvement.x=direction*(hit_frame_cpt)*delta_time_;
                 if(glfwGetTime()-last_frame_t[hit] > anim_frame_t[hit]){
                         hit_frame_cpt++;
                         last_frame_t[hit] = glfwGetTime();
                 }
+
+                // hit frame en blanc
+                if(int((last_frame_t[hit]-glfwGetTime())*100) % 2 == 0){
+                       setColor(255,255,255);
+                }else{
+                        setColor(255*3,255*3,255*3);
+                }
+
+                // mouvement 
+                mouvement.x = -1*direction*percentage*5*delta_time_;
+                mouvement.y = -1*percentage*0.5*delta_time_;
         }else{
                 state = fall;
         }
         frame_cpt = hit_frame_cpt;
+        std::cerr << percentage << std::endl;
 }
 
 void Knight::rebuildCollisionBox()

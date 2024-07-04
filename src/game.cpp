@@ -40,7 +40,8 @@ void Game::update()
     if(players[i].perso->isAttacking()){
       for(long unsigned int c = 0; c < players.size(); c++){
         if(players[i].perso->getAttackBox().check(players[c].perso->getCollisionBox()) && i != c){
-          players[c].perso->doHit(players[i].perso->getDirection());
+                if(players[c].perso->getState() != hit)
+                        players[c].perso->doHit(players[i].perso->getDirection(), 10.f);
         }
       }
     }
