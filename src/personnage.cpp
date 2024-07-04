@@ -114,8 +114,8 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   double fall_time = glfwGetTime() - fall_start_t;
   mouvement.y += fall_time * delta_time_ * weight * delta_time_; // utilser les attribut de la map
   
-  if(mouvement.y > weight * delta_time_)
-    mouvement.y= weight * delta_time_;
+  if(mouvement.y > (weight/3) * delta_time_)
+    mouvement.y= (weight/3) * delta_time_;
   
   move(mouvement);
 
@@ -241,4 +241,9 @@ void Personnage::buildAnimCache(perso_info info_)
 bool Personnage::isAttacking()
 {
         return (state == attack || state == light_attack);
+}
+
+float Personnage::getPercentageToApply()
+{
+        return 10.f;
 }

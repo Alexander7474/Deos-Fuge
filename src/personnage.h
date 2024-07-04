@@ -41,11 +41,11 @@ protected:
   float jump_force; //<! force de saut
 
   //stockage des animations
-  std::vector<Texture> animation[8]; //<! stockage des anims
-  int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
-  double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
-  double last_frame_t[8]; //<! timing de la dernière frame de l'anim
-  double anim_frame_cpt[8]; //<! compteur pour stocker la frame actuelle d'une anim
+  std::vector<Texture> animation[9]; //<! stockage des anims
+  int anim_frame_n[9]; //<! nombre de frame en fonction de chaque anim
+  double anim_frame_t[9]; //<! temps entre chaque frame en fonction de chaque anim
+  double last_frame_t[9]; //<! timing de la dernière frame de l'anim
+  double anim_frame_cpt[9]; //<! compteur pour stocker la frame actuelle d'une anim
 
   // gestion des états du personnage
   perso_state state; //<! etat général
@@ -135,6 +135,11 @@ public:
    * @détermine si le personnage est dans un etat d'attaque
    */
   bool isAttacking();
+
+  /**
+   * @brief retourne le nombre de pourcentage à appliquer a l'adversaire lors d'une attaque
+   */
+  virtual float getPercentageToApply();
 
   /**
    * @brief Methode purement virtuelle qui définissent comment le personnage agit selon son etat

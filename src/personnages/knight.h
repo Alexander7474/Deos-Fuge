@@ -8,6 +8,8 @@ public:
 
         void rebuildCollisionBox() override;
 
+        float getPercentageToApply() override;
+
         /**
          * @brief Methode purement virtuelle qui définissent comment le personnage agit selon son etat
          */

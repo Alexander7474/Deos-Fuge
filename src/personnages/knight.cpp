@@ -121,3 +121,15 @@ void Knight::rebuildCollisionBox()
                 getCollisionBox().setOffsetX(Vector2f(95.f,80.f));
         }
 }
+
+float Knight::getPercentageToApply()
+{
+        switch(state){
+                case attack: 
+                        return 20.f;
+                case light_attack:
+                        return 15.f;
+                default:
+                        return 10.f;
+        }
+}
