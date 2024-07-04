@@ -37,7 +37,7 @@ void Game::update()
     Vector2f player_pos = players[i].perso->getPosition();
 
     //gestion des collisions entre les joueur
-    if(players[i].perso->getState() == light_attack){
+    if(players[i].perso->isAttacking()){
       for(long unsigned int c = 0; c < players.size(); c++){
         if(players[i].perso->getAttackBox().check(players[c].perso->getCollisionBox()) && i != c){
           players[c].perso->doHit(players[i].perso->getDirection());

@@ -2,6 +2,7 @@
 #include "src/game.h"
 #include "src/player.h"
 #include <BBOP/Graphics.h>
+#include <BBOP/Graphics/bbopFunc.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

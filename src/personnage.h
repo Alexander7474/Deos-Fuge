@@ -6,8 +6,6 @@
 #include "map.h"
 #include "personnages/perso_info.h"
 
-static const int frame_divisor = 1;
-
 //enumeration des états possible du personnage
 enum perso_state:int{
   stationary=0,
@@ -47,6 +45,7 @@ protected:
   int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
   double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
   double last_frame_t[8]; //<! timing de la dernière frame de l'anim
+  double anim_frame_cpt[8]; //<! compteur pour stocker la frame actuelle d'une anim
 
   // gestion des états du personnage
   perso_state state; //<! etat général
@@ -131,6 +130,11 @@ public:
    * @brief construit les tableau contenant toutes les informations sur les animations 
    */
   void buildAnimCache(perso_info info_);
+
+  /**
+   * @détermine si le personnage est dans un etat d'attaque
+   */
+  bool isAttacking();
 
   /**
    * @brief Methode purement virtuelle qui définissent comment le personnage agit selon son etat
