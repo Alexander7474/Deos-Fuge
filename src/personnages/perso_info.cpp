@@ -17,11 +17,23 @@ const perso_info DEFAULT_PERSO = {
   // timing des frames de chaque anim
   {0.09,  // stationnary
     0.05, // run 
-    0.3,  // dash 
+    0.1,  // dash 
     0.1,  // jump 
     0.1,  // fall 
     0.04, // light_attack 
     0.05, // attack 
     0.2   // hit
+  },
+
+  // timing des frames de chaque anim
+  {0.0,  // stationnary
+    0.0, // run 
+    0.4,  // dash 
+    0.3,  // jump 
+    0.0,  // fall 
+    0.16, // light_attack 
+    0.3, // attack 
+    0.2   // hit
   }
+
 };

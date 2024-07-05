@@ -42,24 +42,22 @@ protected:
 
   //stockage des animations
   std::vector<Texture> animation[9]; //<! stockage des anims
-  int anim_frame_n[9]; //<! nombre de frame en fonction de chaque anim
-  double anim_frame_t[9]; //<! temps entre chaque frame en fonction de chaque anim
-  double last_frame_t[9]; //<! timing de la dernière frame de l'anim
-  double anim_frame_cpt[9]; //<! compteur pour stocker la frame actuelle d'une anim
+  int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
+  double anim_t[8]; //<! durée total de l'anim
+  double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
+  // stockage dynamique des infos nécessaire a l'animation
+  double anim_start_t[8]; //<! timing de départ e l'anim
+  double anim_last_frame_t[8]; //<! timing de la dernière frame de l'anim
+  int anim_frame_cpt[8]; //<! compteur de frame de chaque anim
+  int frame_cpt; //<! compteur de frame par default
 
   // gestion des états du personnage
   perso_state state; //<! etat général
   perso_state calling_state; //<! état demandé par les inputs donné à personnage
   perso_direction direction; //<! direction 
   Vector2f mouvement; //<! mouvement du personnages
-  double fall_start_t; //<! timing du debut de la chute 
-  int frame_cpt; //<! compteur de frame par default
-  int dash_frame_cpt; //<! compteur de frame du dash
-  int jump_frame_cpt; //<! compteur de frame du saut
-  int jump_cpt; //<! compteur de jump
-  int light_attack_frame_cpt; //<! compteur de frame de l'attaque légère  
-  int attack_frame_cpt; //<! compteur de frame de l'attaque légère  
-  int hit_frame_cpt; //<! compteur de frame de hit
+  double fall_start_t; //<! timing du debut de la chute
+  int jump_cpt; //<! compteur de saut
 
   //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage
