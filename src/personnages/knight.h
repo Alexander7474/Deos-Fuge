@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../personnage.h"
 #include "perso_info.h"
 

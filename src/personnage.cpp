@@ -14,7 +14,6 @@ Personnage::Personnage():
     state(fall),
     direction(right),
     fall_start_t(glfwGetTime()),
-    jump_cpt(0),
     attack_box(getCollisionBox())
 {}
 
@@ -31,11 +30,8 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       }
       break;
     case jump:
-      //si le personnage ne saute pas deja on considère qu'un saut est rajouté au compteur
-      if(state!=jump && anim_frame_cpt[jump] == 0)
-        jump_cpt++;
       // limite de deux jump 
-      if(jump_cpt <= 2 && state != jump){
+      if(state != jump && state != fall && anim_frame_cpt[jump] == 0) {
         state = jump;
         anim_last_frame_t[jump] = glfwGetTime();
         anim_start_t[state] = glfwGetTime();
@@ -127,8 +123,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
     if(map_->getTiles()[i].getCollisionBox().check(shapeCollisionBox)){
       //reset du mouvement 
       mouvement.y=0;
-      //reset compteur de jump
-      jump_cpt=0;
       // si le personngae ne dash pas il est considéré comme stationnaire
       if(state == fall){
         state=stationary;

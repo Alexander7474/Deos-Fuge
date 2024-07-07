@@ -17,4 +17,5 @@ struct perso_info{
   double anim_t[8]; //<! temps total de l'anim du personnage
 };
 
-extern const perso_info DEFAULT_PERSO; //<! Personnage de par default
+extern const perso_info WHITE_KNIGHT; //<! Personnage de par default
+extern const perso_info KNIGHT; //<! Personnage de par default

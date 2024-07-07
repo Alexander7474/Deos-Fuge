@@ -57,7 +57,6 @@ protected:
   perso_direction direction; //<! direction 
   Vector2f mouvement; //<! mouvement du personnages
   double fall_start_t; //<! timing du debut de la chute
-  int jump_cpt; //<! compteur de saut
 
   //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage

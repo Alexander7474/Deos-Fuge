@@ -12,7 +12,7 @@ Knight::Knight()
 
         //attribut du sprite
         // 
-        buildAnimCache(DEFAULT_PERSO);
+        buildAnimCache(KNIGHT);
         setAutoUpdateCollision(true);
         setPosition(300.f,100.f);
         setSize(200.f,200.f); 
@@ -28,7 +28,7 @@ Knight::Knight()
 void Knight::Dash(double delta_time_)
 {
         if(anim_t[dash] > glfwGetTime()-anim_start_t[dash]){
-                mouvement.x=direction*speed*delta_time_;
+                mouvement.x=direction*speed*4*delta_time_;
         }else{
                 state = fall;
         }

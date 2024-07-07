@@ -1,16 +1,24 @@
 #include "player.h"
 #include "personnage.h"
+#include "personnages/white_knight.h"
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
 
-Player::Player(GLFWwindow*& window_, int joystick_, std::string name_)
+Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, int perso_select)
   : name(name_),
     joystick(joystick_),
     window(window_)
 {
-  perso = new Knight();
+  switch (perso_select){
+    case 0:
+      perso = new Knight();
+      break;
+    case 1:
+      perso = new White_knight();
+      break;
+  }
 }
 
 void Player::update(double delta_time_, Map *map_)
@@ -96,3 +104,6 @@ void Player::update(double delta_time_, Map *map_)
   perso->updatePersonnage(delta_time_, map_);
  }
 
+Player::~Player()
+{
+}
