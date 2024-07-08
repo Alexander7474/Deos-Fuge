@@ -10,14 +10,10 @@
 Personnage::Personnage():
     Sprite("img/default.png"),
     percentage(0),
+    frame_cpt(0),
     state(fall),
     direction(right),
     fall_start_t(glfwGetTime()),
-    frame_cpt(0),
-    dash_frame_cpt(0),
-    jump_frame_cpt(0),
-    jump_cpt(0),
-    hit_frame_cpt(0),
     attack_box(getCollisionBox())
 {}
 
@@ -27,50 +23,62 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   switch (calling_state) {
     case dash:
       // dash seulement si le dash est reset
-      if(dash_frame_cpt == 0)
+      if(anim_frame_cpt[dash] == 0 && state != dash){
         state = dash;
+        anim_last_frame_t[dash] = glfwGetTime();
+        anim_start_t[state] = glfwGetTime();
+      }
       break;
     case jump:
-      //si le personnage ne saute pas deja on considère qu'un saut est rajouté au compteur
-      if(state!=jump && jump_frame_cpt == 0)
-        jump_cpt++;
       // limite de deux jump 
-      if(jump_cpt <= 2)
+      if(state != jump && state != fall && anim_frame_cpt[jump] == 0) {
         state = jump;
+        anim_last_frame_t[jump] = glfwGetTime();
+        anim_start_t[state] = glfwGetTime();
+      }
       break;
     case light_attack:
-      if(light_attack_frame_cpt == 0){
+      if(anim_frame_cpt[light_attack] == 0 && state != light_attack){
         state=light_attack;
+        anim_last_frame_t[light_attack] = glfwGetTime();
+        anim_start_t[state] = glfwGetTime();
       }
       break;
     case attack:
-      if(attack_frame_cpt == 0){
+      if(anim_frame_cpt[attack] == 0 && state != attack){
         state=attack;
+        anim_last_frame_t[attack] = glfwGetTime();
+        anim_start_t[state] = glfwGetTime();
       }
       break;
     case hit:
-      if(hit_frame_cpt == 0){
+      if(anim_frame_cpt[hit] == 0 && state != hit){
         state = hit;
+        anim_last_frame_t[hit] = glfwGetTime();
+        anim_start_t[state] = glfwGetTime();
       }
       break;
     case run:
       // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
-      if(state==stationary)
+      if(state==stationary && state != run){
         state=run;
+        anim_last_frame_t[run] = glfwGetTime();
+      }
     default:
       // si il n'y a pas de jump call le jump frame est reset
-      if(state != jump)
-        jump_frame_cpt = 0;
-      else // pas de jump call ni de jump state en cours le perso tombe
+      if(state != jump){
+        anim_frame_cpt[jump] = 0;
+      }else{ // pas de jump call ni de jump state en cours le perso tombe
         state = fall;
+      }
       // reset du dash uniquement quand le pero est au sol et sans dash call
       if(state==stationary || state == run){
-        dash_frame_cpt = 0;
-        light_attack_frame_cpt = 0;
-        attack_frame_cpt = 0;
+        anim_frame_cpt[dash] = 0;
+        anim_frame_cpt[light_attack] = 0;
+        anim_frame_cpt[attack] = 0;
       }
       if(state != hit)
-        hit_frame_cpt = 0;
+        anim_frame_cpt[hit] = 0;
       break;
   }
 
@@ -78,68 +86,23 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   switch(state){
     case dash:
       // si le perso dash
-      if(dash_frame_cpt < anim_frame_n[dash]*frame_divisor){
-        mouvement.x=direction*speed*delta_time_;
-        if(glfwGetTime()-last_frame_t[dash] > anim_frame_t[dash]){
-          dash_frame_cpt++;
-          last_frame_t[dash] = glfwGetTime();
-        }
-      }else{
-        state = fall;
-      }
-      frame_cpt = dash_frame_cpt;
+      Dash(delta_time_);
       break;
     case jump:
       //si le perso jump 
-      if(jump_frame_cpt < anim_frame_n[jump]*frame_divisor && jump_cpt <= 2){
-        mouvement.y= -jump_force*delta_time_;
-        if(glfwGetTime()-last_frame_t[jump] > anim_frame_t[jump]){
-          jump_frame_cpt++;
-          last_frame_t[jump] = glfwGetTime();
-        }
-      }else{
-        state = fall;
-      }
-      frame_cpt = jump_frame_cpt;
+      Jump(delta_time_);
       break;
     case light_attack:
       // si le perso fais une attaque légère
-      if(light_attack_frame_cpt < anim_frame_n[light_attack]*frame_divisor){
-        if(glfwGetTime()-last_frame_t[light_attack] > anim_frame_t[light_attack]){
-          light_attack_frame_cpt++;
-          last_frame_t[light_attack] = glfwGetTime();
-        }
-        attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
-      }else{
-        state = fall;
-      }
-      frame_cpt = light_attack_frame_cpt;
+      Light_attack(delta_time_);
       break;
     case attack:
       // si le perso fais une attaque
-      if(attack_frame_cpt < anim_frame_n[attack]*frame_divisor){
-        if(glfwGetTime()-last_frame_t[attack] > anim_frame_t[attack]){
-          attack_frame_cpt++;
-          last_frame_t[attack] = glfwGetTime();
-        }
-        attack_box.setPosition(getCollisionBox().getPosition().x+(direction*30.0f),getCollisionBox().getPosition().y);
-      }else{
-        state = fall;
-      }
-      frame_cpt = attack_frame_cpt;
+      Attack(delta_time_);
       break;
     case hit:
       //si le perso est touché
-      if(hit_frame_cpt < anim_frame_n[hit]*frame_divisor){
-        mouvement.x=direction*(hit_frame_cpt)*delta_time_;
-        if(glfwGetTime()-last_frame_t[hit] > anim_frame_t[hit]){
-          hit_frame_cpt++;
-          last_frame_t[hit] = glfwGetTime();
-        }
-      }else{
-        state = fall;
-      }
-      frame_cpt = hit_frame_cpt;
+      Hit(delta_time_);
       break;
     default:
       break;
@@ -149,8 +112,8 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   double fall_time = glfwGetTime() - fall_start_t;
   mouvement.y += fall_time * delta_time_ * weight * delta_time_; // utilser les attribut de la map
   
-  if(mouvement.y > weight * delta_time_)
-    mouvement.y= weight * delta_time_;
+  if(mouvement.y > (weight/3) * delta_time_)
+    mouvement.y= (weight/3) * delta_time_;
   
   move(mouvement);
 
@@ -160,8 +123,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
     if(map_->getTiles()[i].getCollisionBox().check(shapeCollisionBox)){
       //reset du mouvement 
       mouvement.y=0;
-      //reset compteur de jump
-      jump_cpt=0;
       // si le personngae ne dash pas il est considéré comme stationnaire
       if(state == fall){
         state=stationary;
@@ -182,14 +143,15 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   move(mouvement);
 
   // gestion des frames et de l'animation
-  // sécurité pour ne pas que frame_cpt dépasse le nombre de frame de l'anim qui va être joué
-  if(frame_cpt/frame_divisor >= anim_frame_n[state])
-    frame_cpt = 0;
-  setTexture(animation[state][frame_cpt/frame_divisor]);
-  if(glfwGetTime()-last_frame_t[state] > anim_frame_t[state]){
-    frame_cpt++;
-    last_frame_t[state] = glfwGetTime();
+  if(anim_frame_t[state] < glfwGetTime()-anim_last_frame_t[state]){
+    anim_frame_cpt[state]++;
+    anim_last_frame_t[state] = glfwGetTime();
   }
+
+  if(anim_frame_cpt[state] >= anim_frame_n[state])
+    anim_frame_cpt[state] = 0;
+
+  setTexture(animation[state][anim_frame_cpt[state]]);
   
   // reset du mouvement
   mouvement.x = mouvement.x/20.0;
@@ -225,34 +187,13 @@ void Personnage::goLeft(double delta_time_, float value)
   calling_state = run;
 }
 
-// appelle pour faire sauter le personnage
-void Personnage::doJump()
-{
-  calling_state = jump;
-}
-
-// appelle pour faire dash le personnage
-void Personnage::doDash()
-{
-  calling_state = dash;
-}
-
-void Personnage::doLightAttack()
-{
-  calling_state = light_attack;
-}
-
-void Personnage::doAttack()
-{
-  calling_state = attack;
-}
-
-void Personnage::doHit(int dir)
+void Personnage::doHit(int dir, float percentage_)
 {
   calling_state = hit;
-  if(direction != static_cast<perso_direction>(dir))
+  percentage += percentage_;
+  if(direction == static_cast<perso_direction>(dir))
     flipVertically();
-  direction = static_cast<perso_direction>(dir);
+  direction = static_cast<perso_direction>(-1*dir);
   rebuildCollisionBox();
 }
 
@@ -288,8 +229,20 @@ void Personnage::buildAnimCache(perso_info info_)
     std::string anim_file=sprite_folder+std::to_string(i)+".png";
     anim_frame_n[i] = info_.anim_frame_n[i];
     anim_frame_t[i] = info_.anim_frame_t[i];
-    last_frame_t[i] = glfwGetTime();
+    anim_t[i] = info_.anim_t[i];
+    anim_last_frame_t[i] = glfwGetTime();
+    anim_start_t[i] = glfwGetTime();
+    anim_frame_cpt[i] = 0;
     animation[i] = bbopLoadSpriteSheet(anim_file.c_str(), 1, anim_frame_n[i]);
   }
+}
 
+bool Personnage::isAttacking()
+{
+        return (state == attack || state == light_attack);
+}
+
+float Personnage::getPercentageToApply()
+{
+        return 10.f;
 }

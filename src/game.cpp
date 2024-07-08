@@ -6,12 +6,11 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-Game::Game(GLFWwindow*& window_, std::vector<Player> &players_, std::vector<Personnage> &bots_):
+Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
    cam_scale_goal(0.33f),
    cam_scale_last(0.33f),
    game_state(start),
    players(players_),
-   bots(bots_),
    last_time(glfwGetTime()),
    window(window_),
    font(48, "font/GohuFont11NerdFont-Regular.ttf"),
@@ -38,10 +37,11 @@ void Game::update()
     Vector2f player_pos = players[i].perso->getPosition();
 
     //gestion des collisions entre les joueur
-    if(players[i].perso->getState() == light_attack){
+    if(players[i].perso->isAttacking()){
       for(long unsigned int c = 0; c < players.size(); c++){
         if(players[i].perso->getAttackBox().check(players[c].perso->getCollisionBox()) && i != c){
-          players[c].perso->doHit(players[i].perso->getDirection());
+                if(players[c].perso->getState() != hit && players[c].perso->getState() != dash)
+                        players[c].perso->doHit(players[i].perso->getDirection(), players[i].perso->getPercentageToApply());
         }
       }
     }
@@ -56,7 +56,7 @@ void Game::update()
     if(player_pos.y < max_y.x)
        max_y.x = player_pos.y;
 
-    if(players[i].perso->getPosition().y > 1800.f){
+    if(players[i].perso->getPosition().y > 1000.f){
       players[i].perso->setPosition(300.f,100.f);
     }
   }
@@ -87,8 +87,8 @@ void Game::Draw()
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
     scene.Draw(*players[i].perso);
-    bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
-    bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
+    //bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
+    //bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);

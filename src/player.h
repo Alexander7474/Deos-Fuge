@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "personnages/knight.h"
+#include "personnages/white_knight.h"
 #include "map.h"
 #include "personnage.h"
 
@@ -25,7 +26,10 @@ public:
   * @param[in] name_ nom du player 
   * @param[in] personnage_info_ struct d'information du personnage du player 
   */ 
-  Player(GLFWwindow*& window_, int joystick_, std::string name_);
+  Player(GLFWwindow*& window_, int joystick_, std::string name_, int perso_select);
+
+  ~Player();
+
 
   /**
   * @brief Met a jour le personnage du player en fonction des touches de la manettes

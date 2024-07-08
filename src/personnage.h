@@ -6,8 +6,6 @@
 #include "map.h"
 #include "personnages/perso_info.h"
 
-static const int frame_divisor = 1;
-
 //enumeration des états possible du personnage
 enum perso_state:int{
   stationary=0,
@@ -43,24 +41,22 @@ protected:
   float jump_force; //<! force de saut
 
   //stockage des animations
-  std::vector<Texture> animation[8]; //<! stockage des anims
+  std::vector<Texture> animation[9]; //<! stockage des anims
   int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
+  double anim_t[8]; //<! durée total de l'anim
   double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
-  double last_frame_t[8]; //<! timing de la dernière frame de l'anim
+  // stockage dynamique des infos nécessaire a l'animation
+  double anim_start_t[8]; //<! timing de départ e l'anim
+  double anim_last_frame_t[8]; //<! timing de la dernière frame de l'anim
+  int anim_frame_cpt[8]; //<! compteur de frame de chaque anim
+  int frame_cpt; //<! compteur de frame par default
 
   // gestion des états du personnage
   perso_state state; //<! etat général
   perso_state calling_state; //<! état demandé par les inputs donné à personnage
   perso_direction direction; //<! direction 
   Vector2f mouvement; //<! mouvement du personnages
-  double fall_start_t; //<! timing du debut de la chute 
-  int frame_cpt; //<! compteur de frame par default
-  int dash_frame_cpt; //<! compteur de frame du dash
-  int jump_frame_cpt; //<! compteur de frame du saut
-  int jump_cpt; //<! compteur de jump
-  int light_attack_frame_cpt; //<! compteur de frame de l'attaque légère  
-  int attack_frame_cpt; //<! compteur de frame de l'attaque légère  
-  int hit_frame_cpt; //<! compteur de frame de hit
+  double fall_start_t; //<! timing du debut de la chute
 
   //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage
@@ -96,30 +92,10 @@ public:
   */
   void goRight(double delta_time_, float value);
 
-  /**
-  * @brief Saute si Cela est possible
-  */
-  void doJump();
-
-  /**
-  * @brief Dash si cela est possible
-  */
-  void doDash();
-
-  /**
-  * @brief attack légère
-  */
-  void doLightAttack();
-
-  /**
-  * @brief attack
-  */
-  void doAttack();
-
-  /**
+   /**
    * @brief le personnage est touché
    */ 
-  void doHit(int dir);
+  void doHit(int dir, float percentage_);
 
   /**
    * @brief renvoie l'état du personnage
@@ -138,7 +114,7 @@ public:
   /**
    * @brief permet de recalculer la boite de collision
    */
-  void rebuildCollisionBox();
+  virtual void rebuildCollisionBox();
 
   /**
    * @brief renvoie la box d'attaque du personnage 
@@ -147,9 +123,30 @@ public:
    */
   const CollisionBox &getAttackBox() const;
 
+  /**
+   * @brief construit les tableau contenant toutes les informations sur les animations 
+   */
   void buildAnimCache(perso_info info_);
 
-  //void attack(Personnage Ennemy[], GLFWwindow *);
-  //bool gettinghit();
-  //void Dash();
+  /**
+   * @détermine si le personnage est dans un etat d'attaque
+   */
+  bool isAttacking();
+
+  /**
+   * @brief retourne le nombre de pourcentage à appliquer a l'adversaire lors d'une attaque
+   */
+  virtual float getPercentageToApply();
+
+  /**
+   * @brief Methode purement virtuelle qui définissent comment le personnage agit selon son etat
+   */
+  //////////////////////////////////////
+  virtual void Dash(double delta_time_) = 0;
+  virtual void Jump(double delta_time_) = 0;
+  virtual void Attack(double delta_time_) = 0;
+  virtual void Light_attack(double delta_time_) = 0;
+  virtual void Hit(double delta_time_) = 0;
+  //////////////////////////////////////
+
 };
