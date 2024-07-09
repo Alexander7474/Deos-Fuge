@@ -2,7 +2,7 @@
 
 // perso par default
 const perso_info KNIGHT = {
-  "img/personnages/knight/",
+  "assets/personnages/knight/",
   // nombre de frames par anim
   {10,  // stationnary
     10, // run
@@ -40,7 +40,7 @@ const perso_info KNIGHT = {
 
 // perso par default
 const perso_info WHITE_KNIGHT = {
-  "img/personnages/white_knight/",
+  "assets/personnages/white_knight/",
   // nombre de frames par anim
   {10,  // stationnary
     10, // run

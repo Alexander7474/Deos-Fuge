@@ -5,10 +5,12 @@
 using namespace std;
 
 Map::Map() : 
-    background(Texture("img/map/glace/background.png"))
+    background(Texture("assets/map/glace/background.png"))
 {
     // remplissage du tableau
-    remplissage("img/map/glace/");
+    remplissage("assets/map/glace/");
+    background.setRGBFilterState(true);
+    background.setColor(100,100,100);
 }
 
 Map::Map(const char* tiles_folder) :
