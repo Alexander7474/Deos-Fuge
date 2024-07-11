@@ -3,6 +3,7 @@
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
 #include <BBOP/Graphics/cameraClass.h>
+#include <BBOP/Graphics/collisionBoxClass.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -16,6 +17,7 @@ class Map
 {
 private:
   std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
+  std::vector<CollisionBox> Collision_layer; //!< stock les collision de la box
   Sprite background; //!< Background du jeu
   
 public:
@@ -87,4 +89,5 @@ public:
   void destroyBlock(Vector2f position, float zone);
 
   std::vector<Sprite>& getTiles();
+  std::vector<CollisionBox>& getCollision();
 };

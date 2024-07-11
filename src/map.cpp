@@ -1,7 +1,14 @@
 #include "map.h"
+
+#include <BBOP/Graphics/bbopFunc.h>
 #include <BBOP/Graphics/cameraClass.h>
+#include <BBOP/Graphics/collisionBoxClass.h>
+#include <BBOP/Graphics/textureClass.h>
 #include <iostream>
 #include <fstream>
+#include <LDtkLoader/Project.hpp>
+#include <LDtkLoader/Layer.hpp>
+
 using namespace std;
 
 Map::Map() : 
@@ -20,53 +27,36 @@ Map::Map(const char* tiles_folder) :
 }
 
 void Map::remplissage(const char* tiles_folder)
-{
-    ifstream fichier(string(tiles_folder) + "definition.bmm");
+{  
+  ldtk::Project ldtk_project;
+  ldtk_project.loadFromFile("assets/map/test/map.ldtk");
 
-    string path;
-    int x, x_final, y, y_final;
+  vector<Texture> tileset = bbopLoadSpriteSheet("assets/map/test/tileset.png", 32, 12);
 
-    if (fichier)
-    {
-        string mot;
+  const auto& world = ldtk_project.getWorld();
+  const auto& level = world.getLevel("AutoLayer");
+  const auto& layer = level.getLayer("IntGrid_layer");
+  const auto& c_layer = level.getLayer("Collision_layer");
 
-        for(int b=0; b<9; b++)
-        {
-            fichier >> mot;
-            path = string(tiles_folder) + "tiles/" + mot + ".png";
-
-            fichier >> mot;
-            x = stoi(mot);
-
-            fichier >> mot;
-            x_final = stoi(mot);
-
-            fichier >> mot;
-            y = stoi(mot);
-
-            fichier >> mot;
-            y_final = stoi(mot);
-
-            cout << path << " " << x << " " << x_final << " " << y << " " << y_final << endl;
-
-            for(int j=y; j<=y_final; j+=16)
-            {
-                for(int i=x; i<=x_final; i+=16)
-                {
-                    Sprite sprite(Texture(path.c_str()));
-                    sprite.setPosition(Vector2f(i, j));
-                    tiles.push_back(sprite);
-                }
-            }
-        }
-
-        cout << "Vecteur de Sprite remplie avec succès" << endl;
-    }
-
-    else
-    {
-        cout << "Erreur Impossible d'ouvrir le fichier" << endl;
-    }
+  // iterate on the tiles of the layer
+  for (const auto& tile : layer.allTiles()) {
+    Sprite tile_spr(tileset[tile.tileId]);
+    tile_spr.setPosition(tile.getWorldPosition().x,tile.getWorldPosition().y);
+    tile_spr.setSize(8,8);
+    tiles.push_back(tile_spr);
+  }
+  
+  std::cerr << "herer" << std::endl;
+  if(c_layer.hasTileset())
+    std::cerr << "uiqsfheui" << std::endl;
+  // iterate on the tiles of the layer
+  for (const auto& box : c_layer.getIntGridValPositions(1)) {
+    CollisionBox b;
+    b.setPosition(box.x*32, box.y*32);
+    b.setSize(32,32);
+    std::cerr << "pos: " << b.getPosition().x << " " << b.getPosition().y << " size: " << b.getSize().x << " " << b.getSize().y << std::endl;
+    Collision_layer.push_back(b);
+  }
 }
 
 void Map::Draw(Scene &scene, Camera &ground_camera)
@@ -78,6 +68,10 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
   for (unsigned i=0; i<tiles.size(); i++)
   {
     scene.Draw(tiles[i]);
+  }
+
+  for(const auto& box : Collision_layer){
+    bbopDebugCollisionBox(box, scene);
   }
 }
 
@@ -114,4 +108,9 @@ void Map::destroyBlock(Vector2f position, float zone)
 vector<Sprite>& Map::getTiles()
 {
     return tiles;
+}
+
+vector<CollisionBox>& Map::getCollision()
+{
+    return Collision_layer;
 }

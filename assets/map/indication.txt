@@ -1,8 +1,0 @@
-avec comme exemple la 6ème ligne : 
-6 192 992 512 720
-
-6 : index du sprite 
-192 992 : longueur x -> il va y avoir 61 sprites de 16 pixels entre la position x 192 et la position x 992
-512 720 : hauteur y -> il va y avoir 14 sprites de 16 pixels entre la position y 512 et la position y 720
-
-Puis dans le code je fais une double boucle for donnant 61*14 sprites soit 854 sprites de 16 pixels

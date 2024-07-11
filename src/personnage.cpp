@@ -119,8 +119,8 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
 
   //collision avec les plateformes
   bool isInCollision = false;
-  for(long unsigned int i = 0; i < map_->getTiles().size() ; i++){
-    if(map_->getTiles()[i].getCollisionBox().check(shapeCollisionBox)){
+  for(long unsigned int i = 0; i < map_->getCollision().size() ; i++){
+    if(map_->getCollision()[i].check(shapeCollisionBox)){
       //reset du mouvement 
       mouvement.y=0;
       // si le personngae ne dash pas il est considéré comme stationnaire
@@ -129,7 +129,7 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       }
       fall_start_t = glfwGetTime();
       //on replace le personnage pour eviter les decalage avec la plateforme
-      setPosition(getPosition().x,map_->getTiles()[i].getPosition().y);
+      setPosition(getPosition().x,map_->getCollision()[i].getPosition().y);
       isInCollision = true;
     }
   }
