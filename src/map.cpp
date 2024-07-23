@@ -5,7 +5,6 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <iostream>
-#include <fstream>
 #include <LDtkLoader/Project.hpp>
 #include <LDtkLoader/Layer.hpp>
 
@@ -15,30 +14,39 @@ Map::Map() :
     background(Texture("assets/map/glace/background.png"))
 {
     // remplissage du tableau
-    remplissage("assets/map/glace/");
+    remplissage("assets/map/test/");
     background.setRGBFilterState(true);
     background.setColor(100,100,100);
 }
 
-Map::Map(const char* tiles_folder) :
-    background(Texture((string(tiles_folder) + "background.png").c_str()))
+Map::Map(const char* map_folder) :
+    background(Texture((string(map_folder) + "background.png").c_str()))
 {
-    remplissage(tiles_folder);
+    remplissage(map_folder);
+    background.setRGBFilterState(true);
+    background.setColor(100,100,100);
 }
 
-void Map::remplissage(const char* tiles_folder)
+void Map::remplissage(const char* map_folder)
 {  
+  // on charge la map
   ldtk::Project ldtk_project;
-  ldtk_project.loadFromFile("assets/map/test/map.ldtk");
 
-  vector<Texture> tileset = bbopLoadSpriteSheet("assets/map/test/tileset.png", 32, 12);
+  string ldtk_map_file = map_folder;
+  ldtk_map_file += "map.ldtk";
+  ldtk_project.loadFromFile(ldtk_map_file);
 
   const auto& world = ldtk_project.getWorld();
   const auto& level = world.getLevel("AutoLayer");
   const auto& layer = level.getLayer("IntGrid_layer");
   const auto& c_layer = level.getLayer("Collision_layer");
 
-  // iterate on the tiles of the layer
+  // on charge le tile set de la map
+  string tileset_file = map_folder;
+  tileset_file += "tileset.png";
+  vector<Texture> tileset = bbopLoadSpriteSheet(tileset_file.c_str(), 32, 12);
+
+  // iteration pour récupérer les tiles
   for (const auto& tile : layer.allTiles()) {
     Sprite tile_spr(tileset[tile.tileId]);
     tile_spr.setPosition(tile.getWorldPosition().x,tile.getWorldPosition().y);
@@ -46,15 +54,11 @@ void Map::remplissage(const char* tiles_folder)
     tiles.push_back(tile_spr);
   }
   
-  std::cerr << "herer" << std::endl;
-  if(c_layer.hasTileset())
-    std::cerr << "uiqsfheui" << std::endl;
-  // iterate on the tiles of the layer
+  // iteration pour recupérer les box 
   for (const auto& box : c_layer.getIntGridValPositions(1)) {
     CollisionBox b;
     b.setPosition(box.x*32, box.y*32);
     b.setSize(32,32);
-    std::cerr << "pos: " << b.getPosition().x << " " << b.getPosition().y << " size: " << b.getSize().x << " " << b.getSize().y << std::endl;
     Collision_layer.push_back(b);
   }
 }
@@ -71,7 +75,6 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
   }
 
   for(const auto& box : Collision_layer){
-    bbopDebugCollisionBox(box, scene);
   }
 }
 

@@ -2,9 +2,6 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
-#include <cmath>
-#include <iostream>
-#include <ostream>
 #include <string>
 
 Personnage::Personnage():
@@ -20,66 +17,70 @@ Personnage::Personnage():
 void Personnage::updatePersonnage(double delta_time_, Map *map_)
 {
   // gestion des états entrants
-  switch (calling_state) {
-    case dash:
-      // dash seulement si le dash est reset
-      if(anim_frame_cpt[dash] == 0 && state != dash){
-        state = dash;
-        anim_last_frame_t[dash] = glfwGetTime();
-        anim_start_t[state] = glfwGetTime();
-      }
-      break;
-    case jump:
-      // limite de deux jump 
-      if(state != jump && state != fall && anim_frame_cpt[jump] == 0) {
-        state = jump;
-        anim_last_frame_t[jump] = glfwGetTime();
-        anim_start_t[state] = glfwGetTime();
-      }
-      break;
-    case light_attack:
-      if(anim_frame_cpt[light_attack] == 0 && state != light_attack){
-        state=light_attack;
-        anim_last_frame_t[light_attack] = glfwGetTime();
-        anim_start_t[state] = glfwGetTime();
-      }
-      break;
-    case attack:
-      if(anim_frame_cpt[attack] == 0 && state != attack){
-        state=attack;
-        anim_last_frame_t[attack] = glfwGetTime();
-        anim_start_t[state] = glfwGetTime();
-      }
-      break;
-    case hit:
-      if(anim_frame_cpt[hit] == 0 && state != hit){
-        state = hit;
-        anim_last_frame_t[hit] = glfwGetTime();
-        anim_start_t[state] = glfwGetTime();
-      }
-      break;
-    case run:
-      // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
-      if(state==stationary && state != run){
-        state=run;
-        anim_last_frame_t[run] = glfwGetTime();
-      }
-    default:
-      // si il n'y a pas de jump call le jump frame est reset
-      if(state != jump){
-        anim_frame_cpt[jump] = 0;
-      }else{ // pas de jump call ni de jump state en cours le perso tombe
-        state = fall;
-      }
-      // reset du dash uniquement quand le pero est au sol et sans dash call
-      if(state==stationary || state == run){
-        anim_frame_cpt[dash] = 0;
-        anim_frame_cpt[light_attack] = 0;
-        anim_frame_cpt[attack] = 0;
-      }
-      if(state != hit)
-        anim_frame_cpt[hit] = 0;
-      break;
+  if(state != hit && !call_hit){
+    switch (calling_state) {
+      case dash:
+        // dash seulement si le dash est reset
+        if(anim_frame_cpt[dash] == 0 && state != dash){
+          state = dash;
+          anim_last_frame_t[dash] = glfwGetTime();
+          anim_start_t[state] = glfwGetTime();
+        }
+        break;
+      case jump:
+        // limite de deux jump 
+        if(state != jump && state != fall && anim_frame_cpt[jump] == 0) {
+          state = jump;
+          anim_last_frame_t[jump] = glfwGetTime();
+          anim_start_t[state] = glfwGetTime();
+        }
+        break;
+      case light_attack:
+        if(anim_frame_cpt[light_attack] == 0 && state != light_attack){
+          state=light_attack;
+          anim_last_frame_t[light_attack] = glfwGetTime();
+          anim_start_t[state] = glfwGetTime();
+        }
+        break;
+      case attack:
+        if(anim_frame_cpt[attack] == 0 && state != attack){
+          state=attack;
+          anim_last_frame_t[attack] = glfwGetTime();
+          anim_start_t[state] = glfwGetTime();
+        }
+        break;
+      case run:
+        // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
+        if(state==stationary && state != run){
+          state=run;
+          anim_last_frame_t[run] = glfwGetTime();
+        }
+      default:
+        // si il n'y a pas de jump call le jump frame est reset
+        if(state != jump){
+          anim_frame_cpt[jump] = 0;
+        }else{ // pas de jump call ni de jump state en cours le perso tombe
+          state = fall;
+        }
+        // reset du dash uniquement quand le pero est au sol et sans dash call
+        if(state==stationary || state == run){
+          anim_frame_cpt[dash] = 0;
+          anim_frame_cpt[light_attack] = 0;
+          anim_frame_cpt[attack] = 0;
+        }
+        if(state != hit)
+          anim_frame_cpt[hit] = 0;
+        break;
+    }
+  }
+
+  if(call_hit){
+    if(anim_frame_cpt[hit] == 0 && state != hit){
+      state = hit;
+      anim_last_frame_t[hit] = glfwGetTime();
+      anim_start_t[state] = glfwGetTime();
+      call_hit = false;
+    }
   }
 
   //gestion des états///////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +163,7 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
 void Personnage::goRight(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash){
+  if(state != dash && !isAttacking()){
     mouvement.x=speed*value*delta_time_;
     if(direction==left){
       flipVertically();
@@ -176,7 +177,7 @@ void Personnage::goRight(double delta_time_, float value)
 void Personnage::goLeft(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash){
+  if(state != dash && !isAttacking()){
     mouvement.x=speed*value*delta_time_;
     if(direction==right){
       flipVertically();
@@ -189,8 +190,9 @@ void Personnage::goLeft(double delta_time_, float value)
 
 void Personnage::doHit(int dir, float percentage_)
 {
-  calling_state = hit;
+  call_hit = true;
   percentage += percentage_;
+  std::cerr << "hit: " << percentage << std::endl;
   if(direction == static_cast<perso_direction>(dir))
     flipVertically();
   direction = static_cast<perso_direction>(-1*dir);

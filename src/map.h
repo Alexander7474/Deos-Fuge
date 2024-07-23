@@ -36,7 +36,7 @@ public:
   *
   * @see Map::Map(const char* tiles_folder);
   */
-  Map(const char* tiles_folder);
+  Map(const char* map_folder);
 
   /**
   * @brief Conctructeur par copie de Map

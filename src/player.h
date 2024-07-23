@@ -42,6 +42,7 @@ public:
 private:
   std::string name; //<! nom du Player
   int joystick; //<! manette du Player
+  bool joystick_connected; //<! Uniquement pour gérer le message d'erreur
   Personnage *perso; //<! personnage du joueur
 
   //attribut system
