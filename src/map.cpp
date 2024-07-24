@@ -57,8 +57,8 @@ void Map::remplissage(const char* map_folder)
   // iteration pour recupérer les box 
   for (const auto& box : c_layer.getIntGridValPositions(1)) {
     CollisionBox b;
-    b.setPosition(box.x*32, box.y*32);
-    b.setSize(32,32);
+    b.setPosition(box.x*8, box.y*8);
+    b.setSize(8,8);
     Collision_layer.push_back(b);
   }
 }
@@ -69,12 +69,14 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
   scene.Draw(background);
 
   scene.useCamera(&ground_camera);
-  for (unsigned i=0; i<tiles.size(); i++)
+  for (Sprite& tile : tiles)
   {
-    scene.Draw(tiles[i]);
+    if(ground_camera.isInCamView(tile))
+      scene.Draw(tile);
   }
 
   for(const auto& box : Collision_layer){
+    bbopDebugCollisionBox(box, scene);
   }
 }
 
