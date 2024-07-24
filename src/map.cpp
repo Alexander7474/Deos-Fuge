@@ -10,14 +10,7 @@
 
 using namespace std;
 
-Map::Map() : 
-    background(Texture("assets/map/glace/background.png"))
-{
-    // remplissage du tableau
-    remplissage("assets/map/test/");
-    background.setRGBFilterState(true);
-    background.setColor(100,100,100);
-}
+Map::Map() : Map("assets/map/test/"){}
 
 Map::Map(const char* map_folder) :
     background(Texture((string(map_folder) + "background.png").c_str()))

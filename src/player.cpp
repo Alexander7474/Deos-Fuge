@@ -1,9 +1,4 @@
 #include "player.h"
-#include "personnage.h"
-#include "personnages/white_knight.h"
-#include <GL/gl.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
 #include <string>
 
 Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, int perso_select)

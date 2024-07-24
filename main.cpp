@@ -1,5 +1,5 @@
 
-#include "src/personnage.h"
+#include "src/personnages/personnage.h"
 #include "src/game.h"
 #include "src/player.h"
 

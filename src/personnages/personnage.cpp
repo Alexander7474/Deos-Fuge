@@ -5,7 +5,7 @@
 #include <string>
 
 Personnage::Personnage():
-    Sprite("img/default.png"),
+    Sprite("assets/default.png"),
     percentage(0),
     frame_cpt(0),
     state(fall),

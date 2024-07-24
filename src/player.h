@@ -3,7 +3,7 @@
 #include "personnages/knight.h"
 #include "personnages/white_knight.h"
 #include "map.h"
-#include "personnage.h"
+#include "personnages/personnage.h"
 
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
