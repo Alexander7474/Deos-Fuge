@@ -58,6 +58,7 @@ void Game::update()
 
     if(players[i].perso->getPosition().y > 1000.f){
       players[i].perso->setPosition(300.f,100.f);
+      players[i].perso->percentage = 0.f;
     }
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){

@@ -64,6 +64,7 @@ protected:
 public:
 
   friend class Player;
+  friend class Game;
  
   /**
   * @brief Constructeur de personnage
