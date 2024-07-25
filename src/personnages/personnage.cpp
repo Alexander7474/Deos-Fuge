@@ -115,33 +115,47 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   
   if(mouvement.y > (weight/3) * delta_time_)
     mouvement.y= (weight/3) * delta_time_;
-  
+
+  // application du vecteur de mouvement final
   move(mouvement);
 
   //collision avec les plateformes
   bool isInCollision = false;
-  for(long unsigned int i = 0; i < map_->getCollision().size() ; i++){
-    if(map_->getCollision()[i].check(shapeCollisionBox)){
-      //reset du mouvement 
-      mouvement.y=0;
-      // si le personngae ne dash pas il est considéré comme stationnaire
-      if(state == fall){
-        state=stationary;
+  for(CollisionBox box : map_->getCollision()){
+    if(box.check(shapeCollisionBox)){
+      if(box.getTop() <= shapeCollisionBox.getBottom() && box.getBottom() >= shapeCollisionBox.getBottom()){
+        pos.y = box.getPosition().y;
+        isInCollision = true;
+        fall_start_t = glfwGetTime();
+        if(state == fall){
+          state=stationary;
+        }
+      } 
+      else if(box.getBottom() >= shapeCollisionBox.getTop() && box.getTop() <= shapeCollisionBox.getTop()){
+        pos.y += box.getBottom() - shapeCollisionBox.getTop();
+        isInCollision = true;
+        fall_start_t = glfwGetTime();
+        state = fall;
+      } 
+      else if(box.getRight() >= shapeCollisionBox.getLeft() && box.getLeft() <= shapeCollisionBox.getLeft()){
+        pos.x += box.getRight() - shapeCollisionBox.getLeft();
+        isInCollision = true;
+        state = stationary;
+      } 
+      else if(box.getLeft() <= shapeCollisionBox.getRight() && box.getRight() >= shapeCollisionBox.getRight()){
+        pos.x -= shapeCollisionBox.getRight() - box.getLeft();
+        isInCollision = true;
+        state = stationary;
       }
-      fall_start_t = glfwGetTime();
-      //on replace le personnage pour eviter les decalage avec la plateforme
-      setPosition(getPosition().x,map_->getCollision()[i].getPosition().y);
-      isInCollision = true;
     }
   }
-
+  
+ 
+ 
   // check pour éviter des situations anormale
   if(mouvement.x >= -0.1f && mouvement.x <= 0.1f) mouvement.x = 0.f;  
   if(!isInCollision && state == run) state = fall;
   if(state == run && mouvement.x == 0.f) state = stationary;
-  
-  // application du vecteur de mouvement final
-  move(mouvement);
 
   // gestion des frames et de l'animation
   if(anim_frame_t[state] < glfwGetTime()-anim_last_frame_t[state]){

@@ -17,7 +17,7 @@ class Map
 {
 private:
   std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
-  std::vector<CollisionBox> Collision_layer; //!< stock les collision de la box
+  std::vector<CollisionBox> collision_layer; //!< stock les collision de la box
   Sprite background; //!< Background du jeu
   
 public:
