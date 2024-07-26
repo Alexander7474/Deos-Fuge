@@ -102,9 +102,9 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
       scene.Draw(tile);
   }
 
-  for(const auto& box : collision_layer){
-    bbopDebugCollisionBox(box, scene);
-  }
+  //for(const auto& box : collision_layer){
+    //bbopDebugCollisionBox(box, scene);
+  //}
 }
 
 void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)

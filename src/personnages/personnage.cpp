@@ -2,6 +2,8 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
+#include <ostream>
 #include <string>
 
 Personnage::Personnage():
@@ -122,29 +124,33 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   //collision avec les plateformes
   bool isInCollision = false;
   for(CollisionBox box : map_->getCollision()){
-    if(box.check(shapeCollisionBox)){
-      if(box.getTop() <= shapeCollisionBox.getBottom() && box.getBottom() >= shapeCollisionBox.getBottom()){
-        pos.y = box.getPosition().y;
-        isInCollision = true;
+    if(shapeCollisionBox.check(box)){
+      bool real_y_col = false;
+      isInCollision = true;
+      if(box.getTop() < shapeCollisionBox.getBottom() && box.getBottom() > shapeCollisionBox.getBottom()){
+        if(shapeCollisionBox.getBottom()-box.getTop() < 9.f){
+          move(0.f,-(shapeCollisionBox.getBottom()-box.getTop()+0.1f));
+          real_y_col = true;
+        }
         fall_start_t = glfwGetTime();
         if(state == fall){
           state=stationary;
         }
       } 
-      else if(box.getBottom() >= shapeCollisionBox.getTop() && box.getTop() <= shapeCollisionBox.getTop()){
-        pos.y += box.getBottom() - shapeCollisionBox.getTop();
-        isInCollision = true;
-        fall_start_t = glfwGetTime();
+      else if(box.getBottom() > shapeCollisionBox.getTop() && box.getTop() < shapeCollisionBox.getTop()){
+        if(box.getBottom()-shapeCollisionBox.getTop() < 9.f){
+          move(0.f,box.getBottom() - shapeCollisionBox.getTop()+0.1f);
+          real_y_col = true;
+        }
+        anim_frame_cpt[jump] += anim_frame_n[jump];
         state = fall;
       } 
-      else if(box.getRight() >= shapeCollisionBox.getLeft() && box.getLeft() <= shapeCollisionBox.getLeft()){
-        pos.x += box.getRight() - shapeCollisionBox.getLeft();
-        isInCollision = true;
+      if(box.getRight() > shapeCollisionBox.getLeft() && box.getLeft() < shapeCollisionBox.getLeft() && !real_y_col){
+        move(box.getRight() - shapeCollisionBox.getLeft()+0.1f, 0.f);
         state = stationary;
       } 
-      else if(box.getLeft() <= shapeCollisionBox.getRight() && box.getRight() >= shapeCollisionBox.getRight()){
-        pos.x -= shapeCollisionBox.getRight() - box.getLeft();
-        isInCollision = true;
+      else if(box.getLeft() < shapeCollisionBox.getRight() && box.getRight() > shapeCollisionBox.getRight() && !real_y_col){
+        move(-(shapeCollisionBox.getRight() - box.getLeft()+0.1f), 0.f);
         state = stationary;
       }
     }

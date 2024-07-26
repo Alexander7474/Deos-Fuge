@@ -19,3 +19,4 @@
 2. des platformes ou l'on peut passer a travers 
 3. animer les décors 
 4. destruction d'objets et même du terrain 
+5. possibilté d'avoir de objets devant le personnages

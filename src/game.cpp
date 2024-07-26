@@ -88,8 +88,8 @@ void Game::Draw()
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
     scene.Draw(*players[i].perso);
-    bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
-    bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
+    //bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
+    //bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);
