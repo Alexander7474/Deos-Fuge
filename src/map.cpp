@@ -16,11 +16,9 @@ using namespace std;
 Map::Map() : Map("assets/map/test/"){}
 
 Map::Map(const char* map_folder) :
-    background(Texture((string(map_folder) + "background.png").c_str()))
+    background(Texture("assets/default.png"))
 {
     remplissage(map_folder);
-    background.setRGBFilterState(true);
-    background.setColor(100,100,100);
 }
 
 void Map::remplissage(const char* map_folder)
@@ -49,6 +47,18 @@ void Map::remplissage(const char* map_folder)
     tile_spr.setSize(8,8);
     tiles.push_back(tile_spr);
   }
+
+  //recuperation du background 
+  if(level.hasBgImage()){
+    ldtk::FilePath bg_path= level.getBgImage().path;
+    string bg_file = bg_path.directory() + bg_path.filename() + bg_path.extension();
+    background.setTexture(Texture(bg_file.c_str()));
+  }else {
+    std::string bg_file = map_folder;
+    bg_file += "map/png/Level_bg.png";
+    background.setTexture(Texture(bg_file.c_str()));
+  }
+  background.setSize(1280,720);
 
   //stockge de info sur le layer de collision 
   int collision_box_size = c_layer.getCellSize();
