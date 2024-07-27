@@ -32,21 +32,14 @@ void Map::remplissage(const char* map_folder)
 
   const auto& world = ldtk_project.getWorld();
   const auto& level = world.getLevel("Level");
-  const auto& layer = level.getLayer("Tile_layer");
   const auto& c_layer = level.getLayer("Collision_layer");
 
   // on charge le tile set de la map
+  ldtk::FilePath tileset_path = world.getTileset("Tileset").path;
   string tileset_file = map_folder;
-  tileset_file += "tileset.png";
+  tileset_file += tileset_path.directory() + tileset_path.filename();
+  std::cerr << tileset_file << std::endl;
   vector<Texture> tileset = bbopLoadSpriteSheet(tileset_file.c_str(), 32, 12);
-
-  // iteration pour récupérer les tiles
-  for (const auto& tile : layer.allTiles()) {
-    Sprite tile_spr(tileset[tile.tileId]);
-    tile_spr.setPosition(tile.getWorldPosition().x,tile.getWorldPosition().y);
-    tile_spr.setSize(8,8);
-    tiles.push_back(tile_spr);
-  }
 
   //recuperation du background 
   if(level.hasBgImage()){
@@ -59,6 +52,18 @@ void Map::remplissage(const char* map_folder)
     background.setTexture(Texture(bg_file.c_str()));
   }
   background.setSize(1280,720);
+ 
+  // iteration pour récupérer les tiles
+  for (const auto& layer : level.allLayers()){
+    if(layer.getName() != "Collision_layer"){
+      for (const auto& tile : layer.allTiles()) {
+        Sprite tile_spr(tileset[tile.tileId]);
+        tile_spr.setPosition(tile.getWorldPosition().x,tile.getWorldPosition().y);
+        tile_spr.setSize(layer.getCellSize(),layer.getCellSize());
+        tiles.push_back(tile_spr);
+      }
+    }
+  }
 
   //stockge de info sur le layer de collision 
   int collision_box_size = c_layer.getCellSize();
