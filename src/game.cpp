@@ -7,8 +7,8 @@
 #include <string>
 
 Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
-   cam_scale_goal(0.33f),
-   cam_scale_last(0.33f),
+   cam_scale_goal(0.166f),
+   cam_scale_last(0.166f),
    game_state(start),
    players(players_),
    last_time(glfwGetTime()),
@@ -69,9 +69,9 @@ void Game::update()
   Vector2f scale((max_x.y-max_x.x)/BBOP_WINDOW_RESOLUTION.x, (max_y.y-max_y.x)/BBOP_WINDOW_RESOLUTION.y);
   float cam_scale = (scale.x > scale.y) ? scale.x : scale.y;
   Vector2f cam_pos((max_x.y-max_x.x)/2.f+max_x.x,(max_y.y-max_y.x)/2.f+max_y.x);
-  cam_scale+=0.33f;
+  cam_scale+=0.166f;
   if (cam_scale>3.f) cam_scale = 3.f;
-  if(cam_scale-0.2f > cam_scale_goal || cam_scale < cam_scale_goal-0.4f){
+  if(cam_scale-0.1f > cam_scale_goal || cam_scale < cam_scale_goal-0.2f){
      cam_scale_goal = cam_scale;
   }
   cam_scale = cam_scale_last+((cam_scale_goal-cam_scale_last)/10.f);
@@ -88,8 +88,8 @@ void Game::Draw()
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
     scene.Draw(*players[i].perso);
-    //bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
-    //bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
+    bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
+    bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);

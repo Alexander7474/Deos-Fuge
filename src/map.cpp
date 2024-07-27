@@ -102,9 +102,10 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
       scene.Draw(tile);
   }
 
-  //for(const auto& box : collision_layer){
-    //bbopDebugCollisionBox(box, scene);
-  //}
+  for(CollisionBox& box : collision_layer){
+    if(ground_camera.isInCamView(box))
+      bbopDebugCollisionBox(box, scene);
+  }
 }
 
 void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)
