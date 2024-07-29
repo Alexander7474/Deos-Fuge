@@ -6,15 +6,14 @@ Knight::Knight()
 {
         //attribut de base 
         //
-        speed = 250.f;
+        speed = 200.f;
         weight = 1500.f;
-        jump_force = 120.f;
+        jump_force = 210.f;
 
         //attribut du sprite
         // 
         buildAnimCache(KNIGHT);
         setAutoUpdateCollision(true);
-        setPosition(300.f,100.f);
         setSize(100.f,100.f); 
         setOrigin(50.f,100.0f);
         getCollisionBox().setOffsetY(Vector2f(55.f,0.f));

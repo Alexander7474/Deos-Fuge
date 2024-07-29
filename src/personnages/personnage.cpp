@@ -143,15 +143,12 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
           real_y_col = true;
         }
         anim_frame_cpt[jump] += anim_frame_n[jump];
-        state = fall;
       } 
       if(box.getRight() > shapeCollisionBox.getLeft() && box.getLeft() < shapeCollisionBox.getLeft() && !real_y_col){
         move(box.getRight() - shapeCollisionBox.getLeft()+0.1f, 0.f);
-        state = stationary;
       } 
       else if(box.getLeft() < shapeCollisionBox.getRight() && box.getRight() > shapeCollisionBox.getRight() && !real_y_col){
         move(-(shapeCollisionBox.getRight() - box.getLeft()+0.1f), 0.f);
-        state = stationary;
       }
     }
   }

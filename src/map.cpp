@@ -5,6 +5,7 @@
 #include <BBOP/Graphics/cameraClass.h>
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
+#include <LDtkLoader/DataTypes.hpp>
 #include <cstring>
 #include <iostream>
 #include <LDtkLoader/Project.hpp>
@@ -103,6 +104,26 @@ void Map::remplissage(const char* map_folder)
     }
   }
 
+  //recuperation des point de spawn
+  const auto& spawns = level.getField<ldtk::FieldType::ArrayFloat>("spawns");
+
+  // iterate on the array field
+  Vector2f temp_point;
+  for (long unsigned int i = 0; i < spawns.size(); i++) {
+    if (!spawns[i].is_null()) {
+      if(i % 2 == 0){
+        temp_point.x = spawns[i].value();
+      }else{
+        temp_point.y = spawns[i].value();
+        spawn_points.push_back(temp_point);
+      }
+    }
+  }
+
+  for (Vector2f p : spawn_points) {
+    std::cerr << p.x << " " << p.y << std::endl;
+  }
+
 }
 
 void Map::Draw(Scene &scene, Camera &ground_camera)
@@ -161,4 +182,9 @@ vector<Sprite>& Map::getTiles()
 vector<CollisionBox>& Map::getCollision()
 {
     return collision_layer;
+}
+
+vector<Vector2f>& Map::getSpawnPoints()
+{
+    return spawn_points;
 }

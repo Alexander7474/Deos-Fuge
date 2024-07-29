@@ -2,6 +2,7 @@
 
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
+#include <BBOP/Graphics/bbopMathClass.h>
 #include <BBOP/Graphics/cameraClass.h>
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <GL/glew.h>
@@ -18,6 +19,7 @@ class Map
 private:
   std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
   std::vector<CollisionBox> collision_layer; //!< stock les collision de la box
+  std::vector<Vector2f> spawn_points; //<! different point de spawn de la map
   Sprite background; //!< Background du jeu
   
 public:
@@ -90,4 +92,5 @@ public:
 
   std::vector<Sprite>& getTiles();
   std::vector<CollisionBox>& getCollision();
+  std::vector<Vector2f>& getSpawnPoints();
 };
