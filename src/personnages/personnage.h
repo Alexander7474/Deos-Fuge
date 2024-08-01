@@ -35,7 +35,7 @@ class Personnage : public Sprite
 protected:
   
   // caractèristique du personnage
-  float percentage; //<! pourcentage de dégats 
+  int percentage; //<! pourcentage de dégats 
   float speed; //<! vitesse
   float weight; //<! poid
   float jump_force; //<! force de saut
@@ -97,7 +97,7 @@ public:
    /**
    * @brief le personnage est touché
    */ 
-  void doHit(int dir, float percentage_);
+  void doHit(int dir, int percentage_);
 
   /**
    * @brief renvoie l'état du personnage
@@ -138,7 +138,7 @@ public:
   /**
    * @brief retourne le nombre de pourcentage à appliquer a l'adversaire lors d'une attaque
    */
-  virtual float getPercentageToApply();
+  virtual int getPercentageToApply();
 
   /**
    * @brief Methode purement virtuelle qui définissent comment le personnage agit selon son etat
@@ -149,6 +149,7 @@ public:
   virtual void Attack(double delta_time_) = 0;
   virtual void Light_attack(double delta_time_) = 0;
   virtual void Hit(double delta_time_) = 0;
+  virtual const perso_info &getInfo() = 0;
   //////////////////////////////////////
 
 };

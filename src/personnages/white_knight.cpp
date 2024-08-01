@@ -5,3 +5,8 @@ White_knight::White_knight()
 {
   buildAnimCache(WHITE_KNIGHT);
 }
+
+const perso_info &White_knight::getInfo()
+{
+  return WHITE_KNIGHT;
+}

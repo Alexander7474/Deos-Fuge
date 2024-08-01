@@ -213,7 +213,7 @@ void Personnage::goLeft(double delta_time_, float value)
   calling_state = run;
 }
 
-void Personnage::doHit(int dir, float percentage_)
+void Personnage::doHit(int dir, int percentage_)
 {
   call_hit = true;
   percentage += percentage_;
@@ -269,7 +269,7 @@ bool Personnage::isAttacking()
         return (state == attack || state == light_attack);
 }
 
-float Personnage::getPercentageToApply()
+int Personnage::getPercentageToApply()
 {
-        return 10.f;
+        return 10;
 }

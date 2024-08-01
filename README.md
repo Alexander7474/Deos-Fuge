@@ -2,13 +2,14 @@
 
 ## Road-map 
 
-1. Finir le système de combat et de personnage et l'inclusion de ldtk
-2. Intégrer une ambiance sonore 
-3. Créer les menu 
-4. Ajout du multi joueur local et online 
-5. Ajout des objets et de la destruction du terrain 
-6. Ajouter des personnages
-
+ Finir le système de combat
+   slide, up and down attck, block  
+ Intégrer une ambiance sonore   
+ Créer les menu    
+ Ajout du multi joueur local et online    
+ Ajout des objets et de la destruction du terrain    
+ Ajouter des personnages    
+ 
 ## ldtk road-map 
 1. debuguer les collision 
 2. gérer le background 
