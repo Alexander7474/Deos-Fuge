@@ -1,4 +1,5 @@
 #include "knight.h"
+#include "perso_info.h"
 #include <GLFW/glfw3.h>
 
 Knight::Knight()
@@ -94,14 +95,19 @@ void Knight::rebuildCollisionBox()
         }
 }
 
-float Knight::getPercentageToApply()
+int Knight::getPercentageToApply()
 {
         switch(state){
                 case attack: 
-                        return 20.f;
+                        return 20;
                 case light_attack:
-                        return 15.f;
+                        return 15;
                 default:
-                        return 10.f;
+                        return 10;
         }
+}
+
+const perso_info &Knight::getInfo()
+{
+  return KNIGHT;
 }

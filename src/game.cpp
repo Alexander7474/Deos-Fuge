@@ -5,6 +5,7 @@
 #include <BBOP/Graphics/fontsClass.h>
 #include <GLFW/glfw3.h>
 #include <cstdlib>
+#include <iostream>
 #include <string>
 
 Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
@@ -14,13 +15,13 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
    players(players_),
    last_time(glfwGetTime()),
    window(window_),
-   font(48, "font/GohuFont11NerdFont-Regular.ttf"),
+   font(25, "font/BigBlueTerm437NerdFont-Regular.ttf"),
    fps_hud("0", nullptr),
    last_time_fps(glfwGetTime()),
    fps_counter(0)
 {
   fps_hud.setFont(&font);
-  fps_hud.setPosition(Vector2f(0.0f,50.f));
+  fps_hud.setPosition(Vector2f(300.f,20.f));
 
   // attribution d'un point de spawn a chaque joueur
   unsigned int cpt = 0;
@@ -32,6 +33,47 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
       break;
     cpt++;
   }
+
+
+  //list de position possible pourl es différent hud des joueurs 
+  Vector2f hud_pos_list[4] = {
+    Vector2f(0.f,720.f),
+    Vector2f(1280.f,720.f),
+    Vector2f(1280.f, 0.f),
+    Vector2f(0.f, 0.f)
+  };
+  int cpt_pos = 0;
+
+  //creation du hud
+  
+  players_hud = new player_hud*[players.size()];
+  hud_padding = 2.f;
+
+  for(Player p : players){
+    std::string pp_path = p.perso->getInfo().folder_path + "pp.png";
+    player_hud *h = new player_hud{
+      TexteBox(p.name.c_str(), &font),
+      TexteBox(std::to_string(p.perso->percentage).c_str(), &font),
+      Sprite(Texture(pp_path.c_str()))
+    };
+    
+    h->player_pp.setSize(75.f,75.f);
+
+    //getsion des positions des éléments du hud des différents joueurs
+    hud_pos_list[cpt_pos].x = (hud_pos_list[cpt_pos].x > 0.f) ? hud_pos_list[cpt_pos].x - (h->name.getSize().x+hud_padding) : 0.f + hud_padding;
+    hud_pos_list[cpt_pos].y = (hud_pos_list[cpt_pos].y > 0.f) ? hud_pos_list[cpt_pos].y - (h->name.getSize().y+h->percent.getSize().y+h->player_pp.getSize().y+hud_padding*3) : 0.f + hud_padding;
+
+    h->player_pp.setPosition(hud_pos_list[cpt_pos]);
+    hud_pos_list[cpt_pos].y += hud_padding+h->player_pp.getSize().y+h->name.getSize().y;
+    h->name.setPosition(hud_pos_list[cpt_pos]);
+    hud_pos_list[cpt_pos].y += hud_padding+h->percent.getSize().y;
+    h->percent.setPosition(hud_pos_list[cpt_pos]);
+
+    players_hud[cpt_pos] = h;
+
+    cpt_pos = (cpt_pos < 3) ? cpt_pos+1 : 3;
+  }
+
 }
 
 void Game::update()
@@ -108,11 +150,20 @@ void Game::Draw()
     //scene.Draw(bots[i]);
   //}
   scene.useCamera(nullptr);
+
+  //affichage du hud 
   scene.Draw(fps_hud);
+
+  for(long unsigned int i = 0; i < players.size(); i++){
+    scene.Draw(players_hud[i]->player_pp);
+    scene.Draw(players_hud[i]->name);
+    scene.Draw(players_hud[i]->percent);
+  }
 }
 
 void Game::updateHUD()
 {
+  // hud fps
   double actual_time = glfwGetTime();
   double delta_time = actual_time-last_time_fps;
   fps_counter++;
@@ -122,4 +173,18 @@ void Game::updateHUD()
     last_time_fps = actual_time;
   }
   fps_hud.setTexte(final_fps.c_str());
+
+  //player hud  
+  for(long unsigned int i = 0; i < players.size(); i++){
+    players_hud[i]->percent.setTexte(std::to_string(players[i].perso->percentage).c_str());
+  }
+  
+}
+
+Game::~Game()
+{
+  for(long unsigned int i = 0; i < players.size(); i++){
+    delete players_hud[i];
+  }
+  delete [] players_hud;
 }

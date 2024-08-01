@@ -22,6 +22,12 @@ enum game_state_enum{
   end=2
 };
 
+struct player_hud {
+  TexteBox name;
+  TexteBox percent;
+  Sprite player_pp;
+};
+
 /**
  * @class Game
  * @brief class qui gère la partie
@@ -41,6 +47,8 @@ public:
   * @see Map Personnage
   */
   Game(GLFWwindow*& window_, std::vector<Player> &players_);
+
+  ~Game();
 
   /**
   * @brief Met a jour tous les attribut de la Game
@@ -74,6 +82,8 @@ private:
   TexteBox fps_hud; //<! texte box affichage des fps
   double last_time_fps; //<! last time pour les fps
   int fps_counter; //<! conpteur de frame
+  player_hud** players_hud;
+  float hud_padding;
   
   /**
   * @brief Met à jour le hud

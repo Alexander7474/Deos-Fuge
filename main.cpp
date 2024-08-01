@@ -18,13 +18,16 @@ int main()
   bbopInit(1280, 720, "Bro Melee", window);
 
   std::vector<Player> test; 
-  Player perso1(window, GLFW_JOYSTICK_2, "didier", 0);
-  Player perso2(window, GLFW_JOYSTICK_1, "roger", 1);
+  Player perso1(window, GLFW_JOYSTICK_2, "Didier", 0);
+  Player perso2(window, GLFW_JOYSTICK_1, "Roger", 1);
   
   test.push_back(perso1);
   test.push_back(perso2);
 
   Game game(window, test);
+
+  bbopChangeWindowSize(1280,720);
+  bbopChangeWindowResolution(1280,720);
 
   glfwSwapInterval(1);
 
