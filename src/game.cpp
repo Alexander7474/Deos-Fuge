@@ -25,7 +25,7 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
   // attribution d'un point de spawn a chaque joueur
   unsigned int cpt = 0;
   for(Vector2f p : map.getSpawnPoints()){
-    std::cerr << cpt << std::endl;
+    //std::cerr << cpt << std::endl;
     if(cpt < players.size())
       players[cpt].perso->setPosition(p);
     else 
