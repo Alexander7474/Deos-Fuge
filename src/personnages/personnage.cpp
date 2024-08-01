@@ -217,7 +217,7 @@ void Personnage::doHit(int dir, float percentage_)
 {
   call_hit = true;
   percentage += percentage_;
-  std::cerr << "hit: " << percentage << std::endl;
+  //std::cerr << "hit: " << percentage << std::endl;
   if(direction == static_cast<perso_direction>(dir))
     flipVertically();
   direction = static_cast<perso_direction>(-1*dir);
