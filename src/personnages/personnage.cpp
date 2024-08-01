@@ -2,6 +2,7 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
+#include <algorithm>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -72,12 +73,14 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
         }
         if(state != hit)
           anim_frame_cpt[hit] = 0;
+        if(calling_state != run && state == run)
+          state = stationary;
         break;
     }
   }
 
   if(call_hit){
-    if(anim_frame_cpt[hit] == 0 && state != hit){
+    if(state != hit){
       state = hit;
       anim_last_frame_t[hit] = glfwGetTime();
       anim_start_t[state] = glfwGetTime();
@@ -113,47 +116,52 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
 
   //application de la gravité si le personnage tombe
   double fall_time = glfwGetTime() - fall_start_t;
-  mouvement.y += fall_time * delta_time_ * weight * delta_time_; // utilser les attribut de la map
+  mouvement.y += fall_time * delta_time_ * (weight/9.81); // utilser les attribut de la map
   
-  if(mouvement.y > (weight/3) * delta_time_)
-    mouvement.y= (weight/3) * delta_time_;
+  if(mouvement.y > weight * delta_time_)
+    mouvement.y= weight * delta_time_;
 
   // application du vecteur de mouvement final
+  //std::cerr << "y: " << mouvement.y << std::endl;
+  //std::cerr << "x: " << mouvement.x << std::endl;
   move(mouvement);
 
   //collision avec les plateformes
   bool isInCollision = false;
   for(CollisionBox box : map_->getCollision()){
     if(shapeCollisionBox.check(box)){
-      bool real_y_col = false;
+
+      //std::cerr << "box y: " << box.getPosition().y << std::endl;
+      //std::cerr << "pos y: " << pos.y << std::endl;
+
       isInCollision = true;
-      if(box.getTop() < shapeCollisionBox.getBottom() && box.getBottom() > shapeCollisionBox.getBottom()){
-        if(shapeCollisionBox.getBottom()-box.getTop() < 9.f){
-          move(0.f,-(shapeCollisionBox.getBottom()-box.getTop()+0.1f));
-          real_y_col = true;
+
+      float overlap_left = box.getRight() - shapeCollisionBox.getLeft();
+      float overlap_right = shapeCollisionBox.getRight() - box.getLeft();
+      float overlap_top = box.getBottom() - shapeCollisionBox.getTop() - 8.f;
+      float overlap_bottom = shapeCollisionBox.getBottom() - box.getTop()-8.f;
+
+      float min_overlap = std::min({overlap_right, overlap_left, overlap_top, overlap_bottom});
+
+      if(min_overlap == overlap_top){
+        move(0.f,box.getBottom() - shapeCollisionBox.getTop());
+        anim_start_t[jump] = glfwGetTime()-anim_t[jump];
+      }else if(min_overlap == overlap_bottom) {
+        move(0.f,-(shapeCollisionBox.getBottom()-box.getTop()));
+        if(state == fall){
+          state=run;
         }
         fall_start_t = glfwGetTime();
-        if(state == fall){
-          state=stationary;
-        }
-      } 
-      else if(box.getBottom() > shapeCollisionBox.getTop() && box.getTop() < shapeCollisionBox.getTop()){
-        if(box.getBottom()-shapeCollisionBox.getTop() < 9.f){
-          move(0.f,box.getBottom() - shapeCollisionBox.getTop()+0.1f);
-          real_y_col = true;
-        }
-        anim_frame_cpt[jump] += anim_frame_n[jump];
-      } 
-      if(box.getRight() > shapeCollisionBox.getLeft() && box.getLeft() < shapeCollisionBox.getLeft() && !real_y_col){
-        move(box.getRight() - shapeCollisionBox.getLeft()+0.1f, 0.f);
-      } 
-      else if(box.getLeft() < shapeCollisionBox.getRight() && box.getRight() > shapeCollisionBox.getRight() && !real_y_col){
-        move(-(shapeCollisionBox.getRight() - box.getLeft()+0.1f), 0.f);
+      }else if(min_overlap == overlap_right) {
+        move(-(shapeCollisionBox.getRight() - box.getLeft()), 0.f);
+
+      }else if (min_overlap == overlap_left) {
+        move(box.getRight() - shapeCollisionBox.getLeft(), 0.f);
       }
-    }
-  }
   
- 
+    }
+
+  }
  
   // check pour éviter des situations anormale
   if(mouvement.x >= -0.1f && mouvement.x <= 0.1f) mouvement.x = 0.f;  
@@ -172,7 +180,7 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   setTexture(animation[state][anim_frame_cpt[state]]);
   
   // reset du mouvement
-  mouvement.x = mouvement.x/20.0;
+  mouvement.x = mouvement.x/1.2;
 
   calling_state = stationary;
 }

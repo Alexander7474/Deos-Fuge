@@ -68,7 +68,7 @@ void Game::update()
     if(player_pos.y < max_y.x)
        max_y.x = player_pos.y;
 
-    if(players[i].perso->getPosition().y > 1000.f){
+    if(players[i].perso->getPosition().y > map.y_size){
       int r = rand() % map.getSpawnPoints().size();
       players[i].perso->setPosition(map.getSpawnPoints()[r]);
       players[i].perso->percentage = 0.f;
@@ -101,8 +101,8 @@ void Game::Draw()
   map.Draw(scene, players_camera);
   for(long unsigned int i = 0; i < players.size(); i++){
     scene.Draw(*players[i].perso);
-    bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
-    bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
+    //bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);
+    //bbopDebugCollisionBox(players[i].perso->getAttackBox(), scene);
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
     //scene.Draw(bots[i]);

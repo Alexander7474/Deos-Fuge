@@ -6,6 +6,7 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <LDtkLoader/DataTypes.hpp>
+#include <LDtkLoader/Tileset.hpp>
 #include <cstring>
 #include <iostream>
 #include <LDtkLoader/Project.hpp>
@@ -14,7 +15,7 @@
 
 using namespace std;
 
-Map::Map() : Map("assets/map/test/"){}
+Map::Map() : Map("assets/map/frozen_land/"){}
 
 Map::Map(const char* map_folder) :
     background(Texture("assets/default.png"))
@@ -35,17 +36,23 @@ void Map::remplissage(const char* map_folder)
   const auto& level = world.getLevel("Level");
   const auto& c_layer = level.getLayer("Collision_layer");
 
+  //recuperation des infos du level 
+  x_size = level.size.x;
+  y_size = level.size.y;
+
   // on charge le tile set de la map
-  ldtk::FilePath tileset_path = world.getTileset("Tileset").path;
+  ldtk::Tileset world_tileset = world.getTileset("Tileset");
+  ldtk::FilePath tileset_path = world_tileset.path;
   string tileset_file = map_folder;
   tileset_file += tileset_path.directory() + tileset_path.filename();
-  std::cerr << tileset_file << std::endl;
-  vector<Texture> tileset = bbopLoadSpriteSheet(tileset_file.c_str(), 32, 12);
+  int rows =  world_tileset.texture_size.y/world_tileset.tile_size;
+  int columns = world_tileset.texture_size.x/world_tileset.tile_size;
+  vector<Texture> tileset = bbopLoadSpriteSheet(tileset_file.c_str(), rows, columns);
 
   //recuperation du background 
   if(level.hasBgImage()){
-    ldtk::FilePath bg_path= level.getBgImage().path;
-    string bg_file = bg_path.directory() + bg_path.filename() + bg_path.extension();
+    ldtk::FilePath bg_path = level.getBgImage().path;
+    string bg_file = map_folder + bg_path.directory() + bg_path.filename();
     background.setTexture(Texture(bg_file.c_str()));
   }else {
     std::string bg_file = map_folder;
@@ -59,8 +66,15 @@ void Map::remplissage(const char* map_folder)
     if(layer.getName() != "Collision_layer"){
       for (const auto& tile : layer.allTiles()) {
         Sprite tile_spr(tileset[tile.tileId]);
+
         tile_spr.setPosition(tile.getWorldPosition().x,tile.getWorldPosition().y);
         tile_spr.setSize(layer.getCellSize(),layer.getCellSize());
+
+        if(tile.flipX)
+          tile_spr.flipVertically();
+        if(tile.flipY)
+          tile_spr.flipHorizontally();
+
         tiles.push_back(tile_spr);
       }
     }
@@ -120,10 +134,6 @@ void Map::remplissage(const char* map_folder)
     }
   }
 
-  for (Vector2f p : spawn_points) {
-    std::cerr << p.x << " " << p.y << std::endl;
-  }
-
 }
 
 void Map::Draw(Scene &scene, Camera &ground_camera)
@@ -134,14 +144,14 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
   scene.useCamera(&ground_camera);
   for (Sprite& tile : tiles)
   {
-    if(ground_camera.isInCamView(tile))
+            if(ground_camera.isInCamView(tile))
       scene.Draw(tile);
   }
 
-  for(CollisionBox& box : collision_layer){
-    if(ground_camera.isInCamView(box))
-      bbopDebugCollisionBox(box, scene);
-  }
+  //for(CollisionBox& box : collision_layer){
+    //if(ground_camera.isInCamView(box))
+    //  bbopDebugCollisionBox(box, scene);
+  //}
 }
 
 void Map::indexZone(Vector2f position, float zone, int * tab, int &cpt)

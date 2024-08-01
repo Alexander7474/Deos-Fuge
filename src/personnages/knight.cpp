@@ -7,8 +7,8 @@ Knight::Knight()
         //attribut de base 
         //
         speed = 200.f;
-        weight = 1500.f;
-        jump_force = 210.f;
+        weight = 200.f;
+        jump_force = 160.f;
 
         //attribut du sprite
         // 

@@ -22,7 +22,13 @@ private:
   std::vector<Vector2f> spawn_points; //<! different point de spawn de la map
   Sprite background; //!< Background du jeu
   
+  float y_size;
+  float x_size; 
+  
 public:
+
+  friend class Game;
+
   /**
   * @brief Constructeur par défault de Map.
   *
