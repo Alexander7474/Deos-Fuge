@@ -25,11 +25,11 @@ const perso_info KNIGHT = {
     0.2   // hit
   },
 
-  // timing des frames de chaque anim
+  // timing total de chaque anim
   {0.0,  // stationnary
     0.0, // run 
     0.1,  // dash 
-    0.3,  // jump 
+    0.5,  // jump 
     0.0,  // fall 
     0.16, // light_attack 
     0.3, // attack 
@@ -63,11 +63,11 @@ const perso_info WHITE_KNIGHT = {
     0.2   // hit
   },
 
-  // timing des frames de chaque anim
+  // timing total de chaque anim
   {0.0,  // stationnary
     0.0, // run 
     0.1,  // dash 
-    0.3,  // jump 
+    0.5,  // jump 
     0.0,  // fall 
     0.16, // light_attack 
     0.3, // attack 

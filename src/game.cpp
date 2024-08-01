@@ -4,11 +4,12 @@
 #include <BBOP/Graphics/cameraClass.h>
 #include <BBOP/Graphics/fontsClass.h>
 #include <GLFW/glfw3.h>
+#include <cstdlib>
 #include <string>
 
 Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
-   cam_scale_goal(0.33f),
-   cam_scale_last(0.33f),
+   cam_scale_goal(0.166f),
+   cam_scale_last(0.166f),
    game_state(start),
    players(players_),
    last_time(glfwGetTime()),
@@ -20,6 +21,17 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
 {
   fps_hud.setFont(&font);
   fps_hud.setPosition(Vector2f(0.0f,50.f));
+
+  // attribution d'un point de spawn a chaque joueur
+  unsigned int cpt = 0;
+  for(Vector2f p : map.getSpawnPoints()){
+    std::cerr << cpt << std::endl;
+    if(cpt < players.size())
+      players[cpt].perso->setPosition(p);
+    else 
+      break;
+    cpt++;
+  }
 }
 
 void Game::update()
@@ -56,8 +68,10 @@ void Game::update()
     if(player_pos.y < max_y.x)
        max_y.x = player_pos.y;
 
-    if(players[i].perso->getPosition().y > 1000.f){
-      players[i].perso->setPosition(300.f,100.f);
+    if(players[i].perso->getPosition().y > map.y_size){
+      int r = rand() % map.getSpawnPoints().size();
+      players[i].perso->setPosition(map.getSpawnPoints()[r]);
+      players[i].perso->percentage = 0.f;
     }
   }
   //for(long unsigned int i = 0; i < bots.size(); i++){
@@ -68,9 +82,9 @@ void Game::update()
   Vector2f scale((max_x.y-max_x.x)/BBOP_WINDOW_RESOLUTION.x, (max_y.y-max_y.x)/BBOP_WINDOW_RESOLUTION.y);
   float cam_scale = (scale.x > scale.y) ? scale.x : scale.y;
   Vector2f cam_pos((max_x.y-max_x.x)/2.f+max_x.x,(max_y.y-max_y.x)/2.f+max_y.x);
-  cam_scale+=0.33f;
-  if (cam_scale>3.f) cam_scale = 3.f;
-  if(cam_scale-0.2f > cam_scale_goal || cam_scale < cam_scale_goal-0.4f){
+  cam_scale+=0.166f;
+  if (cam_scale>0.166f*4) cam_scale = 0.166f*4;
+  if(cam_scale-0.1f > cam_scale_goal || cam_scale < cam_scale_goal-0.2f){
      cam_scale_goal = cam_scale;
   }
   cam_scale = cam_scale_last+((cam_scale_goal-cam_scale_last)/10.f);

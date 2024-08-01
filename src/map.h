@@ -2,7 +2,9 @@
 
 #include <BBOP/Graphics.h>
 #include <BBOP/Graphics/bbopGlobal.h>
+#include <BBOP/Graphics/bbopMathClass.h>
 #include <BBOP/Graphics/cameraClass.h>
+#include <BBOP/Graphics/collisionBoxClass.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -16,9 +18,17 @@ class Map
 {
 private:
   std::vector<Sprite> tiles; //!< Vecteur de Sprite pour stocké les tuiles 16x16 de la map
+  std::vector<CollisionBox> collision_layer; //!< stock les collision de la box
+  std::vector<Vector2f> spawn_points; //<! different point de spawn de la map
   Sprite background; //!< Background du jeu
   
+  float y_size;
+  float x_size; 
+  
 public:
+
+  friend class Game;
+
   /**
   * @brief Constructeur par défault de Map.
   *
@@ -34,7 +44,7 @@ public:
   *
   * @see Map::Map(const char* tiles_folder);
   */
-  Map(const char* tiles_folder);
+  Map(const char* map_folder);
 
   /**
   * @brief Conctructeur par copie de Map
@@ -87,4 +97,6 @@ public:
   void destroyBlock(Vector2f position, float zone);
 
   std::vector<Sprite>& getTiles();
+  std::vector<CollisionBox>& getCollision();
+  std::vector<Vector2f>& getSpawnPoints();
 };
