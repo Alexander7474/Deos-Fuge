@@ -9,11 +9,6 @@
  Ajout du multi joueur local et online    
  Ajout des objets et de la destruction du terrain    
  Ajouter des personnages    
- 
-## ldtk road-map 
-1. debuguer les collision 
-2. gérer le background 
-3. adapter les dimension
 
 ## Idées pour les map 
 1. des échelles 
