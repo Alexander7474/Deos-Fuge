@@ -39,6 +39,7 @@ protected:
   float speed; //<! vitesse
   float weight; //<! poid
   float jump_force; //<! force de saut
+  float inertia; //<! force de saut
 
   //stockage des animations
   std::vector<Texture> animation[9]; //<! stockage des anims

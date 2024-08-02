@@ -1,5 +1,6 @@
 #include "knight.h"
 #include "perso_info.h"
+#include "personnage.h"
 #include <GLFW/glfw3.h>
 
 Knight::Knight()
@@ -8,8 +9,9 @@ Knight::Knight()
         //attribut de base 
         //
         speed = 200.f;
-        weight = 200.f;
-        jump_force = 160.f;
+        weight = 250.f;
+        jump_force = 150.f;
+        inertia = 800.f;
 
         //attribut du sprite
         // 
@@ -28,16 +30,17 @@ Knight::Knight()
 void Knight::Dash(double delta_time_)
 {
         if(anim_t[dash] > glfwGetTime()-anim_start_t[dash]){
-                mouvement.x=direction*speed*4*delta_time_;
+                mouvement.x=direction*speed*3;
         }else{
                 state = fall;
+                anim_frame_cpt[dash] = 1;
         }
 }
 
 void Knight::Jump(double delta_time_)
 {
         if(anim_t[jump] > glfwGetTime()-anim_start_t[jump]){
-                mouvement.y= -jump_force*delta_time_;
+                mouvement.y= -jump_force;
         }else{
                 state = fall;
         }
@@ -78,8 +81,8 @@ void Knight::Hit(double delta_time_)
                 }
 
                 // mouvement 
-                mouvement.x = -1*direction*percentage*5*delta_time_;
-                mouvement.y = -1*percentage*0.5*delta_time_;
+                mouvement.x = -1*direction*percentage*5;
+                mouvement.y = -1*percentage*0.5;
         }else{
                 state = fall;
                 setColor(255,255,255);
