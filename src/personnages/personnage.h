@@ -15,7 +15,8 @@ enum perso_state:int{
   fall=4,
   light_attack=5,
   attack=6,
-  hit=7
+  hit=7,
+  block=8
 };
 
 //enumeration des direction possible du personnage
@@ -42,14 +43,14 @@ protected:
   float inertia; //<! force de saut
 
   //stockage des animations
-  std::vector<Texture> animation[9]; //<! stockage des anims
-  int anim_frame_n[8]; //<! nombre de frame en fonction de chaque anim
-  double anim_t[8]; //<! durée total de l'anim
-  double anim_frame_t[8]; //<! temps entre chaque frame en fonction de chaque anim
+  std::vector<Texture> animation[15]; //<! stockage des anims
+  int anim_frame_n[15]; //<! nombre de frame en fonction de chaque anim
+  double anim_t[15]; //<! durée total de l'anim
+  double anim_frame_t[15]; //<! temps entre chaque frame en fonction de chaque anim
   // stockage dynamique des infos nécessaire a l'animation
-  double anim_start_t[8]; //<! timing de départ e l'anim
-  double anim_last_frame_t[8]; //<! timing de la dernière frame de l'anim
-  int anim_frame_cpt[8]; //<! compteur de frame de chaque anim
+  double anim_start_t[15]; //<! timing de départ e l'anim
+  double anim_last_frame_t[15]; //<! timing de la dernière frame de l'anim
+  int anim_frame_cpt[15]; //<! compteur de frame de chaque anim
   int frame_cpt; //<! compteur de frame par default
 
   // gestion des états du personnage
@@ -59,6 +60,7 @@ protected:
   Vector2f mouvement; //<! mouvement du personnages
   double fall_start_t; //<! timing du debut de la chute
   bool call_hit; // gére les appelle sur l'etat hit car différent du reste
+  bool blocked;
 
   //information sur les boite de collision
   CollisionBox attack_box; //<! box de collision pour les attaques du personnage

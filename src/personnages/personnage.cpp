@@ -21,6 +21,7 @@ Personnage::Personnage():
 void Personnage::updatePersonnage(double delta_time_, Map *map_)
 {
   // gestion des états entrants
+  bool default_call = false;
   if(state != hit && !call_hit){
     switch (calling_state) {
       case dash:
@@ -53,13 +54,29 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
           anim_start_t[state] = glfwGetTime();
         }
         break;
+      case block:
+        if(anim_frame_cpt[block] == 0 && (state == stationary || state == run)){
+          state = block;
+          anim_last_frame_t[block] = glfwGetTime();
+          anim_start_t[state] = glfwGetTime();
+        }
+        default_call = true;
+        break;
       case run:
         // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
         if(state==stationary && state != run){
           state=run;
           anim_last_frame_t[run] = glfwGetTime();
         }
+        default_call = true;
+        break;
       default:
+        default_call = true;
+        break;
+    }
+  }
+
+  if(default_call){
         // si il n'y a pas de jump call le jump frame est reset
         if(state != jump){
           anim_frame_cpt[jump] = 0;
@@ -76,8 +93,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
           anim_frame_cpt[hit] = 0;
         if(calling_state != run && state == run)
           state = stationary;
-        break;
-    }
   }
 
   if(call_hit){
@@ -161,8 +176,9 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   }
  
   // check pour éviter des situations anormale
-  if(!isInCollision && state == run) state = fall;
+  if(!isInCollision && (state == run || state == block)) state = fall;
   if(state == run && mouvement.x == 0.f) state = stationary;
+  if(calling_state != block && state == block) state = stationary;
 
   // gestion des frames et de l'animation
   if(anim_frame_t[state] < glfwGetTime()-anim_last_frame_t[state]){
@@ -186,8 +202,9 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
 void Personnage::goRight(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash && !isAttacking()){
-    mouvement.x=speed*value;
+  if(state != dash && !isAttacking() && state != hit){
+    if(state != block)
+      mouvement.x=speed*value;
     if(direction==left){
       flipVertically();
       direction=right;
@@ -200,8 +217,9 @@ void Personnage::goRight(double delta_time_, float value)
 void Personnage::goLeft(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash && !isAttacking()){
-    mouvement.x=speed*value;
+  if(state != dash && !isAttacking() && state != hit){
+    if(state != block)
+      mouvement.x=speed*value;
     if(direction==right){
       flipVertically();
       direction=left;
@@ -213,13 +231,19 @@ void Personnage::goLeft(double delta_time_, float value)
 
 void Personnage::doHit(int dir, int percentage_)
 {
-  call_hit = true;
-  percentage += percentage_;
   //std::cerr << "hit: " << percentage << std::endl;
   if(direction == static_cast<perso_direction>(dir))
     flipVertically();
   direction = static_cast<perso_direction>(-1*dir);
   rebuildCollisionBox();
+
+  if(state == block){
+    mouvement.x += direction*20.f;
+    return;
+  }
+
+  call_hit = true;
+  percentage += percentage_;
 }
 
 int Personnage::getState()
@@ -249,7 +273,7 @@ void Personnage::rebuildCollisionBox()
 void Personnage::buildAnimCache(perso_info info_)
 {
   std::string sprite_folder = info_.folder_path;
-  for (int i = stationary; i <= hit; i++)
+  for (int i = stationary; i <= block; i++)
   {        
     std::string anim_file=sprite_folder+std::to_string(i)+".png";
     anim_frame_n[i] = info_.anim_frame_n[i];

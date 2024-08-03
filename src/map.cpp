@@ -15,7 +15,7 @@
 
 using namespace std;
 
-Map::Map() : Map("assets/map/frozen_land/"){}
+Map::Map() : Map("assets/map/green_hills/"){}
 
 Map::Map(const char* map_folder) :
     background(Texture("assets/default.png"))

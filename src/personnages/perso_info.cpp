@@ -11,7 +11,8 @@ const perso_info KNIGHT = {
     3,  // fall 
     4,  // light_attack
     6,  // attack
-    1   // hit
+    1,  // hit
+    1   // block
   },
   
   // timing des frames de chaque anim
@@ -22,7 +23,8 @@ const perso_info KNIGHT = {
     0.1,  // fall 
     0.04, // light_attack 
     0.05, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1   //block
   },
 
   // timing total de chaque anim
@@ -33,7 +35,8 @@ const perso_info KNIGHT = {
     0.0,  // fall 
     0.16, // light_attack 
     0.3, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1  //block
   }
 
 };
@@ -42,14 +45,15 @@ const perso_info KNIGHT = {
 const perso_info WHITE_KNIGHT = {
   "assets/personnages/white_knight/",
   // nombre de frames par anim
-  {10,  // stationnary
+   {10,  // stationnary
     10, // run
     2, // dash 
     3,  // jump 
     3,  // fall 
     4,  // light_attack
     6,  // attack
-    1   // hit
+    1,  // hit
+    1   // block
   },
   
   // timing des frames de chaque anim
@@ -60,7 +64,8 @@ const perso_info WHITE_KNIGHT = {
     0.1,  // fall 
     0.04, // light_attack 
     0.05, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1   //block
   },
 
   // timing total de chaque anim
@@ -71,7 +76,7 @@ const perso_info WHITE_KNIGHT = {
     0.0,  // fall 
     0.16, // light_attack 
     0.3, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1  //block
   }
-
 };
