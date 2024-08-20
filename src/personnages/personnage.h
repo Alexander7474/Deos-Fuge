@@ -16,7 +16,8 @@ enum perso_state:int{
   light_attack=5,
   attack=6,
   hit=7,
-  block=8
+  block=8,
+  climb=9
 };
 
 //enumeration des direction possible du personnage

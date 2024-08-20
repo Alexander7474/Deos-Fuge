@@ -3,9 +3,6 @@
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
 #include <algorithm>
-#include <climits>
-#include <iostream>
-#include <ostream>
 #include <string>
 
 Personnage::Personnage():
@@ -166,9 +163,20 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
         mouvement.y = 0.f;
       }else if(min_overlap == overlap_right) {
         move(-(shapeCollisionBox.getRight() - box.getLeft()), 0.f);
-
+        //if(state == fall || state == jump){
+          //state = climb;
+          //mouvement.y = 0.f;
+          //direction = static_cast<perso_direction>(-direction);
+          //rebuildCollisionBox();
+        //}
       }else if (min_overlap == overlap_left) {
         move(box.getRight() - shapeCollisionBox.getLeft(), 0.f);
+        //if(state == fall || state == jump){
+          //state = climb;
+          //mouvement.y = 0.f;
+          //direction = static_cast<perso_direction>(-direction);
+          //rebuildCollisionBox();
+        //}
       }
   
     }
@@ -232,14 +240,15 @@ void Personnage::goLeft(double delta_time_, float value)
 void Personnage::doHit(int dir, int percentage_)
 {
   //std::cerr << "hit: " << percentage << std::endl;
-  if(direction == static_cast<perso_direction>(dir))
-    flipVertically();
-  direction = static_cast<perso_direction>(-1*dir);
-  rebuildCollisionBox();
-
-  if(state == block){
-    mouvement.x += direction*20.f;
+  
+  if(state == block && dir != direction){
+    mouvement.x -= direction*20.f;
     return;
+  } else if (dir == direction){
+    if(direction == static_cast<perso_direction>(dir))
+      flipVertically();
+    direction = static_cast<perso_direction>(-1*dir);
+    rebuildCollisionBox();
   }
 
   call_hit = true;
@@ -273,7 +282,7 @@ void Personnage::rebuildCollisionBox()
 void Personnage::buildAnimCache(perso_info info_)
 {
   std::string sprite_folder = info_.folder_path;
-  for (int i = stationary; i <= block; i++)
+  for (int i = stationary; i <= climb; i++)
   {        
     std::string anim_file=sprite_folder+std::to_string(i)+".png";
     anim_frame_n[i] = info_.anim_frame_n[i];

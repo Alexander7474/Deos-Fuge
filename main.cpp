@@ -18,11 +18,9 @@ int main()
   bbopInit(1280, 720, "Bro Melee", window);
 
   std::vector<Player> test; 
-  Player perso1(window, GLFW_JOYSTICK_1, "Didier", 0);
-  Player perso2(window, GLFW_JOYSTICK_2, "Roger", 1);
+  Player perso1(window, -1, "Didier", 0);
   
   test.push_back(perso1);
-  test.push_back(perso2);
 
   Game game(window, test);
 

@@ -988,9 +988,9 @@
 			"__smartColor": "#8E8D8D",
 			"__bgPos": { "topLeftPx": [0,0], "scale": [1.3417402269861287,1.3417402269861287], "cropRect": [16.819548872180462,0,894.3609022556391,793] },
 			"externalRelPath": null,
-			"fieldInstances": [{ "__identifier": "spawns", "__type": "Array<Float>", "__value": [115,111,660,706,307,635,332,876], "__tile": null, "defUid": 220, "realEditorValues": [
-				{ "id": "V_Float", "params": [115] },
-				{ "id": "V_Float", "params": [111] },
+			"fieldInstances": [{ "__identifier": "spawns", "__type": "Array<Float>", "__value": [922,888,660,706,307,635,332,876], "__tile": null, "defUid": 220, "realEditorValues": [
+				{ "id": "V_Float", "params": [922] },
+				{ "id": "V_Float", "params": [888] },
 				{ "id": "V_Float", "params": [660] },
 				{ "id": "V_Float", "params": [706] },
 				{ "id": "V_Float", "params": [307] },

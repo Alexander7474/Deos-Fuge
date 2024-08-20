@@ -143,6 +143,9 @@ void Player::update(double delta_time_, Map *map_)
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
         perso->calling_state = attack;
     }
+    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
+      perso->calling_state = block;
+    }
   }
   //mettre a jour le personnage avec la map
   perso->updatePersonnage(delta_time_, map_);
