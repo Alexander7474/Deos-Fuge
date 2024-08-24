@@ -12,17 +12,18 @@ Knight::Knight()
         weight = 400.f;
         jump_force = 150.f;
         inertia = 900.f;
+        scale = 0.8f;
 
         //attribut du sprite
         // 
         buildAnimCache(KNIGHT);
         setAutoUpdateCollision(true);
-        setSize(100.f,100.f); 
-        setOrigin(50.f,100.0f);
-        getCollisionBox().setOffsetY(Vector2f(55.f,0.f));
+        setSize(100.f*scale,100.f*scale); 
+        setOrigin(50.f*scale,100.0f*scale);
+        getCollisionBox().setOffsetY(Vector2f(55.f*scale,0.f));
         rebuildCollisionBox();
-        attack_box.setSize(25.f,25.f);
-        attack_box.setOrigin(12.5f,12.5f);
+        attack_box.setSize(25.f*scale,25.f*scale);
+        attack_box.setOrigin(12.5f*scale,12.5f*scale);
         setRGBFilterState(true);
         setColor(255,255,255);
 }
@@ -51,8 +52,8 @@ void Knight::Attack(double delta_time_)
         if(anim_t[attack] > glfwGetTime()-anim_start_t[attack]){
                 //gestion de la box d'attack 
                 attack_box.setPosition(getPosition().x+(8.75f*direction),getPosition().y-10.f);
-                attack_box.setOffsetX(Vector2f(-12.5f,-12.5f));
-                attack_box.setOffsetY(Vector2f(-17.5f,2.5f));
+                attack_box.setOffsetX(Vector2f(-12.5f*scale,-12.5f*scale));
+                attack_box.setOffsetY(Vector2f(-17.5f*scale,2.5f*scale));
         }else{
                 state = fall;
         }
@@ -63,8 +64,8 @@ void Knight::Light_attack(double delta_time_)
         if(anim_t[light_attack] > glfwGetTime()-anim_start_t[light_attack]){
                 //gestion de la box d'attack 
                 attack_box.setPosition(getPosition().x+(17.5f*direction),getPosition().y-10.f);
-                attack_box.setOffsetX(Vector2f(-5.f,-5.f));
-                attack_box.setOffsetY(Vector2f(-27.5f,2.5f));
+                attack_box.setOffsetX(Vector2f(-5.f*scale,-5.f*scale));
+                attack_box.setOffsetY(Vector2f(-27.5f*scale,2.5f*scale));
         }else{
                 state = fall;
         }
@@ -92,9 +93,9 @@ void Knight::Hit(double delta_time_)
 void Knight::rebuildCollisionBox()
 {
         if(direction == right){
-                getCollisionBox().setOffsetX(Vector2f(40.f,47.5f));
+                getCollisionBox().setOffsetX(Vector2f(40.f*scale,47.5f*scale));
         }else{
-                getCollisionBox().setOffsetX(Vector2f(47.5f,40.f));
+                getCollisionBox().setOffsetX(Vector2f(47.5f*scale,40.f*scale));
         }
 }
 
