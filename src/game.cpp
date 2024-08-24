@@ -33,8 +33,7 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
       break;
     cpt++;
   }
-
-
+ 
   //list de position possible pourl es différent hud des joueurs 
   Vector2f hud_pos_list[4] = {
     Vector2f(0.f,720.f),
@@ -78,6 +77,9 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
 
 void Game::update()
 {
+  //mise a jour de la map 
+  map.update();
+
   //recupertation du temps depuis la dernière frame
   double current_time = glfwGetTime();
   double delta_time = current_time - last_time;

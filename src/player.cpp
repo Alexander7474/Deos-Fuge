@@ -1,4 +1,5 @@
 #include "player.h"
+#include <GLFW/glfw3.h>
 #include <string>
 
 Player::Player(GLFWwindow*& window_, int joystick_, std::string name_, int perso_select)
@@ -59,6 +60,10 @@ void Player::update(double delta_time_, Map *map_)
           //touche y de la manette
           if(state.buttons[GLFW_GAMEPAD_BUTTON_Y] == GLFW_PRESS){
             perso->calling_state = attack;
+          }
+
+          if(state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] == GLFW_PRESS){
+            perso->calling_state = block;
           }
         }
       }else {
@@ -137,6 +142,9 @@ void Player::update(double delta_time_, Map *map_)
     }
     if(glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
         perso->calling_state = attack;
+    }
+    if(glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
+      perso->calling_state = block;
     }
   }
   //mettre a jour le personnage avec la map

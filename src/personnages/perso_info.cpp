@@ -11,7 +11,9 @@ const perso_info KNIGHT = {
     3,  // fall 
     4,  // light_attack
     6,  // attack
-    1   // hit
+    1,  // hit
+    1,  // block
+    3   // wall climb
   },
   
   // timing des frames de chaque anim
@@ -22,18 +24,22 @@ const perso_info KNIGHT = {
     0.1,  // fall 
     0.04, // light_attack 
     0.05, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1,  //block
+    0.05  //wall climb
   },
 
   // timing total de chaque anim
   {0.0,  // stationnary
     0.0, // run 
     0.1,  // dash 
-    0.5,  // jump 
+    0.4,  // jump 
     0.0,  // fall 
     0.16, // light_attack 
     0.3, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1,  //block
+    0.0   //wall climb
   }
 
 };
@@ -49,7 +55,9 @@ const perso_info WHITE_KNIGHT = {
     3,  // fall 
     4,  // light_attack
     6,  // attack
-    1   // hit
+    1,  // hit
+    1,  // block
+    3   // wall climb
   },
   
   // timing des frames de chaque anim
@@ -60,18 +68,21 @@ const perso_info WHITE_KNIGHT = {
     0.1,  // fall 
     0.04, // light_attack 
     0.05, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1,  //block
+    0.05  //wall climb
   },
 
   // timing total de chaque anim
   {0.0,  // stationnary
     0.0, // run 
     0.1,  // dash 
-    0.5,  // jump 
+    0.4,  // jump 
     0.0,  // fall 
     0.16, // light_attack 
     0.3, // attack 
-    0.2   // hit
+    0.2,  // hit
+    0.1,  //block
+    0.0   //wall climb
   }
-
 };

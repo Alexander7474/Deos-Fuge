@@ -3,8 +3,6 @@
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
 #include <algorithm>
-#include <iostream>
-#include <ostream>
 #include <string>
 
 Personnage::Personnage():
@@ -20,6 +18,7 @@ Personnage::Personnage():
 void Personnage::updatePersonnage(double delta_time_, Map *map_)
 {
   // gestion des états entrants
+  bool default_call = false;
   if(state != hit && !call_hit){
     switch (calling_state) {
       case dash:
@@ -52,13 +51,29 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
           anim_start_t[state] = glfwGetTime();
         }
         break;
+      case block:
+        if(anim_frame_cpt[block] == 0 && (state == stationary || state == run)){
+          state = block;
+          anim_last_frame_t[block] = glfwGetTime();
+          anim_start_t[state] = glfwGetTime();
+        }
+        default_call = true;
+        break;
       case run:
         // si le personnage est stationnaire cela signifie q'il est au sol donc on peut changer son etat sur run
         if(state==stationary && state != run){
           state=run;
           anim_last_frame_t[run] = glfwGetTime();
         }
+        default_call = true;
+        break;
       default:
+        default_call = true;
+        break;
+    }
+  }
+
+  if(default_call){
         // si il n'y a pas de jump call le jump frame est reset
         if(state != jump){
           anim_frame_cpt[jump] = 0;
@@ -75,8 +90,6 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
           anim_frame_cpt[hit] = 0;
         if(calling_state != run && state == run)
           state = stationary;
-        break;
-    }
   }
 
   if(call_hit){
@@ -114,17 +127,12 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       break;
   }
 
-  //application de la gravité si le personnage tombe
-  double fall_time = glfwGetTime() - fall_start_t;
-  mouvement.y += fall_time * delta_time_ * (weight/9.81); // utilser les attribut de la map
-  
-  if(mouvement.y > weight * delta_time_)
-    mouvement.y= weight * delta_time_;
-
   // application du vecteur de mouvement final
   //std::cerr << "y: " << mouvement.y << std::endl;
   //std::cerr << "x: " << mouvement.x << std::endl;
-  move(mouvement);
+  move(mouvement.x*delta_time_,mouvement.y*delta_time_);
+  
+  mouvement.y += weight * delta_time_; // utilser les attribut de la map
 
   //collision avec les plateformes
   bool isInCollision = false;
@@ -144,19 +152,31 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
       float min_overlap = std::min({overlap_right, overlap_left, overlap_top, overlap_bottom});
 
       if(min_overlap == overlap_top){
-        move(0.f,box.getBottom() - shapeCollisionBox.getTop());
+        move(0.f,box.getBottom() - shapeCollisionBox.getTop()+0.1f);
         anim_start_t[jump] = glfwGetTime()-anim_t[jump];
+        mouvement.y = 0.f;
       }else if(min_overlap == overlap_bottom) {
         move(0.f,-(shapeCollisionBox.getBottom()-box.getTop()));
         if(state == fall){
           state=run;
         }
-        fall_start_t = glfwGetTime();
+        mouvement.y = 0.f;
       }else if(min_overlap == overlap_right) {
         move(-(shapeCollisionBox.getRight() - box.getLeft()), 0.f);
-
+        //if(state == fall || state == jump){
+          //state = climb;
+          //mouvement.y = 0.f;
+          //direction = static_cast<perso_direction>(-direction);
+          //rebuildCollisionBox();
+        //}
       }else if (min_overlap == overlap_left) {
         move(box.getRight() - shapeCollisionBox.getLeft(), 0.f);
+        //if(state == fall || state == jump){
+          //state = climb;
+          //mouvement.y = 0.f;
+          //direction = static_cast<perso_direction>(-direction);
+          //rebuildCollisionBox();
+        //}
       }
   
     }
@@ -164,9 +184,9 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   }
  
   // check pour éviter des situations anormale
-  if(mouvement.x >= -0.1f && mouvement.x <= 0.1f) mouvement.x = 0.f;  
-  if(!isInCollision && state == run) state = fall;
+  if(!isInCollision && (state == run || state == block)) state = fall;
   if(state == run && mouvement.x == 0.f) state = stationary;
+  if(calling_state != block && state == block) state = stationary;
 
   // gestion des frames et de l'animation
   if(anim_frame_t[state] < glfwGetTime()-anim_last_frame_t[state]){
@@ -180,7 +200,9 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
   setTexture(animation[state][anim_frame_cpt[state]]);
   
   // reset du mouvement
-  mouvement.x = mouvement.x/1.2;
+  mouvement.x = mouvement.x * direction;
+  mouvement.x = (mouvement.x > delta_time_*inertia) ? mouvement.x - (delta_time_ * inertia): 0.f;
+  mouvement.x = mouvement.x * direction;
 
   calling_state = stationary;
 }
@@ -188,8 +210,9 @@ void Personnage::updatePersonnage(double delta_time_, Map *map_)
 void Personnage::goRight(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash && !isAttacking()){
-    mouvement.x=speed*value*delta_time_;
+  if(state != dash && !isAttacking() && state != hit){
+    if(state != block)
+      mouvement.x=speed*value;
     if(direction==left){
       flipVertically();
       direction=right;
@@ -202,8 +225,9 @@ void Personnage::goRight(double delta_time_, float value)
 void Personnage::goLeft(double delta_time_, float value)
 {
   // le dash est le seule mouvement en x qui passe au dessus des deplacement en priorité donc on utilise les joystick uniquement si le personnage ne dash pas
-  if(state != dash && !isAttacking()){
-    mouvement.x=speed*value*delta_time_;
+  if(state != dash && !isAttacking() && state != hit){
+    if(state != block)
+      mouvement.x=speed*value;
     if(direction==right){
       flipVertically();
       direction=left;
@@ -215,13 +239,20 @@ void Personnage::goLeft(double delta_time_, float value)
 
 void Personnage::doHit(int dir, int percentage_)
 {
+  //std::cerr << "hit: " << percentage << std::endl;
+  
+  if(state == block && dir != direction){
+    mouvement.x -= direction*20.f;
+    return;
+  } else if (dir == direction){
+    if(direction == static_cast<perso_direction>(dir))
+      flipVertically();
+    direction = static_cast<perso_direction>(-1*dir);
+    rebuildCollisionBox();
+  }
+
   call_hit = true;
   percentage += percentage_;
-  //std::cerr << "hit: " << percentage << std::endl;
-  if(direction == static_cast<perso_direction>(dir))
-    flipVertically();
-  direction = static_cast<perso_direction>(-1*dir);
-  rebuildCollisionBox();
 }
 
 int Personnage::getState()
@@ -251,7 +282,7 @@ void Personnage::rebuildCollisionBox()
 void Personnage::buildAnimCache(perso_info info_)
 {
   std::string sprite_folder = info_.folder_path;
-  for (int i = stationary; i <= hit; i++)
+  for (int i = stationary; i <= climb; i++)
   {        
     std::string anim_file=sprite_folder+std::to_string(i)+".png";
     anim_frame_n[i] = info_.anim_frame_n[i];

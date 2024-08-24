@@ -1,4 +1,5 @@
 #include "map.h"
+#include "particle.h"
 
 #include <BBOP/Graphics/bbopFunc.h>
 #include <BBOP/Graphics/bbopMathClass.h>
@@ -15,7 +16,7 @@
 
 using namespace std;
 
-Map::Map() : Map("assets/map/frozen_land/"){}
+Map::Map() : Map("assets/map/green_hills/"){}
 
 Map::Map(const char* map_folder) :
     background(Texture("assets/default.png"))
@@ -136,6 +137,13 @@ void Map::remplissage(const char* map_folder)
 
 }
 
+void Map::update()
+{
+  for(Particle& p : particles){
+    p.update();
+  }
+}
+
 void Map::Draw(Scene &scene, Camera &ground_camera)
 {
   scene.useCamera(nullptr);
@@ -144,8 +152,13 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
   scene.useCamera(&ground_camera);
   for (Sprite& tile : tiles)
   {
-            if(ground_camera.isInCamView(tile))
+    if(ground_camera.isInCamView(tile))
       scene.Draw(tile);
+  }
+  for(Particle& p : particles){
+    if(ground_camera.isInCamView(p)){
+      scene.Draw(p);
+    }
   }
 
   //for(CollisionBox& box : collision_layer){
