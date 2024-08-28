@@ -127,13 +127,14 @@ void Game::update()
   float cam_scale = (scale.x > scale.y) ? scale.x : scale.y;
   Vector2f cam_pos((max_x.y-max_x.x)/2.f+max_x.x,(max_y.y-max_y.x)/2.f+max_y.x);
   cam_scale+=0.166f;
-  if (cam_scale>0.166f*4) cam_scale = 0.166f*4;
-  if(cam_scale-0.1f > cam_scale_goal || cam_scale < cam_scale_goal-0.2f){
-     cam_scale_goal = cam_scale;
-  }
-  cam_scale = cam_scale_last+((cam_scale_goal-cam_scale_last)/10.f);
+  cam_pos.y-=100.f*cam_scale;
+  //if (cam_scale>0.166f*4) cam_scale = 0.166f*4;
+  //if(cam_scale-0.1f > cam_scale_goal || cam_scale < cam_scale_goal-0.2f){
+    // cam_scale_goal = cam_scale;
+  //}
+  //cam_scale = cam_scale_last+((cam_scale_goal-cam_scale_last)/10.f);
+  //cam_scale_last = cam_scale;
   players_camera.setScale(cam_scale);
-  cam_scale_last = cam_scale;
   players_camera.setPosition(cam_pos);
   updateHUD();
 }
