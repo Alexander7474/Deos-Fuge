@@ -2,11 +2,11 @@
 
 ## Road-map 
 
- Finir le système de combat
+ Finir le système de combat  ...
    slide, up and down attck, block  
  Intégrer une ambiance sonore   
- Créer les menu    
- Ajout du multi joueur local et online    
+ Créer les menu ...
+ Ajout du multi joueur local et online ...    
  Ajout des objets et de la destruction du terrain    
  Ajouter des personnages    
 

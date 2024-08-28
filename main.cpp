@@ -10,10 +10,18 @@
 #include <LDtkLoader/Project.hpp>
 #include <iostream>
 
+enum main_state {
+  in_game=0,
+  start_menu=1,
+  leaving=2
+};
+
 int main()
 {
   GLFWwindow * window;
   bbopInit(1280, 720, "Bro Melee", window);
+
+  main_state STATE = start_menu;
 
   //scene par default pour tous les élément sans scene comme le menu d'intro
   Scene default_scene;
@@ -27,15 +35,29 @@ int main()
 
   Game game(window, test);
 
-  Menu m;
+  Menu m(window);
 
   glfwSwapInterval(0);
 
   while(!glfwWindowShouldClose(window)){
     bbopCleanWindow(window, Vector3i(0,0,0), 1.0);
 
-    default_scene.Use();
-    default_scene.Draw(m);
+    switch(STATE) {
+      case start_menu:
+        default_scene.Use();
+        if(m.update() == 0)
+          STATE = in_game;
+        default_scene.Draw(m);
+        break;
+      case in_game:
+        game.update();
+        game.Draw();
+        break;
+      default:
+        std::cerr << "ERROR: default state rrrraaaaaaah impossible" << std::endl;
+        break;
+    }
+
 
     bbopErrorCheck();
 
