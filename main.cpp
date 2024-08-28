@@ -8,20 +8,45 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <LDtkLoader/Project.hpp>
+#include <cstdlib>
 #include <iostream>
 
 enum main_state {
   in_game=0,
-  start_menu=1,
+  in_menu=1,
   leaving=2
 };
+
+main_state STATE = in_menu;
+
+void start_menu(Menu *menu, Scene *scene)
+{
+  scene->Use();
+  switch (menu->update()) {
+    case 0:
+      STATE = in_game;
+      break;
+    case 1:
+      std::cerr << "no local multi yet" << std::endl;
+      break;
+    case 2:
+      std::cerr << "no online multi yet" << std::endl;
+      break;
+    case 3:
+      std::cerr << "no parameters yet" << std::endl;
+      break;
+    case 4:
+      STATE = leaving;
+    default:
+      break;
+  }
+  scene->Draw(*menu);
+}
 
 int main()
 {
   GLFWwindow * window;
   bbopInit(1280, 720, "Bro Melee", window);
-
-  main_state STATE = start_menu;
 
   //scene par default pour tous les élément sans scene comme le menu d'intro
   Scene default_scene;
@@ -43,21 +68,20 @@ int main()
     bbopCleanWindow(window, Vector3i(0,0,0), 1.0);
 
     switch(STATE) {
-      case start_menu:
-        default_scene.Use();
-        if(m.update() == 0)
-          STATE = in_game;
-        default_scene.Draw(m);
+      case in_menu:
+        start_menu(&m, &default_scene);
         break;
       case in_game:
         game.update();
         game.Draw();
         break;
+      case leaving:
+        return 0;
       default:
         std::cerr << "ERROR: default state rrrraaaaaaah impossible" << std::endl;
+        return 1;
         break;
     }
-
 
     bbopErrorCheck();
 
@@ -66,4 +90,7 @@ int main()
   }
   glfwDestroyWindow(window);
   glfwTerminate();
+
+  return 0;
 }
+

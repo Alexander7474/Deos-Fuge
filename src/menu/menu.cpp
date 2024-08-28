@@ -106,6 +106,8 @@ int Menu::update()
         released_t = glfwGetTime();
         break;
       case menu_select:
+        released = false; 
+        released_t = glfwGetTime();
         return cell_index;
         break;
       default:
