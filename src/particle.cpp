@@ -2,6 +2,8 @@
 #include <BBOP/Graphics/bbopMathClass.h>
 #include <BBOP/Graphics/textureClass.h>
 #include <GLFW/glfw3.h>
+#include <cstdlib>
+#include <iostream>
 
 Particle::Particle()
   : Particle("assets/particles/Smoke-Sheet.png", Vector2i(4,5), 0.1f, 1)
@@ -16,8 +18,8 @@ Particle::Particle(std::string _particle_sheet, Vector2i _size, float _frame_t, 
 {
   particle_texture = bbopLoadSpriteSheet(_particle_sheet.c_str(), _size.y, _size.x);
   frame_t = _frame_t;
-  frame_cpt = 0;
   n_frame = _size.x * _size.y - _dead_frame;
+  frame_cpt = rand() % n_frame;
   total_t = n_frame * frame_t;
   anim_start = glfwGetTime();
   last_frame_t = glfwGetTime();

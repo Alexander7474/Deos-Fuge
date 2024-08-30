@@ -8,11 +8,13 @@
 #include <BBOP/Graphics/textureClass.h>
 #include <LDtkLoader/DataTypes.hpp>
 #include <LDtkLoader/Tileset.hpp>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <LDtkLoader/Project.hpp>
 #include <LDtkLoader/Layer.hpp>
 #include <ostream>
+#include <string>
 
 using namespace std;
 
@@ -64,7 +66,7 @@ void Map::remplissage(const char* map_folder)
  
   // iteration pour récupérer les tiles
   for (const auto& layer : level.allLayers()){
-    if(layer.getName() != "Collision_layer"){
+    if(layer.getName() != "Collision_layer" && layer.getType() != ldtk::LayerType::Entities){
       for (const auto& tile : layer.allTiles()) {
         Sprite tile_spr(tileset[tile.tileId]);
 
@@ -77,6 +79,31 @@ void Map::remplissage(const char* map_folder)
           tile_spr.flipHorizontally();
 
         tiles.push_back(tile_spr);
+      }
+    }else if (layer.getType() == ldtk::LayerType::Entities){
+      if(layer.getName() == "World_info"){
+        for(const auto& ent : layer.allEntities()){
+          if(ent.getName() == "Spawn_point"){
+            Vector2f sp;
+            sp.x = ent.getPosition().x;
+            sp.y = ent.getPosition().y;
+            spawn_points.push_back(sp);
+          }
+        }
+      }else if (layer.getName() == "Animated_sprite"){
+        srand(time(NULL));
+        for(const auto& ent : layer.allEntities()){
+          string particule_sheet_path = map_folder;
+          particule_sheet_path += ent.getTexturePath();
+          int rows = ent.getField<ldtk::FieldType::Int>("Rows").value();
+          int columns = ent.getField<ldtk::FieldType::Int>("Columns").value();
+          int frame_n = ent.getField<ldtk::FieldType::Int>("Frame_n").value();
+          float frame_t = ent.getField<ldtk::FieldType::Float>("Frame_t").value();
+          Particle p(particule_sheet_path, Vector2i(columns,rows), frame_t, rows*columns - frame_n);
+          p.setSize(ent.getSize().x,ent.getSize().y);
+          p.setPosition(ent.getPosition().x,ent.getPosition().y);
+          particles.push_back(p);
+        }
       }
     }
   }
@@ -115,22 +142,6 @@ void Map::remplissage(const char* map_folder)
       if(pre_box->getSize().y == collision_layer[i].getSize().y && collision_layer[i].getPosition().x == pre_box->getPosition().x+pre_box->getSize().x){
         pre_box->setSize(pre_box->getSize().x+collision_layer[i].getSize().x,pre_box->getSize().y);
         collision_layer.erase(collision_layer.begin() + i);
-      }
-    }
-  }
-
-  //recuperation des point de spawn
-  const auto& spawns = level.getField<ldtk::FieldType::ArrayFloat>("spawns");
-
-  // iterate on the array field
-  Vector2f temp_point;
-  for (long unsigned int i = 0; i < spawns.size(); i++) {
-    if (!spawns[i].is_null()) {
-      if(i % 2 == 0){
-        temp_point.x = spawns[i].value();
-      }else{
-        temp_point.y = spawns[i].value();
-        spawn_points.push_back(temp_point);
       }
     }
   }
