@@ -643,7 +643,10 @@
 					"max": null,
 					"regex": null,
 					"acceptFileTypes": null,
-					"defaultOverride": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": ["no_name"]
+					},
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -1038,7 +1041,10 @@
 							"height": 64,
 							"defUid": 8,
 							"px": [32,352],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": null, "__tile": null, "defUid": 9, "realEditorValues": [] }],
+							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "local_multiplayer", "__tile": null, "defUid": 9, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["local_multiplayer"]
+							}] }],
 							"__worldX": 32,
 							"__worldY": 352
 						},
@@ -1054,7 +1060,10 @@
 							"height": 64,
 							"defUid": 10,
 							"px": [32,432],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": null, "__tile": null, "defUid": 11, "realEditorValues": [] }],
+							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "online_multiplayer", "__tile": null, "defUid": 11, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["online_multiplayer"]
+							}] }],
 							"__worldX": 32,
 							"__worldY": 432
 						},
@@ -1070,7 +1079,10 @@
 							"height": 64,
 							"defUid": 27,
 							"px": [32,512],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": null, "__tile": null, "defUid": 28, "realEditorValues": [] }],
+							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "parameters", "__tile": null, "defUid": 28, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["parameters"]
+							}] }],
 							"__worldX": 32,
 							"__worldY": 512
 						},
@@ -1086,7 +1098,10 @@
 							"height": 64,
 							"defUid": 32,
 							"px": [32,592],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": null, "__tile": null, "defUid": 33, "realEditorValues": [] }],
+							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "leave", "__tile": null, "defUid": 33, "realEditorValues": [{
+								"id": "V_String",
+								"params": ["leave"]
+							}] }],
 							"__worldX": 32,
 							"__worldY": 592
 						}

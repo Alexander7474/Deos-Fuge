@@ -22,23 +22,13 @@ main_state STATE = in_menu;
 void start_menu(Menu *menu, Scene *scene)
 {
   scene->Use();
-  switch (menu->update()) {
-    case 0:
+  Cellule *menu_cell = menu->update();
+  if(menu_cell != nullptr){
+    if(menu_cell->name == "solo"){
       STATE = in_game;
-      break;
-    case 1:
-      std::cerr << "no local multi yet" << std::endl;
-      break;
-    case 2:
-      std::cerr << "no online multi yet" << std::endl;
-      break;
-    case 3:
-      std::cerr << "no parameters yet" << std::endl;
-      break;
-    case 4:
+    }else if(menu_cell->name == "leave"){
       STATE = leaving;
-    default:
-      break;
+    }
   }
   scene->Draw(*menu);
 }
