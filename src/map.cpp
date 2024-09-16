@@ -43,6 +43,8 @@ void Map::remplissage(const char* map_folder)
   x_size = level.size.x;
   y_size = level.size.y;
 
+  global_illumination = level.getField<ldtk::FieldType::Float>("Global_illumination").value();
+
   // on charge le tile set de la map
   ldtk::Tileset world_tileset = world.getTileset("Tileset");
   ldtk::FilePath tileset_path = world_tileset.path;
@@ -104,6 +106,16 @@ void Map::remplissage(const char* map_folder)
           p.setPosition(ent.getPosition().x,ent.getPosition().y);
           particles.push_back(p);
         }
+      }else if(layer.getName() == "Lights"){
+        for(const auto& ent : layer.allEntities()){
+          float intensity = ent.getField<ldtk::FieldType::Float>("Intensity").value();
+          float l_att = ent.getField<ldtk::FieldType::Float>("L_attenuation").value();
+          float q_att = ent.getField<ldtk::FieldType::Float>("Q_attenuation").value();
+          float c_att = ent.getField<ldtk::FieldType::Float>("C_attenuation").value();
+          Vector2f pos(ent.getPosition().x,ent.getPosition().y);
+          Light l(pos, intensity, Vector3i(255,255,255), c_att, l_att, q_att);
+          lights.push_back(l);
+        }
       }
     }
   }
@@ -157,6 +169,14 @@ void Map::update()
 
 void Map::Draw(Scene &scene, Camera &ground_camera)
 {
+  scene.setAmbiantLightValue(global_illumination);
+
+  for(Light& l : lights){
+    scene.addLight(l);
+  }
+
+  scene.Use();
+
   scene.useCamera(nullptr);
   scene.Draw(background);
 
@@ -171,6 +191,7 @@ void Map::Draw(Scene &scene, Camera &ground_camera)
       scene.Draw(p);
     }
   }
+
 
   //for(CollisionBox& box : collision_layer){
     //if(ground_camera.isInCamView(box))

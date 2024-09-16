@@ -141,9 +141,9 @@ void Game::update()
 
 void Game::Draw()
 {
-  scene.Use();
-
+  //la methode scene.USe() est utilisé avec la map donc pas beasion de la mettre deux fois
   map.Draw(scene, players_camera);
+
   for(long unsigned int i = 0; i < players.size(); i++){
     scene.Draw(*players[i].perso);
     //bbopDebugCollisionBox(players[i].perso->getCollisionBox(), scene);

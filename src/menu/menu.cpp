@@ -6,11 +6,10 @@
 #include <LDtkLoader/Project.hpp>
 #include <LDtkLoader/Layer.hpp>
 #include <iostream>
-#include <iterator>
 #include <string>
 
 Menu::Menu(GLFWwindow *_window)
-  : Menu(_window, "assets/menu/", 8)
+  : Menu(_window, "assets/menu/main_menu/", 8)
 {}
 
 Menu::Menu(GLFWwindow *_window, std::string _menu_path, int _menu_cell_size)

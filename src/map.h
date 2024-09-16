@@ -22,10 +22,13 @@ private:
   std::vector<CollisionBox> collision_layer; //!< stock les collision de la box
   std::vector<Vector2f> spawn_points; //<! different point de spawn de la map
   std::vector<Particle> particles; //<! stock les particule animé de la map
+  std::vector<Light> lights; //<! stock les lumières
   Sprite background; //!< Background du jeu
 
   float y_size;
   float x_size; 
+
+  float global_illumination;
   
 public:
 

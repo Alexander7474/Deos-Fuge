@@ -14,7 +14,8 @@
 enum main_state {
   in_game=0,
   in_menu=1,
-  leaving=2
+  in_player_selection=2,
+  leaving=3
 };
 
 main_state STATE = in_menu;
@@ -25,9 +26,23 @@ void start_menu(Menu *menu, Scene *scene)
   Cellule *menu_cell = menu->update();
   if(menu_cell != nullptr){
     if(menu_cell->name == "solo"){
-      STATE = in_game;
+      STATE = in_player_selection;
     }else if(menu_cell->name == "leave"){
       STATE = leaving;
+    }else if(menu_cell->name == "local_multiplayer"){
+      STATE = in_player_selection;
+    }
+  }
+  scene->Draw(*menu);
+}
+
+void player_select_menu(Menu *menu, Scene *scene)
+{
+   scene->Use();
+  Cellule *menu_cell = menu->update();
+  if(menu_cell != nullptr){
+    if(menu_cell->name == "local_multiplayer"){
+      STATE = in_game;
     }
   }
   scene->Draw(*menu);
@@ -51,6 +66,7 @@ int main()
   Game game(window, test);
 
   Menu m(window);
+  Menu player_selection(window, "assets/menu/player_selection/", 8);
 
   glfwSwapInterval(0);
 
@@ -60,6 +76,9 @@ int main()
     switch(STATE) {
       case in_menu:
         start_menu(&m, &default_scene);
+        break;
+      case in_player_selection:
+        player_select_menu(&player_selection, &default_scene);
         break;
       case in_game:
         game.update();
