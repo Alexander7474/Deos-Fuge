@@ -3,7 +3,6 @@
 #include <BBOP/Graphics/collisionBoxClass.h>
 #include <vector>
 #include <iostream>
-#include "../map.h"
 #include "perso_info.h"
 
 //enumeration des états possible du personnage

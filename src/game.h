@@ -13,7 +13,6 @@
 /////////////////
 /// Local headers
 /////////////////
-#include "map.h"
 #include "player.h"
 
 enum game_state_enum{ 
@@ -55,7 +54,7 @@ public:
   *
   * @note À utiliser à chaque frame
   */
-  void update();
+  int update();
 
   /**
   * @brief Dessine tous les attribut de la game 

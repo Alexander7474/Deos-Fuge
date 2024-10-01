@@ -75,7 +75,7 @@ Game::Game(GLFWwindow*& window_, std::vector<Player> &players_):
 
 }
 
-void Game::update()
+int Game::update()
 {
   //mise a jour de la map 
   map.update();
@@ -137,6 +137,15 @@ void Game::update()
   players_camera.setScale(cam_scale);
   players_camera.setPosition(cam_pos);
   updateHUD();
+ 
+  //leave if escape press
+  if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+    return -1;
+  }
+
+  return 0;
+
+
 }
 
 void Game::Draw()

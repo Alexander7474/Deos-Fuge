@@ -3183,8 +3183,8 @@
 			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0,
-			"pivotY": 0,
+			"pivotX": 0.5,
+			"pivotY": 0.5,
 			"fieldDefs": [
 				{
 					"identifier": "Intensity",
@@ -3604,21 +3604,41 @@
 					"entityInstances": [
 						{
 							"__identifier": "Light_point",
-							"__grid": [435,649],
-							"__pivot": [0,0],
+							"__grid": [3098,655],
+							"__pivot": [0.5,0.5],
 							"__tags": [],
 							"__tile": { "tilesetUid": 324, "x": 400, "y": 0, "w": 16, "h": 16 },
 							"__smartColor": "#D77643",
-							"iid": "347b6880-4ce0-11ef-a09f-4b09f9038660",
+							"iid": "eed439d0-73f0-11ef-9505-11d67becaaeb",
 							"width": 16,
 							"height": 16,
 							"defUid": 323,
-							"px": [435,649],
+							"px": [3098,655],
 							"fieldInstances": [
-								{ "__identifier": "Intensity", "__type": "Float", "__value": 0.4, "__tile": null, "defUid": 325, "realEditorValues": [{ "id": "V_Float", "params": [0.4] }] },
+								{ "__identifier": "Intensity", "__type": "Float", "__value": 1, "__tile": null, "defUid": 325, "realEditorValues": [] },
 								{ "__identifier": "C_attenuation", "__type": "Float", "__value": 0.2, "__tile": null, "defUid": 326, "realEditorValues": [] },
-								{ "__identifier": "L_attenuation", "__type": "Float", "__value": 0.2, "__tile": null, "defUid": 327, "realEditorValues": [] },
-								{ "__identifier": "Q_attenuation", "__type": "Float", "__value": 0.2, "__tile": null, "defUid": 328, "realEditorValues": [] },
+								{ "__identifier": "L_attenuation", "__type": "Float", "__value": 0.4, "__tile": null, "defUid": 327, "realEditorValues": [{ "id": "V_Float", "params": [0.4] }] },
+								{ "__identifier": "Q_attenuation", "__type": "Float", "__value": 1, "__tile": null, "defUid": 328, "realEditorValues": [{ "id": "V_Float", "params": [1] }] },
+								{ "__identifier": "Color", "__type": "Array<Int>", "__value": [255,255,255], "__tile": null, "defUid": 329, "realEditorValues": [ null, null, null ] }
+							]
+						},
+						{
+							"__identifier": "Light_point",
+							"__grid": [611,715],
+							"__pivot": [0.5,0.5],
+							"__tags": [],
+							"__tile": { "tilesetUid": 324, "x": 400, "y": 0, "w": 16, "h": 16 },
+							"__smartColor": "#D77643",
+							"iid": "8e640110-73f0-11ef-9505-dfd7fd56f162",
+							"width": 16,
+							"height": 16,
+							"defUid": 323,
+							"px": [611,715],
+							"fieldInstances": [
+								{ "__identifier": "Intensity", "__type": "Float", "__value": 10, "__tile": null, "defUid": 325, "realEditorValues": [{ "id": "V_Float", "params": [10] }] },
+								{ "__identifier": "C_attenuation", "__type": "Float", "__value": 0, "__tile": null, "defUid": 326, "realEditorValues": [{ "id": "V_Float", "params": [0] }] },
+								{ "__identifier": "L_attenuation", "__type": "Float", "__value": 0, "__tile": null, "defUid": 327, "realEditorValues": [{ "id": "V_Float", "params": [0] }] },
+								{ "__identifier": "Q_attenuation", "__type": "Float", "__value": 4, "__tile": null, "defUid": 328, "realEditorValues": [{ "id": "V_Float", "params": [4] }] },
 								{ "__identifier": "Color", "__type": "Array<Int>", "__value": [255,255,255], "__tile": null, "defUid": 329, "realEditorValues": [ null, null, null ] }
 							]
 						}
@@ -3669,63 +3689,6 @@
 						},
 						{
 							"__identifier": "Fire",
-							"__grid": [124,696],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": { "tilesetUid": 304, "x": 96, "y": 96, "w": 96, "h": 96 },
-							"__smartColor": "#BE4A2F",
-							"iid": "45c20d00-4ce0-11ef-8011-835bda5a175e",
-							"width": 32,
-							"height": 32,
-							"defUid": 303,
-							"px": [124,696],
-							"fieldInstances": [
-								{ "__identifier": "Frame_n", "__type": "Int", "__value": 19, "__tile": null, "defUid": 305, "realEditorValues": [] },
-								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.06, "__tile": null, "defUid": 307, "realEditorValues": [] },
-								{ "__identifier": "Rows", "__type": "Int", "__value": 5, "__tile": null, "defUid": 308, "realEditorValues": [] },
-								{ "__identifier": "Columns", "__type": "Int", "__value": 4, "__tile": null, "defUid": 309, "realEditorValues": [] }
-							]
-						},
-						{
-							"__identifier": "Fire",
-							"__grid": [321,472],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": { "tilesetUid": 304, "x": 96, "y": 96, "w": 96, "h": 96 },
-							"__smartColor": "#BE4A2F",
-							"iid": "477ae090-4ce0-11ef-8011-058b20cde6d4",
-							"width": 32,
-							"height": 32,
-							"defUid": 303,
-							"px": [321,472],
-							"fieldInstances": [
-								{ "__identifier": "Frame_n", "__type": "Int", "__value": 19, "__tile": null, "defUid": 305, "realEditorValues": [] },
-								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.06, "__tile": null, "defUid": 307, "realEditorValues": [] },
-								{ "__identifier": "Rows", "__type": "Int", "__value": 5, "__tile": null, "defUid": 308, "realEditorValues": [] },
-								{ "__identifier": "Columns", "__type": "Int", "__value": 4, "__tile": null, "defUid": 309, "realEditorValues": [] }
-							]
-						},
-						{
-							"__identifier": "Fire",
-							"__grid": [390,512],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": { "tilesetUid": 304, "x": 96, "y": 96, "w": 96, "h": 96 },
-							"__smartColor": "#BE4A2F",
-							"iid": "486f79c0-4ce0-11ef-8011-3f15d1320af5",
-							"width": 32,
-							"height": 32,
-							"defUid": 303,
-							"px": [390,512],
-							"fieldInstances": [
-								{ "__identifier": "Frame_n", "__type": "Int", "__value": 19, "__tile": null, "defUid": 305, "realEditorValues": [] },
-								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.06, "__tile": null, "defUid": 307, "realEditorValues": [] },
-								{ "__identifier": "Rows", "__type": "Int", "__value": 5, "__tile": null, "defUid": 308, "realEditorValues": [] },
-								{ "__identifier": "Columns", "__type": "Int", "__value": 4, "__tile": null, "defUid": 309, "realEditorValues": [] }
-							]
-						},
-						{
-							"__identifier": "Fire",
 							"__grid": [601,688],
 							"__pivot": [0,0],
 							"__tags": [],
@@ -3745,7 +3708,7 @@
 						},
 						{
 							"__identifier": "Gravity",
-							"__grid": [921,576],
+							"__grid": [3016,583],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": { "tilesetUid": 315, "x": 0, "y": 0, "w": 90, "h": 90 },
@@ -3754,7 +3717,7 @@
 							"width": 153,
 							"height": 153,
 							"defUid": 317,
-							"px": [921,576],
+							"px": [3016,583],
 							"fieldInstances": [
 								{ "__identifier": "Frame_n", "__type": "Int", "__value": 20, "__tile": null, "defUid": 318, "realEditorValues": [] },
 								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.08, "__tile": null, "defUid": 319, "realEditorValues": [] },
@@ -3817,6 +3780,63 @@
 								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.08, "__tile": null, "defUid": 312, "realEditorValues": [] },
 								{ "__identifier": "Rows", "__type": "Int", "__value": 6, "__tile": null, "defUid": 313, "realEditorValues": [] },
 								{ "__identifier": "Columns", "__type": "Int", "__value": 6, "__tile": null, "defUid": 314, "realEditorValues": [] }
+							]
+						},
+						{
+							"__identifier": "Fire",
+							"__grid": [1002,720],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 304, "x": 96, "y": 96, "w": 96, "h": 96 },
+							"__smartColor": "#BE4A2F",
+							"iid": "6c8c8580-73f0-11ef-9505-75f3b284960d",
+							"width": 32,
+							"height": 32,
+							"defUid": 303,
+							"px": [1002,720],
+							"fieldInstances": [
+								{ "__identifier": "Frame_n", "__type": "Int", "__value": 19, "__tile": null, "defUid": 305, "realEditorValues": [] },
+								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.06, "__tile": null, "defUid": 307, "realEditorValues": [] },
+								{ "__identifier": "Rows", "__type": "Int", "__value": 5, "__tile": null, "defUid": 308, "realEditorValues": [] },
+								{ "__identifier": "Columns", "__type": "Int", "__value": 4, "__tile": null, "defUid": 309, "realEditorValues": [] }
+							]
+						},
+						{
+							"__identifier": "Fire",
+							"__grid": [1448,592],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 304, "x": 96, "y": 96, "w": 96, "h": 96 },
+							"__smartColor": "#BE4A2F",
+							"iid": "7160c9e0-73f0-11ef-9505-a7dde6266d27",
+							"width": 32,
+							"height": 32,
+							"defUid": 303,
+							"px": [1448,592],
+							"fieldInstances": [
+								{ "__identifier": "Frame_n", "__type": "Int", "__value": 19, "__tile": null, "defUid": 305, "realEditorValues": [] },
+								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.06, "__tile": null, "defUid": 307, "realEditorValues": [] },
+								{ "__identifier": "Rows", "__type": "Int", "__value": 5, "__tile": null, "defUid": 308, "realEditorValues": [] },
+								{ "__identifier": "Columns", "__type": "Int", "__value": 4, "__tile": null, "defUid": 309, "realEditorValues": [] }
+							]
+						},
+						{
+							"__identifier": "Fire",
+							"__grid": [2079,744],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 304, "x": 96, "y": 96, "w": 96, "h": 96 },
+							"__smartColor": "#BE4A2F",
+							"iid": "755890f0-73f0-11ef-9505-4d69e8978ff6",
+							"width": 32,
+							"height": 32,
+							"defUid": 303,
+							"px": [2079,744],
+							"fieldInstances": [
+								{ "__identifier": "Frame_n", "__type": "Int", "__value": 19, "__tile": null, "defUid": 305, "realEditorValues": [] },
+								{ "__identifier": "Frame_t", "__type": "Float", "__value": 0.06, "__tile": null, "defUid": 307, "realEditorValues": [] },
+								{ "__identifier": "Rows", "__type": "Int", "__value": 5, "__tile": null, "defUid": 308, "realEditorValues": [] },
+								{ "__identifier": "Columns", "__type": "Int", "__value": 4, "__tile": null, "defUid": 309, "realEditorValues": [] }
 							]
 						}
 					]

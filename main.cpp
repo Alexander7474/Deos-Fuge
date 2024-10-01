@@ -63,7 +63,7 @@ int main()
   test.push_back(perso1);
   test.push_back(perso2);
 
-  Game game(window, test);
+  Game* game;
 
   Menu m(window);
   Menu player_selection(window, "assets/menu/player_selection/", 8);
@@ -79,10 +79,16 @@ int main()
         break;
       case in_player_selection:
         player_select_menu(&player_selection, &default_scene);
+        if(STATE == in_game)
+          game = new Game(window, test);
         break;
       case in_game:
-        game.update();
-        game.Draw();
+        if(game->update() == -1){
+          STATE = in_menu;
+          delete game;
+          break;
+        }
+        game->Draw();
         break;
       case leaving:
         return 0;
